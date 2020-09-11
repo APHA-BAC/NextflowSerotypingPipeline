@@ -1,4 +1,12 @@
-1) Installing Nextflow:
+1) Installing and running Nextflow:
+- create a new directory (e.g. called nextflow) in your /home directory (e.g. /home/jaromirguzinski/nextflow)
+- cd into /nextflow and follow the instructions here https://www.nextflow.io/ (Nextflow homepage)
+- copy the command curl -s https://get.nextflow.io | bash from the Nextflow homepage and paste it into the terminal
+- the script should only need less than a minute to run, and when finished a shell script file called nextflow will appear in the /nextflow directory
+- test if the Nextflow installation has completed without any errors by pasting the ./nextflow run hello command into the terminal
 
+- it is recommended to keep the Nextflow script files (extension .nf) in the same directory as the nextflow shell script
+- thus if the Nextflow script file is called pipeline.nf, this can be launched from the /home/jaromirguzinski/nextflow directory using the ./nextflow run pipeline.nf command
+- after launching the Nextflow script, a new directory called work will appear in /home/jaromirguzinski/nextflow
+- work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
 
-https://www.nextflow.io/
