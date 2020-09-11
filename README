@@ -10,3 +10,30 @@
 - after launching the Nextflow script, a new directory called work will appear in /home/jaromirguzinski/nextflow
 - work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
 
+2) Installing pipeline component software
+
+
+3) Instructions for running the Nextflow serotyping pipeline in SCEv2
+
+
+
+4) Instructions for running the Nextflow serotyping pipeline in SCEv3
+- the assumption is that the R1 and R2 sequence fastq files for the isolates to be analysed will be stored on an external hard disk that will be mounted onto a directory called /disk
+- thus the path to access the external hard disk should be /home/jaromirguzinski/disk - where jaromirguzinski is replaced by $USER
+- after entering into /disk, two directories need to be created there
+- the WGS_Data directory will contain the R1 and R2 sequence files
+
+- additionally, in /WGS_Data directory each time a new directory will need to be created, named for example after the sequencing run name: /home/$USER/disk/WGS_Data/run_n900  
+
+
+- the WGS_Results is a directory where the serotyping pipeline output files will be written out to: /home/$USER/disk/WGS_Results
+
+
+- summary.py scipt update the path with disk
+- pipeline_disk.nf
+- use WGS_Data and run name as inputs and WGS_Results as output names
+- need to create these directories
+
+
+
+
