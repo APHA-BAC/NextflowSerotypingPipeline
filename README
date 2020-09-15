@@ -18,8 +18,11 @@
 
 
 4) Instructions for running the Nextflow serotyping pipeline in SCEv3
-- the assumption is that the R1 and R2 sequence fastq files for the isolates to be analysed will be stored on an external hard disk that will be mounted onto a directory called /disk
+- the assumption is that the R1 and R2 fastq files for all of the isolates to be serotyped will be stored during the pipeline run on an external hard disk that will be mounted onto a directory called /disk
 - thus the path to access the external hard disk should be /home/jaromirguzinski/disk - where jaromirguzinski is replaced by $USER
+- 
+
+
 - after entering into /disk, two directories need to be created there
 - the WGS_Data directory will contain the R1 and R2 sequence files
 
