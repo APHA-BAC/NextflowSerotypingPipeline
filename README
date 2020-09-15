@@ -11,6 +11,14 @@
 - work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
 
 2) Installing pipeline component software
+- FastQC
+- shovill
+- quast
+- KmerID
+- MOST
+- SeqSero2 
+- sistr
+- srst2
 
 
 3) Instructions for running the Nextflow serotyping pipeline in SCEv2
@@ -28,7 +36,7 @@
 - enter the /home/$USER/nextflow directory and launch the Nextflow pipeline script (./nextflow run pipeline_disk.nf)
 - several seconds will pass while the script is launching and the message "Please enter the name of directory where the sequences are located:" will appear in the terminal
 - after the appearance of the message use the keyboard to enter the sequencing_run_name on the same line as the message in the terminal
-- the Nextflow serotyping pipeline will start running and all the processes will be 100% finalized upon successful completetion of the pipeline 
+- the Nextflow serotyping pipeline will start running and all the pipeline component software processes will be 100% finalized upon the successful completetion of the pipeline 
 
 
 
