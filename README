@@ -6,7 +6,7 @@
 - test if the Nextflow installation has completed without any errors by pasting the ./nextflow run hello command into the terminal
 
 - it is recommended to keep the Nextflow script files (Nextflow serotyping pipeline script with the extension .nf) in the same directory as the nextflow shell script
-- thus if the Nextflow script file is called pipeline.nf, this can be launched from the /home/jaromirguzinski/nextflow directory using the ./nextflow run pipeline.nf command
+- thus if the Nextflow script file is called pipeline.nf, this can be launched from the /home/jaromirguzinski/nextflow directory using the ./nextflow run pipeline_disk.nf command
 - after launching the Nextflow script, a new directory called work will appear in /home/$USER/nextflow
 - work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
 
@@ -14,7 +14,7 @@
 
 
 3) Instructions for running the Nextflow serotyping pipeline in SCEv2
-
+- no disk but running straight from /home/$USER/WGS_Data (??) 
 
 
 4) Instructions for running the Nextflow serotyping pipeline in SCEv3
@@ -24,13 +24,16 @@
 - additionally, in the /WGS_Data directory it will be necesseary to create a directory named (for example) after the sequencing run to be analysed: for example /home/$USER/disk/WGS_Data/run_n900  
 - the /WGS_Data/sequencing_run_name directory must contain the R1 and R2 fastq files for all isolates to be analysed in the Nextflow pipeline run 
 - the /WGS_Results is a directory where the serotyping pipeline output files will be written out to: /home/$USER/disk/WGS_Results
-- prior to launching the Nextlow pipeline script you need to make sure that there is data in the /home/$USER/WGS_Data/sequencing_run_name, that the /home/$USER/disk/WGS_Results directory is empty, and the previous run's /work directory has been deleted from /home/$USER/nextflow 
-- enter the /home/$USER/nextflow directory and launch the Nextflow pipeline script (./nextflow run pipeline.nf)
-- Please enter the name of directory where the sequences are located:
+- prior to launching the Nextlow pipeline script it needs to be made sure that there is sequencing data in the /home/$USER/WGS_Data/sequencing_run_name, that the /home/$USER/disk/WGS_Results directory is empty, and the previous run's /work directory has been deleted from /home/$USER/nextflow 
+- enter the /home/$USER/nextflow directory and launch the Nextflow pipeline script (./nextflow run pipeline_disk.nf)
+- several seconds will pass while the script is launching and the message "Please enter the name of directory where the sequences are located:" will appear in the terminal
+- after the appearance of the message use the keyboard to enter the sequencing_run_name on the same line as the message in the terminal
+- the Nextflow serotyping pipeline will start running and all the processes will be 100% finalized upon successful completetion of the pipeline 
+
 
 
 - summary.py scipt update the path with disk
-- pipeline_disk.nf
+
 
 
 
