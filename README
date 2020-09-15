@@ -18,6 +18,7 @@
 - MOST
 - SeqSero2 
 - sistr
+conda install sistr_cmd (https://github.com/phac-nml/sistr_cmd)
 - srst2
 
 
