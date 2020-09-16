@@ -24,10 +24,17 @@ Seems it is easiest to download quast by using the command: tar -xzf quast-<VERS
 Download and then unpack the tar.gz file into a directory in your /home, for example: /home/$USER/quast-5.0.2 
 To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/quast-5.0.2/quast.py to provide the path to the quast.py Python file 
 
-- KmerID
-
+- KmerID (https://github.com/phe-bioinformatics/kmerid)
+Unpack the tar.gz archive that was downloaded into a newly created directory in your /home (for example: /home/$USER/kmerid)
+Compile the auxilliary executables by typing "make all" when in the /home/$USER/kmerid directory
+Replace the Python 2 compatible kmerid.py file that came with the original installation with the edited Python 3 compatible kmerid_python3.py file (in this repo)
+Important: open the kmerid_python3.py file and if necessary edit the lines of code with the text intersect_kmer_lists_filelist (line 97, line 144, line 195) and kmer_reads_process_stdin (line 82), and make sure that there is specified the full path to the /bin directory where these files are located (thus for example: "/home/$USER/kmerid/bin/intersect_kmer_lists_filelist")
+Check that the KmerID reference genome files correspond to the bacterial genera against which the analysed samples ought to be compared, and edit the /home/$USER/kmerid/config/config.cnf file as needed 
 
 - MOST
+
+
+
 - SeqSero2 
 - sistr
 conda install sistr_cmd (https://github.com/phac-nml/sistr_cmd)
