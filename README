@@ -11,10 +11,22 @@
 - work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
 
 2) Installing pipeline component software
-- FastQC 
-- shovill
-- quast
+- FastQC (https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+Download the zip file from here: http://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc and follow the instructions: https://raw.githubusercontent.com/s-andrews/FastQC/master/INSTALL.txt to install
+If the install has been performed correctly, the "fastqc" command will be sufficient to launch this Nextflow serotyping pipeline process 
+
+- shovill (https://github.com/tseemann/shovill)
+Use conda to install shovill and all dependencies: conda install -c conda-forge -c bioconda -c defaults shovill
+If the install has been performed correctly, the "shovill" command will be sufficient to launch this Nextflow serotyping pipeline process 
+
+- quast (http://quast.sourceforge.net/quast.html)
+Seems it is easiest to download quast by using the command: tar -xzf quast-<VERSION>.tar.gz
+Download and then unpack the tar.gz file into a directory in your /home, for example: /home/$USER/quast-5.0.2 
+To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/quast-5.0.2/quast.py to provide the path to the quast.py Python file 
+
 - KmerID
+
+
 - MOST
 - SeqSero2 
 - sistr
