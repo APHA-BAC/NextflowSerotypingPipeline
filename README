@@ -27,18 +27,32 @@ To launch this Nextflow serotyping pipeline process, use the command: python /ho
 - KmerID (https://github.com/phe-bioinformatics/kmerid)
 Unpack the tar.gz archive that was downloaded into a newly created directory in your /home (for example: /home/$USER/kmerid)
 Compile the auxilliary executables by typing "make all" when in the /home/$USER/kmerid directory
-Replace the Python 2 compatible kmerid.py file that came with the original installation with the edited Python 3 compatible kmerid_python3.py file (in this repo)
+Replace the Python 2 compatible kmerid.py file that came with the original installation with the edited Python 3 compatible kmerid_python3.py file (in this repo in the "pipeline component Python 3 scripts/KmerID" folder)
 Important: open the kmerid_python3.py file and if necessary edit the lines of code with the text intersect_kmer_lists_filelist (line 97, line 144, line 195) and kmer_reads_process_stdin (line 82), and make sure that there is specified the full path to the /bin directory where these files are located (thus for example: "/home/$USER/kmerid/bin/intersect_kmer_lists_filelist")
 Check that the KmerID reference genome files correspond to the bacterial genera against which the analysed samples ought to be compared, and edit the /home/$USER/kmerid/config/config.cnf file as needed 
 To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/kmerid/kmerid_python3.py to specify the path to the kmerid_python3.py Python file 
 
 - MOST (https://github.com/phe-bioinformatics/MOST)
-For MOST to function in a Python 3 set-up  
+For MOST to function in a Python 3 set-up, all of the Python files that come with the original release of MOST need to be replaced with the Python 3 version of these files that can be found in this repo in the "pipeline component Python 3 scripts/MOST" folder
+The MOST.py is the master script file and the remaining scripts are not accessed directly but through the MOST.py script
+Important: therefore in the directory structure the MOST.py script needs to be placed in a directory above the support script files, and the support script files need to be placed in a directory called "modules" 
+Thus if MOST.py is in the /home/$USER/most/MOST-master directory, the other Python scripts need to be placed in the /home/$USER/most/MOST-master/modules directory 
+Apart from the Python scripts, there will also be a need to install bowtie 2-2.1.0 (example of a path to software: /home/$USER/most/bowtie2-2.1.0/bowtie2), samtools 0.1.18 (example of a path to software: /opt/samtools-0.1.18/samtools), and the Salmomella MLST database (/home/$USER/most/MOST-master/MLST_data/salmonella) 
+To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/most/MOST-master/MOST.py to specify the path to the MOST.py Python file 
+
+- SeqSero2 (https://github.com/denglab/SeqSero2) 
+Use conda to install the software: conda install -c bioconda seqsero2=1.1.1
+To launch this Nextflow serotyping pipeline process, use the command: SeqSero2_package.py 
+
+- sistr (https://github.com/phac-nml/sistr_cmd)
 
 
-- SeqSero2 
-- sistr
+
+
 conda install sistr_cmd (https://github.com/phac-nml/sistr_cmd)
+
+
+
 - srst2
 
 
