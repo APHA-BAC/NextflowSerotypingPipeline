@@ -45,22 +45,31 @@ Use conda to install the software: conda install -c bioconda seqsero2=1.1.1
 To launch this Nextflow serotyping pipeline process, use the command: SeqSero2_package.py 
 
 - sistr (https://github.com/phac-nml/sistr_cmd)
+Use conda to install the software, first the necessary channels:
+conda config --add channels conda-forge
+conda config --add channels defaults
+conda config --add channels r
+conda config --add channels bioconda
+And then sistr:
+conda install sistr_cmd
+It may be necessary to update the versions of numpy and pandas for sistr to function:
+pip install --upgrade pip
+pip install wheel
+pip install numpy pandas
+To launch this Nextflow serotyping pipeline process, use the command: sistr
 
+- srst2 (https://github.com/katholt/srst2) 
+To install, clone the git repository: git clone https://github.com/katholt/srst2
+Then install with pip: pip install srst2/
+Important: it is necessary to replace the Python 2 compatible srst2.py script that comes with the original distribution with the edited Python 3 compatible srst2.py script that can be found in this repo in the "pipeline component Python 3 scripts/srst2" folder 
+Example of a path to the srst2.py script: /home/$USER/srst2/scripts/srst2.py
+The path to the vaccine differentiation database needs to be specified, for example: /home/$USER/srst2/VaccineDifferentiation/allVacDB9d_clustered.fasta
+It is necessary to have bowtie (for example bowtie2-2.2.3) installed and to specify the path as follows prior to running srst2:
+export SRST2_BOWTIE2=/home/$USER/srst2/bowtie2-2.2.3/bowtie2
+export SRST2_BOWTIE2_BUILD=/home/$USER/srst2/bowtie2-2.2.3/bowtie2-build
+To launch this Nextflow serotyping pipeline process, use the command: srst2
 
-
-
-conda install sistr_cmd (https://github.com/phac-nml/sistr_cmd)
-
-
-
-- srst2
-
-
-3) Instructions for running the Nextflow serotyping pipeline in SCEv2
-- no disk but running straight from /home/$USER/WGS_Data (??) 
-
-
-4) Instructions for running the Nextflow serotyping pipeline in SCEv3
+3) Instructions for running the Nextflow serotyping pipeline in SCEv3
 - the assumption is that the R1 and R2 fastq files for all of the isolates to be serotyped will be stored during the pipeline run on an external hard disk that will be mounted onto a directory called /disk
 - thus the path to access the external hard disk should be /home/$USER/disk 
 - after entering the /disk directory, two directories need to be created there: /WGS_Data and /WGS_Results
@@ -72,6 +81,9 @@ conda install sistr_cmd (https://github.com/phac-nml/sistr_cmd)
 - several seconds will pass while the script is launching and the message "Please enter the name of directory where the sequences are located:" will appear in the terminal
 - after the appearance of the message use the keyboard to enter the sequencing_run_name on the same line as the message in the terminal
 - the Nextflow serotyping pipeline will start running and all the pipeline component software processes will be 100% finalized upon the successful completetion of the pipeline 
+
+4) Instructions for running the Nextflow serotyping pipeline in SCEv2
+- no disk but running straight from /home/$USER/WGS_Data (??) 
 
 
 
