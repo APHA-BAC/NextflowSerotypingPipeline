@@ -77,18 +77,21 @@ To launch this Nextflow serotyping pipeline process, use the command: srst2
 - the /WGS_Data/sequencing_run_name directory must contain the R1 and R2 fastq files for all isolates to be analysed in the Nextflow pipeline run 
 - the /WGS_Results is a directory where the serotyping pipeline output files will be written out to: /home/$USER/disk/WGS_Results
 - prior to launching the Nextlow pipeline script it needs to be made sure that there is sequencing data in the /home/$USER/WGS_Data/sequencing_run_name directory, that the /home/$USER/disk/WGS_Results directory is empty, and the previous run's /work directory has been deleted from /home/$USER/nextflow 
-- enter the /home/$USER/nextflow directory and launch the Nextflow pipeline script (./nextflow run SCE3_pipeline_disk.nf)
+- cd into the /home/$USER/nextflow directory and launch the Nextflow pipeline script (./nextflow run SCE3_pipeline_disk.nf)
 - several seconds will pass while the script is launching and the message "Please enter the name of directory where the sequences are located:" will appear in the terminal
 - after the appearance of the message use the keyboard to enter the sequencing_run_name on the same line as the message in the terminal
 - the Nextflow serotyping pipeline will start running and all the pipeline component software processes will be 100% finalized upon the successful completetion of the pipeline 
 
 4) Instructions for running the Nextflow serotyping pipeline in SCEv2
-- no disk but running straight from /home/$USER/WGS_Data (??) 
+- same as for running the Nextflow pipeline in SCEv3 but it is important to be sure that all paths are edited/updated if needed
+- in particular, if the data are to be read and written out to /WGS_Data and /WGS_Results, respectively, on the /home directory rather than from an external hard disk, the paths in the .nf script will need to be updated to reflect this 
 
-
-
-- summary.py scipt update the path with disk
-
+5) Summary table
+- the summaryTable_Python3.py scipt gathers the data from the output directories for each of the serotyped isolates and collates that data into a single summary table 
+- depending on whether the pipeline input and output data are located in the /home directory or on the external hard disk (/disk), there is a need to edit line 101 of the summaryTable_Python3.py script
+- line 101 is: pathoData = glob.glob("/home/*/disk/WGS_Data/*"), either with (data stored on /disk) or without (data stored in /home) "/disk"
+- the summaryTable_Python3.py (copied from this repo) needs to be stored in some directory (e.g. /home/$USER/summary/summaryTable_Python3.py)
+- to launch this script as part of the Nextflow pipeline use: python /home/$USER/summary/summaryTable_Python3.py  
 
 
 
