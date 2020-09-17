@@ -32,8 +32,8 @@ Important: open the kmerid_python3.py file and if necessary edit the lines of co
 Check that the KmerID reference genome files correspond to the bacterial genera against which the analysed samples ought to be compared, and edit the /home/$USER/kmerid/config/config.cnf file as needed 
 To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/kmerid/kmerid_python3.py to specify the path to the kmerid_python3.py Python file 
 
-- MOST
-
+- MOST (https://github.com/phe-bioinformatics/MOST)
+For MOST to function in a Python 3 set-up  
 
 
 - SeqSero2 
