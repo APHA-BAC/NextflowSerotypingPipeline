@@ -6,7 +6,7 @@
 - test if the Nextflow installation has completed without any errors by pasting the ./nextflow run hello command into the terminal
 
 - it is recommended to keep the Nextflow script files (Nextflow serotyping pipeline script with the extension .nf) in the same directory as the nextflow shell script
-- thus if the Nextflow script file is called pipeline.nf, this can be launched from the /home/jaromirguzinski/nextflow directory using the ./nextflow run pipeline_disk.nf command
+- thus if the Nextflow script file is for example called pipeline.nf, this can be launched from the /home/jaromirguzinski/nextflow directory using the ./nextflow run pipeline_disk.nf command
 - after launching the Nextflow script, a new directory called "work" will appear in /home/$USER/nextflow
 - /home/$USER/nextflow/work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
 
