@@ -98,7 +98,7 @@ def GCcontent(fName):
 ##########################
 ##########################
 ##########################
-pathoData = glob.glob("/home/*/disk/WGS_Data/*")
+pathoData = glob.glob("/home/*/WGS_Data/*")
 pathoData = str(pathoData[0])
 print(pathoData)
 
