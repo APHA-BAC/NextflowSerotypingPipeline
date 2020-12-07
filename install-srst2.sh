@@ -8,4 +8,4 @@ sudo ln -s /opt/srst2/scripts/srst2.py /usr/local/bin
 rm -rf srst2
 rm srst2.zip
 
-pip3 install scipy
+pip install scipy
