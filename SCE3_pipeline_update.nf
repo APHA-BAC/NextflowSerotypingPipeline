@@ -84,7 +84,7 @@ process quast {
    
     script:
     """
-    python /opt/quast-5.0.2/quast.py -o /home/$USER/WGS_Results/$dir/${sample_id}/quast "${sample_id}_contigs.fa"
+    python /opt/quast-5.1.0rc1/quast.py -o /home/$USER/WGS_Results/$dir/${sample_id}/quast "${sample_id}_contigs.fa"
     > ${sample_id}_3.txt
     """
 }
