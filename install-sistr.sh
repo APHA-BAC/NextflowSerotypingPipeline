@@ -1,8 +1,8 @@
 #!/bin/bash
 
-pip install --upgrade pip
-pip install wheel
-pip install numpy pandas
+pip3 install --upgrade pip
+pip3 install wheel
+pip3 install numpy pandas
 
 conda config --add channels defaults
 conda config --add channels conda-forge
