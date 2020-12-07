@@ -7,8 +7,8 @@ sudo chmod +x /opt/most/MOST-master/MOST.py
 rm -rf most
 rm most.zip
 
-pip3 install lxml==4.5.2
-pip3 install biopython==1.73
+pip install lxml==4.5.2
+pip install biopython==1.73
 conda install -c bioconda emboss
 conda install -c kantorlab blastn
 sudo apt-get install libncurses5
