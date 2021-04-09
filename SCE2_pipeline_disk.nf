@@ -1,7 +1,5 @@
 #!/usr/bin/env nextflow
 
-#change here
-
 /*
  * STEP 0 - define the input path to the sequences that will be analysed 
 */ 
