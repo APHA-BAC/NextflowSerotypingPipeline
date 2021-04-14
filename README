@@ -1,100 +1,74 @@
-1) Installing and running Nextflow:
-- create a new directory (e.g. called nextflow) in your /home directory (e.g. /home/jaromirguzinski/nextflow - where jaromirguzinski can be replaced by the general designation $USER whenever you specify a path to this directory)
-- cd into /nextflow and follow the instructions here https://www.nextflow.io/ (Nextflow homepage)
-- copy the command curl -s https://get.nextflow.io | bash from the Nextflow homepage and paste it into the terminal
-- the script should only need less than a minute to run, and when finished a shell script file called nextflow will appear in the /nextflow directory
-- test if the Nextflow installation has completed without any errors by pasting the ./nextflow run hello command into the terminal
+Introduction
+The Salmonella serotyping pipeline described has been developed to replace the classical serotyping process at the APHA by a method based on extracting the serotyping information from the whole genome sequencing (WGS) data of the Salmonella isolates. The pipeline benefits from several publicly available serotyping tools developed by other institutions which are combined in order to increase the reliability of the results. This document describes a newer version of the serotyping pipeline that was re-coded from the previous version of the pipeline to be compatible with Nextflow programming language and the Amazon Web Services (AWS) Scientific Computing Environment version 3 (SCEv3). Nextflow is a programming language that allows running different software packages in parallel, using all available Central Processing Units (CPUs). This highly efficient large scale parallelization results in improved (shorter) time to result per sample and for all samples combined. Software written in different programming languages (such as Bash, Python, or Perl), as is the case with the Salmonella serotyping pipeline, is adapted to become fully operational within the Nextflow framework; furthermore, Nextflow is highly compatible to efficiently operate within the SCEv3 architecture that the APHA is currently in the process of implementing.
 
-- it is recommended to keep the Nextflow script files (Nextflow serotyping pipeline script with the extension .nf) in the same directory as the nextflow shell script
-- thus if the Nextflow script file is for example called pipeline.nf, this can be launched from the /home/jaromirguzinski/nextflow directory using the ./nextflow run pipeline_disk.nf command
-- after launching the Nextflow script, a new directory called "work" will appear in /home/$USER/nextflow
-- /home/$USER/nextflow/work will be continously updated while the Nextflow script is running and some output files as well as temporary files will be saved there
+Installation
+To install the Nextflow Salmonella serotyping pipeline on blank state VM:
+1)	Download the install-salmonella-pipeline-SCEv3.sh script (attached) into /home/$USER
+2)	Open terminal and type cd /home/$USER
+3)	In the terminal type sh install-salmonella-pipeline-SCEv3.sh
+4)	When prompted press the Enter key or type “y” or “yes”
+5)	Installation process takes about 20 minutes
+6)	The VM will reboot after the installation has been completed
+7)	No other action will be required by the user after completion of the installation wrapper script and the pipeline will be ready for utilization   
 
-- in this repo there are four versions of the Nextflow serotyping pipeline script: SCE2_pipeline.nf, SCE2_pipeline_disk.nf, SCE3_pipeline, SCE3_pipeline_disk.nf
-- the SCE scripts are compatible with the SCEv2 computing environment, and the SCE3 scripts are compatible with the SCEv3 computing environment
-- the main difference is in the paths directing the pipeline to the various pipeline component software
-- the scripts labelled with "_disk" should be utilised when the input and the output data are stored on an external hard disk
-- whereas if the input and the output data are stored directly in the /home/$USER directory (which may only be suitable for smaller amounts of data due to potential space restrictions in the /home/$USER directory), the SCE2_pipeline.nf and SCE3_pipeline.nf scripts should be used
+Utilization
+1) Newly sequenced samples in paired FASTQ will be deposited by the APHA Sequencing Unit (SCU) into the SCU Amazon Simple Storage Service (Amazon S3) bucket. All of the sequencing files belonging to a particular sequencing run will be stored in a zipped folder with a unique name corresponding only to that sequencing run (for example 211220_APHA_run_n1041). The user will need to download the zipped folder via AWS Management Console interface onto the VM hosting the pipeline and unzip the folder using the unzip command. The unzipped folder then needs to be copied to the /home/$USER/WGS_Data directory.
 
-2) Installing pipeline component software
-- FastQC (https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-Download the zip file from here: http://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc and follow the instructions: https://raw.githubusercontent.com/s-andrews/FastQC/master/INSTALL.txt to install
-If the install has been performed correctly, the "fastqc" command will be sufficient to launch this Nextflow serotyping pipeline process 
+2) Prior to running the pipeline it is absolutely imperative to edit the names of the newly sequenced files. This procedure will remove sections of the file name that were appended by the Illumina sequencing software which are redundant and will impede the pipeline from correctly recognizing that it has to process these sequencing files. Crucially, the file name renaming procedure will leave the unique isolate identifier unchanged in each of the file names. The renaming of the files is done using the changeAPHArunName.sh script: 
+-	Copy the changeAPHArunName.sh script from /home/$USER to /home/$USER/WGS_Data/211220_APHA_run_n1041 (the folder name with the sequenced files in this example is 211220_APHA_run_n1041 but this will be different for every sequencing run and thus needs to be edited accordingly).
+-	Open the terminal and access the /home/$USER/WGS_Data/211220_APHA_run_n1041 directory using the cd /home/$USER/WGS_Data/211220_APHA_run_n1041 command.
+-	Execute the bash changeAPHArunName.sh command to change the names of all of the sequence files stored in the /home/$USER/WGS_Data/211220_APHA_run_n1041 directory.
+-	For example, S02387-19_S193_R1_001.fastq.gz will be changed to S02387-19_R1.fastq.gz 
+-	The changeAPHArunName.sh should be deleted from the /home/$USER/WGS_Data/211220_APHA_run_n1041 directory. 
 
-- shovill (https://github.com/tseemann/shovill)
-Use conda to install shovill and all dependencies: conda install -c conda-forge -c bioconda -c defaults shovill
-If the install has been performed correctly, the "shovill" command will be sufficient to launch this Nextflow serotyping pipeline process 
+3) In the terminal, use the command line to launch a pipeline run by typing:
+cd /home/$USER/nextflow
+./nextflow run SCE3_pipeline_update.nf
 
-- quast (http://quast.sourceforge.net/quast.html)
-Seems it is easiest to download quast by using the command: tar -xzf quast-<VERSION>.tar.gz
-Download and then unpack the tar.gz file into a directory in your /home, for example: /home/$USER/quast-5.0.2 
-To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/quast-5.0.2/quast.py to specify the path to the quast.py Python file 
+When prompted by a message in the terminal window the user should enter the name of the folder with the sequence files (from the above example this would be: “211220_APHA_run_n1041”), and press the Enter key. This will launch the pipeline.
 
-- KmerID (https://github.com/phe-bioinformatics/kmerid)
-Unpack the tar.gz archive that was downloaded into a newly created directory in your /home (for example: /home/$USER/kmerid)
-Compile the auxilliary executables by typing "make all" when in the /home/$USER/kmerid directory
-Replace the Python 2 compatible kmerid.py file that came with the original installation with the edited Python 3 compatible kmerid_python3.py file (in this repo in the "pipeline component Python 3 scripts/KmerID" folder)
-Important: open the kmerid_python3.py file and if necessary edit the lines of code with the text intersect_kmer_lists_filelist (line 97, line 144, line 195) and kmer_reads_process_stdin (line 82), and make sure that there is specified the full path to the /bin directory where these files are located (thus for example: "/home/$USER/kmerid/bin/intersect_kmer_lists_filelist")
-Check that the KmerID reference genome files correspond to the bacterial genera against which the analysed samples ought to be compared, and edit the /home/$USER/kmerid/config/config.cnf file as needed 
-To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/kmerid/kmerid_python3.py to specify the path to the kmerid_python3.py Python file 
+In the SCE3_pipeline_update.nf script, values for some global variables are assigned. These include the paths to the directories of the tools used during the analysis namely: FastQC, KmerID, SeqSero2, MOST, Shovill, Quast, SISTR and SRST2. Additionally, there are paths to the WGS_Data and WGS_Results directories which house the pipeline input and output files, respectively. These computer paths can be updated if circumstances change; for example if a new version of KmerID is installed in a different directory. 
 
-- MOST (https://github.com/phe-bioinformatics/MOST)
-For MOST to function in a Python 3 set-up, all of the Python files that come with the original release of MOST need to be replaced with the Python 3 version of these files that can be found in this repo in the "pipeline component Python 3 scripts/MOST" folder
-The MOST.py is the master script file and the remaining scripts are not accessed directly but through the MOST.py script
-Important: therefore in the directory structure the MOST.py script needs to be placed in a directory above the support script files, and the support script files need to be placed in a directory called "modules" 
-Thus if MOST.py is in the /home/$USER/most/MOST-master directory, the other Python scripts need to be placed in the /home/$USER/most/MOST-master/modules directory 
-Apart from the Python scripts, there will also be a need to install bowtie 2-2.1.0 (example of a path to software: /home/$USER/most/bowtie2-2.1.0/bowtie2), samtools 0.1.18 (example of a path to software: /opt/samtools-0.1.18/samtools), and the Salmomella MLST database (/home/$USER/most/MOST-master/MLST_data/salmonella) 
-To launch this Nextflow serotyping pipeline process, use the command: python /home/$USER/most/MOST-master/MOST.py to specify the path to the MOST.py Python file 
+Specific tasks performed by the SCE3_pipeline_update.nf script include: 
 
-- SeqSero2 (https://github.com/denglab/SeqSero2) 
-Use conda to install the software: conda install -c bioconda seqsero2=1.1.1
-To launch this Nextflow serotyping pipeline process, use the command: SeqSero2_package.py 
+Operating within the Nextflow framework, the pipeline will analyse all of the isolates with multiple software in parallel, utilising all available CPU cores that the VM possesses. Therefore, multiple isolates will be analysed with the same software concurrently and multiple software will be analysing the same isolate concurrently, with the exceptions specified below. The order as to which isolates will be analysed with which software and which software will be analysing which isolate is totally random except for the specified exceptions. Crucially, the unique isolate identifiers specified in the sequencing file names are consistently applied and utilized by the pipeline script throughout the running of the pipeline thus mitigating any risk of a mix-up between any of the analysed isolates.   
 
-- sistr (https://github.com/phac-nml/sistr_cmd)
-Use conda to install the software, first the necessary channels:
-conda config --add channels conda-forge
-conda config --add channels defaults
-conda config --add channels r
-conda config --add channels bioconda
-And then sistr:
-conda install sistr_cmd
-It may be necessary to update the versions of numpy and pandas for sistr to function:
-pip install --upgrade pip
-pip install wheel
-pip install numpy pandas
-To launch this Nextflow serotyping pipeline process, use the command: sistr
+•	Isolates will be analysed concurrently by FastQC, shovill, KmerID, SeqSero2, and MOST.  
+•	Analysis of an isolate with Quast will only commence upon successful completion of the genome assembly with shovill for that isolate.
+•	Analysis of an isolate with SISTR will only commence upon successful completion of the genome assembly with shovill for that isolate.
+•	Analysis of an isolate with SRST2 will only commence upon successful completion of serotyping with MOST for that isolate and only if the isolate’s serotype was identified as either Typhimurium or Enteritidis or Gallinarum or Pullorum or Idikan or Kedougou or Java or Paratyphi.
 
-- srst2 (https://github.com/katholt/srst2) 
-To install, clone the git repository: git clone https://github.com/katholt/srst2
-Then install with pip: pip install srst2/
-Important: it is necessary to replace the Python 2 compatible srst2.py script that comes with the original distribution with the edited Python 3 compatible srst2.py script that can be found in this repo in the "pipeline component Python 3 scripts/srst2" folder 
-Example of a path to the srst2.py script: /home/$USER/srst2/scripts/srst2.py
-The path to the vaccine differentiation database needs to be specified, for example: /home/$USER/srst2/VaccineDifferentiation/allVacDB9d_clustered.fasta
-It is necessary to have bowtie (for example bowtie2-2.2.3) installed and to specify the path as follows prior to running srst2:
-export SRST2_BOWTIE2=/home/$USER/srst2/bowtie2-2.2.3/bowtie2
-export SRST2_BOWTIE2_BUILD=/home/$USER/srst2/bowtie2-2.2.3/bowtie2-build
-To launch this Nextflow serotyping pipeline process, use the command: srst2
+For each of the pipeline component software, the results are stored under the directory /home/$USER/WGS_Results/<runName>/<isolateName>/<toolName>. The results are written out “live” as the pipeline progresses.
 
-3) Instructions for running the Nextflow serotyping pipeline in SCEv3
-- the assumption is that the R1 and R2 fastq files for all of the isolates to be serotyped will be stored during the pipeline run on an external hard disk that will be mounted onto a directory called /disk
-- thus the path to access the external hard disk will be /home/$USER/disk 
-- after entering the /home/$USER/disk directory, two directories need to be created there: /WGS_Data and /WGS_Results
-- additionally, in the /WGS_Data directory it will be necesseary to create a directory named (for example) after the sequencing run to be analysed: for example /home/$USER/disk/WGS_Data/run_n900  
-- the /WGS_Data/sequencing_run_name directory must contain the R1 and R2 fastq files for all isolates to be analysed in the Nextflow pipeline run 
-- the /WGS_Results is a directory where the serotyping pipeline output files will be written out to: /home/$USER/disk/WGS_Results
-- prior to launching the Nextlow pipeline script it needs to be made sure that there is sequencing data in the /home/$USER/WGS_Data/sequencing_run_name directory, that the /home/$USER/disk/WGS_Results directory is empty, and the previous run's /work directory has been deleted from /home/$USER/nextflow 
-- cd into the /home/$USER/nextflow directory and launch the Nextflow pipeline script (in this scenario use: ./nextflow run SCE3_pipeline_disk.nf)
-- several seconds will pass while the script is launching and the message "Please enter the name of directory where the sequences are located:" will appear in the terminal
-- after the appearance of the message use the keyboard to enter the sequencing_run_name on the same line as the message in the terminal, i.e. this has to completely match the name of directory where the fastq files are stored in /home/$USER/WGS_Data 
-- the Nextflow serotyping pipeline will start running and all the pipeline component software processes will be 100% finalized upon the successful completetion of the pipeline 
+When all the samples have been processed, the python script summaryTable_Python3.py is called automatically. This script extracts and combines and presents the information for all the samples and individual pipeline component software results into a CSV table which is named runName_SummaryTable.csv stored at location /home/$USER/WGS_Results/<runName>.
 
-4) Instructions for running the Nextflow serotyping pipeline in SCEv2
-- same as for running the Nextflow pipeline in SCEv3 but it is important to be sure that all paths are edited/updated if needed - thus use the provided "SCE2_" .nf scripts
-- in particular, if the data are to be read from and written out to /WGS_Data and /WGS_Results, respectively, on the /home directory rather than from an external hard disk, the paths in the .nf script will need to be updated to reflect this (use the ./nextflow run SCE2_pipeline.nf to launch the pipeline under this scenario)  
+4) A message in the style of “Completed at: 25-Dec-2020 18:23:48” will appear in the terminal window upon successful completion of a pipeline run. 
+In the directory /home/$USER/WGS_Results there will be a folder with the same name as was entered into the terminal window upon launching of the pipeline (such as “211220_APHA_run_n1041”) and hence the same name as the name of the folder that was copied into /home/$USER/WGS_Data. This folder in /home/$USER/WGS_Results will contain a series of sub-folders, each of which will be named after the unique isolate identifier for each of the files that were sequenced in the sequencing run. Each sub-folder will contain pipeline outputs specific only to the isolate that the sub-folder was named after. The folder in /home/$USER/WGS_Results will also contain a summary table CSV document named 211220_APHA_run_n1041_SummaryTable.csv (the “211220_APHA_run_n1041” prefix will be replaced by the name of the current sequencing run) that summarizes the outputs of a pipeline run.
 
-5) Summary table
-- the summaryTable_Python3.py scipt gathers the data from the output directories for each of the serotyped isolates and collates that data into a single summary table 
-- depending on whether the pipeline input and output data are located in the /home directory or on the external hard disk (/disk), there is a need to edit line 101 of the summaryTable_Python3.py script
-- line 101 is: pathoData = glob.glob("/home/*/disk/WGS_Data/*"), either with (data stored on /disk) or without (data stored in /home) "/disk"
-- the summaryTable_Python3.py (copied from this repo) has to be stored in a directory called "summary", thus the full path will be: /home/$USER/summary/summaryTable_Python3.py
-- to launch this script as part of the Nextflow pipeline use: python /home/$USER/summary/summaryTable_Python3.py
+The rows in the summary table relate to the strains in the sequencing run and the columns to the relevant information extracted from the results of the analysis tools; these are the following from left to right:
+1.	StrainID. Name or identifier of the strain provided by the FASTQ files
+2.	Consensus. A score showing the number of programs in agreement between, MOST, SeqSero and SISTR. Scores 1-3 stand for: 1 – only one program identified the sample, 2 – two programs are in agreement on the sample’s identity and one is not, and 3 – all three programs are in agreement on the identity of the sample 
+3.	#ReadsR1. Number of DNA fragments that the R1 FASTQ file contains.
+4.	GC%R1. Percentage of the GC content of the fragments of the R1 FASTQ.
+5.	R1Kmerid. Percentage of similarity of the sample according to the KmerID analysis tool, using the R1 FASTQ, to the two most similar organisms.
+6.	Contamination flag  
+7.	MOST. Serotype according to MOST
+8.	Most_light. The traffic light Quality Control system: The script validates the results based on coverage metrics and writes a cut-off value standard based on the "Traffic light system".
+-	The "GREEN traffic light" indication is assigned if the max percentage non consensus depth < 15% and Complete pileup= TRUE and Minimum consensus depth > 2 and Percentage coverage =100 and ST not "Failed(incomplete locus coverage)
+-	The "AMBER traffic light" indication is assigned if the there is no exact fit which matches either GREEN or RED
+-	The RED traffic light indication is assigned if the Complete pileup= FAIL or Percentage coverage < 100 or ST is "Failed(incomplete locus coverage)
+9.	st is the sequence type otherwise known as the allelic profile 
+10.	MLST.
+11.	MLST mean cov. Mean coverage for the 7 core MLST genes 
+12.	Seqsero. Serotype according to Seqsero
+13.	SS comment. Additional comment for Seqsero tool output.
+14.	N50
+15.	Serogroup as defined by SISTR
+16.	Serovar as defined by SISTR
+17.	serovar_antigen as defined by SISTR
+18.	serovar_cgmlst (core genome MLST) as defined by SISTR
+19.	vaccine. To differentiate vaccine from field S. Typhimurium, S. Enteritidis, S. Gallinarum and S. Pulorrum strains.
+20.	mono. Differentiation of monophasic S. 13,23:i:- from biphasic S. Kedougou (1,13,23:i:l,w) and S. Idikan (1,13,23:i:1,5) isolates
+21.	sseJ. Differentiation of S. Paratyphi B from S. Paratyphi B Java variants based on the detection of sseJ gene, present only in the genomes of S. Paratyphi B Java isolates.
+
+5) Prior to any subsequent pipeline runs, the “211220_APHA_run_n1041” folder will need to be deleted from /home/$USER/WGS_Data and from /home/$USER/WGS_Results. Moreover, a folder called “work” that collates Nextflow temporary files during a pipeline run will need to be deleted from the /home/$USER/nextflow directory. These operations will not be performed automatically and need to performed by the user.
