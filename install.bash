@@ -24,5 +24,10 @@ sudo apt-get install -y python3 \
     nano \
     bc
 
+# python 
+# TODO: Version pin pandas to 1.15
+pip3 install biopython pandas gitpython
+sudo ln -s /usr/bin/python3 /usr/bin/python
+
 # Install the dependencies
 # sh install-fastqc.sh
