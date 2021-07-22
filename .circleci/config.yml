@@ -9,6 +9,8 @@ jobs:
       - image: &build_img cimg/base:2020.01
 
     steps:
+      - checkout
+      - setup_remote_docker
       - run: |
           docker build -t testbuild -f ./docker/Dockerfile .
 
