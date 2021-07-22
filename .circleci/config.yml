@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: |
           echo HEY IM IN THE BUILD JOB
-          exit 1
+          exit 0
           #docker build -t TEST_BUILD -f ./docker/Dockerfile .
 
 # Orchestrates the validation tests 
