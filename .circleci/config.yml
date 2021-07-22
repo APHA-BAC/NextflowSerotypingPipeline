@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - run: |
-          docker build -t TEST_BUILD -f ./docker/Dockerfile .
+          docker build -t test_build -f ./docker/Dockerfile .
 
 # Orchestrates the validation tests 
 workflows:
