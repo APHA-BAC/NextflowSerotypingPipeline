@@ -1,35 +1,5 @@
 version: 2.1
 
-commands:
-  # Run tests under BovTB-nf/tests/jobs/ and store artifacts
-  run-test:
-    parameters:
-      script:
-        description: This test calls 'bash -e tests/jobs/<< script >>'
-        type: string
-
-    steps:
-      - run: |
-          cd /BovTB-nf/
-          mkdir /reads/ /results/ /artifacts/
-          bash -e tests/jobs/<< parameters.script >>
-      - store_artifacts:
-          path: /artifacts/
-
-  build-and-push:
-    parameters:
-      tag:
-        description: Tag to push built docker image to
-        type: string
-
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: |
-          TAG=<< parameters.tag >>
-          docker build -t aaronsfishman/bov-tb:$TAG -f ./docker/Dockerfile .
-          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-          docker push aaronsfishman/bov-tb:$TAG
 # Run tests under BovTB-nf/tests/jobs/ and store artifacts
 jobs:
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
@@ -39,101 +9,11 @@ jobs:
       - image: &build_img cimg/base:2020.01
 
     steps:
-      - build-and-push:
-          tag: $CIRCLE_BRANCH
-
-  deploy: 
-    docker:
-      # Circleci base ubuntu image
-      - image: *build_img
-
-    steps:
-      - build-and-push:
-          tag: latest
-
-  unittests:
-    executor: nf-pipeline
-    steps:
       - run: |
-          cd /BovTB-nf/
-          python tests/unit_tests/unit_tests.py
-  tinyreads:
-    executor: nf-pipeline
-    steps:
-      - run-test:
-          script: "tinyreads.bash"
-
-  quality:
-    executor: nf-pipeline
-    parameters:
-      case:
-        type: string
-    steps:
-      - run-test:
-          script: "quality.bash << parameters.case >>"
-
-  lod:
-    executor: nf-pipeline
-    parameters:
-      case:
-        type: string
-    steps:
-      - run-test:
-          script: "lod.bash << parameters.case >>"
-
-  inclusivity:
-    executor: nf-pipeline
-    parameters:
-      case:
-        type: string
-    steps:
-      - run-test:
-          script: "inclusivity.bash << parameters.case >>"
-
-# Run a job on the current branch's Dockerfile
-executors:
-  nf-pipeline:
-    docker:
-      - image: "aaronsfishman/bov-tb:$CIRCLE_BRANCH"
+          docker build -t TEST_BUILD -f ./docker/Dockerfile .
 
 # Orchestrates the validation tests 
 workflows:
   validation:
     jobs:
       - build
-
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-
-      - unittests:
-          requires:
-            - build
-
-      - tinyreads:
-          requires:
-            - build
-            
-      - quality:
-          requires:
-            - tinyreads
-          matrix:
-            parameters:
-              case: ["low", "adequate"]
-
-      - lod:
-          requires:
-            - tinyreads
-          matrix:
-            parameters:
-              case: ["0", "1", "2", "3"]
-
-      - inclusivity:
-          requires:
-            - tinyreads
-          matrix:
-            parameters:
-              case: ["0", "1", "2", "3"]
