@@ -1,0 +1,21 @@
+version: 2.1
+
+# Run tests under BovTB-nf/tests/jobs/ and store artifacts
+jobs:
+  # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
+  build:
+    docker:
+      # Circleci base ubuntu image
+      - image: &build_img cimg/base:2020.01
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          docker build -t testbuild -f ./docker/Dockerfile .
+
+# Orchestrates the validation tests 
+workflows:
+  validation:
+    jobs:
+      - build
