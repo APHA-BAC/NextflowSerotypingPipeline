@@ -13,7 +13,4 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 
 WORKDIR /NextflowSerotypingPipeline/
 COPY ./ ./
-#RUN ./install.bash
-
-#RUN apt-get update
-#RUN apt-get -y install git
+RUN ./install.bash
