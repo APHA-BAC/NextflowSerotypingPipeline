@@ -16,3 +16,4 @@ COPY ./ ./
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 RUN sh install-fastqc.sh
+RUn sh install-shovill.sh
