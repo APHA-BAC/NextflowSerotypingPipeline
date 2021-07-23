@@ -13,4 +13,4 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 
 WORKDIR /NextflowSerotypingPipeline/
 COPY ./ ./
-RUN sudo apt-get install python3-pip
+RUN sudo apt-get -y install python3-pip
