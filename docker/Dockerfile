@@ -13,7 +13,6 @@ RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 
 WORKDIR /NextflowSerotypingPipeline/
 COPY ./ ./
-RUN sudo apt-get -y install python3-pip
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
-RUN sh install-salmonella-pipeline-SCEv3.sh
+RUN sh install-fastqc.sh
