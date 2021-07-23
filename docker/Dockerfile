@@ -17,4 +17,4 @@ RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 RUN sh install-fastqc.sh
 RUN sh install-shovill.sh
-RUN conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
+#RUN conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
