@@ -19,8 +19,9 @@ RUN sh install-fastqc.sh
 
 RUN INSTALL_PATH=~/anaconda \
     && wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh \
-    && bash Miniconda3-py37_4.8.3-Linux-x86_64.sh -fbp $INSTALL_PATH \
-    ENV PATH=/root/anaconda/bin:$PATH
+    && bash Miniconda3-py37_4.8.3-Linux-x86_64.sh -fbp $INSTALL_PATH 
+
+RUN ENV PATH=/root/anaconda/bin:$PATH
 
 RUN conda create --name shovill
 
