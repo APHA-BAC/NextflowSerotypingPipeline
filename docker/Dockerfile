@@ -17,17 +17,23 @@ RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 RUN sh install-fastqc.sh
 
-
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh
-
-RUN bash Miniconda3-py37_4.8.3-Linux-x86_64.sh -b && \
-    echo "export PATH="/root/anaconda3/bin:$PATH"" >> ~/.bashrc && \
-    /bin/bash -c "source ~/.bashrc"
-ENV PATH /root/anaconda3/bin:$PATH
-
-RUN sudo apt-get -y update
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+&& chmod +x /Miniconda3-latest-Linux-x86_64.sh \
+&& /Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda \
+&& rm /Miniconda3-latest-Linux-x86_64.sh
 
 RUN conda --version
+
+#RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh
+
+#RUN bash Miniconda3-py37_4.8.3-Linux-x86_64.sh -b && \
+#    echo "export PATH="/root/anaconda3/bin:$PATH"" >> ~/.bashrc && \
+#    /bin/bash -c "source ~/.bashrc"
+#ENV PATH /root/anaconda3/bin:$PATH
+
+#RUN sudo apt-get -y update
+
+#RUN conda --version
 
 
 
