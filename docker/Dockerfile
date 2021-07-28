@@ -16,9 +16,12 @@ COPY ./ ./
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 RUN sh install-fastqc.sh
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh
-RUN sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh
-RUN ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b
+
+RUN INSTALL_PATH=~/anaconda \
+    && wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh \
+    && bash Miniconda3-py37_4.8.3-Linux-x86_64.sh -fbp $INSTALL_PATH \
+ENV PATH=/root/anaconda/bin:$PATH
+
 RUN conda init bash
 #RUN sudo /usr/sbin/shutdown -r now
 #RUN conda create --name shovill
