@@ -25,7 +25,7 @@ RUN bash Miniconda3-py37_4.8.3-Linux-x86_64.sh -b && \
     /bin/bash -c "source ~/.bashrc"
 ENV PATH /root/anaconda3/bin:$PATH
 
-RUN /root/anaconda3/bin/conda update --all
+RUN conda init bash
 
 
 
