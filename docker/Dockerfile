@@ -18,4 +18,5 @@ RUN sudo apt-get -y install wget
 RUN sh install-fastqc.sh
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh
 RUN sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh
+RUN ./Miniconda3-py37_4.8.3-Linux-x86_64.sh
 #RUN conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
