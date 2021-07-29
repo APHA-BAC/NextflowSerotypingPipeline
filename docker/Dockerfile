@@ -30,7 +30,13 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
 
 # Quast
-RUN sh install-quast.sh
+RUN sudo ln -s /usr/bin/python3 /usr/bin/python
+RUN sudo apt-get install python3-pip
+RUN sudo python -m pip install -U pip
+RUN sudo python -m pip install -U matplotlib
+
+
+#RUN sh install-quast.sh
 
 
 
