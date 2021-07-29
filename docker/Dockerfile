@@ -22,12 +22,12 @@ COPY ./ ./
 RUN sh install-fastqc.sh
 
 # Shovill
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
-     sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
-     ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
-     rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
+#RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
+#     sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
+#     ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
+#     rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
-RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
+#RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
 
 # Quast
 RUN sudo ln -s /usr/bin/python3 /usr/bin/python
@@ -37,9 +37,16 @@ RUN sudo python -m pip install -U matplotlib
 
 RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/quast/quast-5.1.0rc1.tar.gz
 RUN tar -xvf quast-5.1.0rc1.tar.gz
-RUN sudo cp -r quast-5.1.0rc1 /opt
-RUN cd /opt/quast-5.1.0rc1
-RUN ./opt/quast-5.1.0rc1/install_full.sh
+RUN cd quast-5.1.0rc1
+RUN ls
+RUN pwd
+
+#RUN ./install_full.sh
+
+
+#RUN sudo cp -r quast-5.1.0rc1 /opt
+#RUN cd /opt/quast-5.1.0rc1
+#RUN ./opt/quast-5.1.0rc1/install_full.sh
 
 
 #RUN sh install-quast.sh
