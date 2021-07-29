@@ -59,6 +59,21 @@ RUN /opt/conda/bin/conda install -c bioconda emboss
 RUN /opt/conda/bin/conda install -c kantorlab blastn
 RUN sudo apt-get -y install libncurses5
 
+# Kmerid
+RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
+RUN sudo unzip kmerid.zip -d /opt/ 
+RUN rm kmerid.zip
+
+RUN aws s3 cp s3://s3-staging-area/kmerid_ref/kmerid_ref.zip kmerid_ref.zip
+RUN sudo unzip kmerid_ref.zip
+RUN sudo rm -rf kmerid_ref.zip
+RUN sudo mv ref /opt/kmerid/ref
+
+RUN cd /opt/kmerid
+RUN sudo make all
+RUN sudo chmod +x /opt/kmerid/setup_refs.py
+RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
+
 # SeqSero2
 RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
 
