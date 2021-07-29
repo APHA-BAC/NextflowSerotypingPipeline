@@ -18,16 +18,21 @@ RUN sudo apt-get -y install wget
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
 COPY ./ ./
-RUN chmod +x ./bin/*
 
 RUN sh install-fastqc.sh
 
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh \
-&& sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh \
-&& ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /miniconda \
-&& rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
+#RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh \
+#&& sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh \
+#&& ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /miniconda \
+#&& rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
-RUN conda --version
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
+     sudo chmod +x ~/Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
+     ~/Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
+     rm ~/Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
+     /opt/conda/bin/conda --version
+
+#RUN conda --version
 
 #RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
