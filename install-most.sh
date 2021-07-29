@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/pipeline_component_software/most/most.zip
+wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/most/most.zip
 unzip most.zip
 sudo cp -r most /opt
 sudo chmod +x /opt/most/MOST-master/MOST.py
