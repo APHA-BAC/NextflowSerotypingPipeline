@@ -31,7 +31,7 @@ RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=
 
 # Quast
 RUN sudo ln -s /usr/bin/python3 /usr/bin/python
-RUN sudo apt-get install python3-pip
+RUN sudo apt-get -y install python3-pip
 RUN sudo python -m pip install -U pip
 RUN sudo python -m pip install -U matplotlib
 
