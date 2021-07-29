@@ -69,3 +69,14 @@ RUN /opt/conda/bin/conda config --add channels conda-forge
 RUN /opt/conda/bin/conda config --add channels r
 RUN /opt/conda/bin/conda config --add channels bioconda
 RUN /opt/conda/bin/conda install sistr_cmd
+
+# Srst2
+RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/srst2/srst2.zip
+RUN unzip srst2.zip
+RUN sudo cp -r srst2 /opt
+RUN sudo chmod +x /opt/srst2/scripts/srst2.py
+RUN sudo ln -s /opt/srst2/scripts/srst2.py /usr/local/bin
+RUN rm -rf srst2
+RUN rm srst2.zip
+
+RUN pip install scipy
