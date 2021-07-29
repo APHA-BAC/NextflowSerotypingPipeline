@@ -12,6 +12,7 @@ LABEL about.tags="Genomics, WGS"
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
+RUN sudo apt-get -y install python3
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
