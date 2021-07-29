@@ -42,7 +42,8 @@ RUN rm quast-5.1.0rc1.tar.gz
 RUN ./quast-5.1.0rc1/install.sh
 RUN sudo ln -s /quast-5.1.0rc1/quast.py /usr/local/bin
 
-
+# MOST
+RUN sh install-most.sh
 
 
 
