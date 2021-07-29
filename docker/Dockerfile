@@ -56,5 +56,7 @@ RUN /opt/conda/bin/conda install -c bioconda emboss
 RUN /opt/conda/bin/conda install -c kantorlab blastn
 RUN sudo apt-get -y install libncurses5
 
+# SeqSero2
+RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
 
 
