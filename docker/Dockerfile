@@ -52,8 +52,8 @@ RUN rm most.zip
 
 RUN pip install lxml==4.5.2
 RUN pip install biopython==1.73
-RUN conda install -c bioconda emboss
-RUN conda install -c kantorlab blastn
+RUN /opt/conda/bin/conda install -c bioconda emboss
+RUN /opt/conda/bin/conda install -c kantorlab blastn
 RUN sudo apt-get -y install libncurses5
 
 
