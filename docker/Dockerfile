@@ -12,6 +12,7 @@ LABEL about.tags="Genomics, WGS"
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
+RUN sudo apt-get -y install curl
 RUN sudo apt-get -y install python3
 
 # Pipeline
@@ -87,4 +88,9 @@ RUN cd /home/$USER/nextflow
 RUN curl -s https://get.nextflow.io | bash
 RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf
 
+RUN mkdir /home/$USER/summary
+RUN cd /home/$USER/summary
+RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_Python3.py
 
+RUN mkdir /home/$USER/WGS_Data
+RUN mkdir /home/$USER/WGS_Results
