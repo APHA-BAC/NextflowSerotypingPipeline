@@ -8,21 +8,24 @@ LABEL about.summary="Salmonella Serotyping Pipeline"
 LABEL about.documentation="https://github.com/APHA-BAC/NextflowSerotypingPipeline"
 LABEL about.tags="Genomics, WGS"
 
-# Sudo
+#Sudo
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 
-WORKDIR /NextflowSerotypingPipeline/
-COPY ./ ./
+#WORKDIR /NextflowSerotypingPipeline/
+#COPY ./ ./
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
+
+
+# Pipeline
 RUN sh install-fastqc.sh
 
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh \
-&& sudo chmod +x /Miniconda3-py37_4.8.3-Linux-x86_64.sh \
-&& ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /miniconda \
-&& rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh #\
+#&& sudo chmod +x /Miniconda3-py37_4.8.3-Linux-x86_64.sh \
+#&& ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /miniconda \
+#&& rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
-RUN conda --version
+#RUN conda --version
 
 #RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
