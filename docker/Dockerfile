@@ -42,7 +42,7 @@ RUN rm quast-5.1.0rc1.tar.gz
 RUN ./quast-5.1.0rc1/install.sh
 RUN sudo ln -s /quast-5.1.0rc1/quast.py /usr/local/bin
 
-# MOST
+# MOST 
 RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/most/most.zip
 RUN unzip most.zip
 RUN sudo cp -r most /opt
