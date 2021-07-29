@@ -11,13 +11,14 @@ LABEL about.tags="Genomics, WGS"
 #Sudo
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
 
-#WORKDIR /NextflowSerotypingPipeline/
-#COPY ./ ./
 RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 
 
 # Pipeline
+WORKDIR /NextflowSerotypingPipeline/
+COPY ./ ./
+
 RUN sh install-fastqc.sh
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh #\
