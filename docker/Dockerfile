@@ -19,8 +19,8 @@ RUN sh install-fastqc.sh
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh \
 && chmod +x /Miniconda3-py37_4.8.3-Linux-x86_64.sh \
-&& /Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /miniconda \
-&& rm /Miniconda3-py37_4.8.3-Linux-x86_64.sh
+&& ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /miniconda \
+&& rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
 RUN conda --version
 
