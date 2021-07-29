@@ -39,7 +39,7 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN tar -xvf quast-5.1.0rc1.tar.gz
 RUN sudo cp -r quast-5.1.0rc1 /opt
 RUN cd /opt/quast-5.1.0rc1
-RUN sudo ./install_full.sh
+RUN ./install_full.sh
 
 
 #RUN sh install-quast.sh
