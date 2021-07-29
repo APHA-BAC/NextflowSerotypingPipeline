@@ -59,4 +59,13 @@ RUN sudo apt-get -y install libncurses5
 # SeqSero2
 RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
 
+# Sistr
+RUN pip install --upgrade pip
+RUN pip install wheel
+RUN pip install numpy pandas==1.1.5
 
+RUN /opt/conda/bin/conda config --add channels defaults
+RUN /opt/conda/bin/conda config --add channels conda-forge
+RUN /opt/conda/bin/conda config --add channels r
+RUN /opt/conda/bin/conda config --add channels bioconda
+RUN /opt/conda/bin/conda install sistr_cmd
