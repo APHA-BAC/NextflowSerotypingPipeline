@@ -47,9 +47,14 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN unzip most.zip
 RUN sudo cp -r most /opt
 RUN sudo chmod +x /opt/most/MOST-master/MOST.py
-#rm -rf most
-#rm most.zip
+RUN rm -rf most
+RUN rm most.zip
 
+RUN pip install lxml==4.5.2
+RUN pip install biopython==1.73
+RUN conda install -c bioconda emboss
+RUN conda install -c kantorlab blastn
+RUN sudo apt-get -y install libncurses5
 
 
 
