@@ -37,11 +37,8 @@ RUN sudo python -m pip install -U matplotlib
 
 RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/quast/quast-5.1.0rc1.tar.gz
 RUN tar -xvf quast-5.1.0rc1.tar.gz
-RUN cd quast-5.1.0rc1
-RUN ls
-RUN pwd
 
-#RUN ./install_full.sh
+RUN ./quast-5.1.0rc1/install_full.sh
 
 
 #RUN sudo cp -r quast-5.1.0rc1 /opt
