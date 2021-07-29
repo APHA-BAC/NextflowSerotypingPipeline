@@ -14,6 +14,8 @@ RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 RUN sudo apt-get -y install curl
 RUN sudo apt-get -y install python3
+RUN sudo apt-get -y install default-jre
+RUN sudo apt-get -y install default-jdk
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
