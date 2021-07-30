@@ -64,9 +64,9 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN sudo unzip kmerid.zip -d /opt/ 
 RUN rm kmerid.zip
 
-RUN aws s3 cp s3://s3-staging-area/kmerid_ref/kmerid_ref.zip kmerid_ref.zip
-RUN sudo unzip kmerid_ref.zip
-RUN sudo rm -rf kmerid_ref.zip
+RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/circleci-project-setup/kmerid_ref1.zip
+RUN sudo unzip kmerid_ref1.zip
+RUN sudo rm -rf kmerid_ref1.zip
 RUN sudo mv ref /opt/kmerid/ref
 
 RUN cd /opt/kmerid
