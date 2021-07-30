@@ -69,7 +69,7 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN sudo mv Acinetobacter_ADP1_uid61597.fa /opt/kmerid/ref
 
 RUN cd /opt/kmerid
-RUN sudo make all
+RUN sudo /opt/kmerid/make all
 RUN sudo chmod +x /opt/kmerid/setup_refs.py
 RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
 
