@@ -1,7 +1,6 @@
 #!/bin/bash
 
 sudo apt install unzip
-sudo apt install default-jre 
 
 wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/FastQC/fastqc_v0.11.9.zip
 unzip fastqc_v0.11.9.zip
