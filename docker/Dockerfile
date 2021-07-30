@@ -64,10 +64,8 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN sudo unzip kmerid.zip -d /opt/ 
 RUN rm kmerid.zip
 
-RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/circleci-project-setup/kmerid_ref1.zip
-RUN sudo unzip kmerid_ref1.zip
-RUN sudo rm -rf kmerid_ref1.zip
-RUN sudo mv ref /opt/kmerid/ref
+RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/circleci-project-setup/Acinetobacter
+RUN sudo mv Acinetobacter /opt/kmerid/ref
 
 RUN cd /opt/kmerid
 RUN sudo make all
