@@ -69,9 +69,10 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN sudo mv Acinetobacter_ADP1_uid61597.fa /opt/kmerid/ref
 
 RUN cd /opt/kmerid
-RUN sudo /opt/kmerid/makefile make all
-RUN sudo chmod +x /opt/kmerid/setup_refs.py
-RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
+RUN ls /opt/kmerid
+RUN sudo make all
+#RUN sudo chmod +x /opt/kmerid/setup_refs.py
+#RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
 
 # SeqSero2
 RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
