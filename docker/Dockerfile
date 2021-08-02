@@ -61,6 +61,8 @@ RUN /opt/conda/bin/conda install -c kantorlab blastn
 RUN sudo apt-get -y install libncurses5
 
 # Kmerid
+RUN sudo apt-get -y install nodejs
+RUN sudo apt-get -y install npm
 RUN npm install -g github-files-fetcher
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter" --out=/opt
 
