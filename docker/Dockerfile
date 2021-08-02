@@ -61,25 +61,19 @@ RUN /opt/conda/bin/conda install -c kantorlab blastn
 RUN sudo apt-get -y install libncurses5
 
 # Kmerid
-RUN sudo apt-get -y install nodejs
-RUN sudo apt-get -y install npm
-RUN npm install -g github-files-fetcher
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter" --out=/opt
-
-
-#RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
-#RUN sudo unzip kmerid.zip -d /opt/ 
-#RUN rm kmerid.zip
-
-#RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/circleci-project-setup/kmerid_ref/Acinetobacter.zip
-#RUN sudo unzip Acinetobacter.zip
-#RUN sudo rm -rf Acinetobacter.zip
-#RUN sudo mv Acinetobacter /opt/kmerid/ref
+RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
+RUN sudo unzip kmerid.zip -d /opt/ 
+RUN rm kmerid.zip
 
 RUN cd /opt/kmerid && \
      sudo make all
 RUN sudo chmod +x /opt/kmerid/setup_refs.py
 RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
+
+RUN sudo apt-get -y install nodejs
+RUN sudo apt-get -y install npm
+RUN npm install -g github-files-fetcher
+RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter" --out=/opt/kmerid/ref
 
 # SeqSero2
 RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
