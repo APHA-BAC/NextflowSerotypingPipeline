@@ -1,1 +1,2 @@
 Acinetobacter filter=lfs diff=lfs merge=lfs -text
+kmerid_ref/Acinetobacter filter=lfs diff=lfs merge=lfs -text
