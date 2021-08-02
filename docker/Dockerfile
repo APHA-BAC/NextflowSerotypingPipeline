@@ -66,7 +66,7 @@ RUN sudo unzip kmerid.zip -d /opt/
 RUN rm kmerid.zip
 
 #RUN wget -r --no-parent --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/circleci-project-setup/kmerid_ref/Acinetobacter
-RUN download-directory.github.io?url=https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter
+RUN https://download-directory.github.io/?url=https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter
 RUN sudo mv Acinetobacter /opt/kmerid/ref
 
 RUN cd /opt/kmerid && \
