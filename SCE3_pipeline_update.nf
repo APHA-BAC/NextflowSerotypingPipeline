@@ -4,7 +4,7 @@
  * STEP 0 - define the input path to the sequences that will be analysed 
 */ 
 
-params.reads = "/home/$USER/WGS_Data/test_isolates/*_{R1,R2}.fastq.gz"
+params.reads = "/home/WGS_Data/test_isolates/*_{R1,R2}.fastq.gz"
 
 /*
  * STEP 1 - fastqc
@@ -12,7 +12,7 @@ params.reads = "/home/$USER/WGS_Data/test_isolates/*_{R1,R2}.fastq.gz"
 reads = Channel.fromFilePairs(params.reads)
 
 process fastqc {
-    publishDir "/home/$USER/WGS_Results/test_isolates/${sample_id}/FASTQC_Reports", mode: 'move'
+    publishDir "/home/WGS_Results/test_isolates/${sample_id}/FASTQC_Reports", mode: 'move'
 
     input:
     tuple sample_id, file(reads_file) from reads   
@@ -37,7 +37,7 @@ process fastqc {
 reads1 = Channel.fromFilePairs(params.reads)
 
 process shovill {
-    publishDir "/home/$USER/WGS_Results/test_isolates/${sample_id}/shovill", mode: 'copy'
+    publishDir "/home/WGS_Results/test_isolates/${sample_id}/shovill", mode: 'copy'
     
     input:
     tuple sample_id, file(reads_file) from reads1
