@@ -74,7 +74,6 @@ RUN sudo apt-get -y install nodejs
 RUN sudo apt-get -y install npm
 RUN npm install -g github-files-fetcher
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter" --out=/opt/kmerid/ref
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
 
 # SeqSero2
