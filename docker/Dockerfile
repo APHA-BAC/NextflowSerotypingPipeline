@@ -113,3 +113,7 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 
 RUN mkdir /home/$USER/WGS_Data
 RUN mkdir /home/$USER/WGS_Results
+
+# Pipeline run
+RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/$USER/WGS_Data
+
