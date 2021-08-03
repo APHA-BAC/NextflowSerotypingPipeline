@@ -116,6 +116,5 @@ RUN mkdir /home/$USER/WGS_Results
 
 # Pipeline run
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/$USER/WGS_Data
-RUN ls /home/$USER/nextflow
 RUN cd /home/$USER/nextflow
-RUN ls
+RUN ./nextflow run SCE3_pipeline_update.nf
