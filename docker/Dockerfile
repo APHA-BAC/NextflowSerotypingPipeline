@@ -106,7 +106,6 @@ RUN mkdir /home/$USER/nextflow
 RUN cd /home/$USER/nextflow
 RUN curl -s https://get.nextflow.io | bash
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf" --out=/home/$USER/nextflow
-#RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf
 
 RUN mkdir /home/$USER/summary
 RUN cd /home/$USER/summary
