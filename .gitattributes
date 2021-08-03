@@ -1,0 +1,2 @@
+kmerid_ref/Citrobacter filter=lfs diff=lfs merge=lfs -text
+kmerid_ref/Salmonella filter=lfs diff=lfs merge=lfs -text
