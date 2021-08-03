@@ -186,7 +186,7 @@ process most {
     script:
     """     
     python /opt/most/MOST-master/MOST.py -1 /home/WGS_Data/test_isolates/${sample_id}_R1.fastq.gz  -2 /home/WGS_Data/test_isolates/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory /home/WGS_Results/test_isolates/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
-    if grep "predicted_serotype" /home/WGS_Results/$dir/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
+    if grep "predicted_serotype" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
     then
     grep "predicted_serotype" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
     if grep -q "ST-serotype" serovar1.txt
