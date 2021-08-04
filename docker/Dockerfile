@@ -15,7 +15,7 @@ RUN sudo apt-get -y install wget
 RUN sudo apt-get -y install git
 RUN sudo apt-get -y install curl
 RUN sudo apt-get -y install make
-RUN sudo apt-get -y install openjdk-11-jdk
+#RUN sudo apt-get -y install openjdk-11-jdk
 RUN sudo apt-get -y install libz-dev
 RUN sudo apt-get -y install libbz2-dev
 RUN sudo apt-get -y install libncurses5-dev
