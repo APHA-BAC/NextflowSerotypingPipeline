@@ -40,8 +40,8 @@ COPY ./ ./
 RUN sh install-fastqc.sh
 
 # Shovill
-RUN git clone https://github.com/lh3/seqtk.git;
-RUN seqtk; make
+#RUN git clone https://github.com/lh3/seqtk.git;
+#RUN seqtk; make
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
      sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
