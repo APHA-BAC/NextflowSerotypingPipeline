@@ -32,7 +32,6 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
-#RUN /opt/conda/bin/conda install -c biobuilds seqtk
 
 # Quast
 RUN sudo ln -s /usr/bin/python3 /usr/bin/python
@@ -121,4 +120,4 @@ RUN whereis seqtk
 # Pipeline run
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/WGS_Data
 RUN cd /home/$USER/nextflow
-RUN ./nextflow run SCE3_pipeline_update.nf
+RUN sudo ./nextflow run SCE3_pipeline_update.nf
