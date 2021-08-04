@@ -14,6 +14,15 @@ RUN sudo apt-get -y install apt-utils
 RUN sudo apt-get -y install wget
 RUN sudo apt-get -y install curl
 RUN sudo apt-get -y install make
+RUN sudo apt-get -y install openjdk-11-jdk
+RUN sudo apt-get -y install libz-dev
+RUN sudo apt-get -y install libbz2-dev
+RUN sudo apt-get -y install libncurses5-dev
+RUN sudo apt-get -y install libncursesw5-dev
+RUN sudo apt-get -y install libghc-bzlib-prof
+RUN sudo apt-get -y install gcc
+RUN sudo apt-get -y install zlib1g-dev
+RUN sudo apt-get -y install libcurl4-openssl-dev
 RUN sudo apt-get -y install python3
 RUN sudo apt-get -y install default-jre
 RUN sudo apt-get -y install default-jdk
@@ -32,6 +41,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
+RUN /opt/conda/bin/shovill --check
 
 # Quast
 RUN sudo ln -s /usr/bin/python3 /usr/bin/python
@@ -114,10 +124,7 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN mkdir /home/WGS_Data
 RUN mkdir /home/WGS_Results
 
-RUN whereis shovill
-RUN whereis seqtk
-
 # Pipeline run
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/WGS_Data
 RUN cd /home/$USER/nextflow
-RUN sudo ./nextflow run SCE3_pipeline_update.nf
+RUN ./nextflow run SCE3_pipeline_update.nf
