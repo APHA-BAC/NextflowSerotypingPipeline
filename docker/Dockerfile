@@ -26,6 +26,10 @@ RUN sudo apt-get -y install libcurl4-openssl-dev
 RUN sudo apt-get -y install python3
 RUN sudo apt-get -y install default-jre
 RUN sudo apt-get -y install default-jdk
+RUN sudo apt-get -y install libfile-copy-recursive-perl
+RUN sudo apt-get -y install libio-socket-ssl-perl
+RUN sudo apt-get -y install libio-tee-perl
+RUN sudo apt-get -y install libunicode-string-perl
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
