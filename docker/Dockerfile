@@ -48,7 +48,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
 
 RUN git clone https://github.com/lh3/seqtk.git
-RUN sudo seqtk cd
+RUN sudo cd seqtk
 RUN sudo make
 
 RUN /opt/conda/bin/shovill --check
