@@ -48,7 +48,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
 RUN /opt/conda/bin/conda init bash
-RUN source ~/.bashrc
+RUN . ~/.bashrc
 
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
 RUN /opt/conda/bin/shovill --check
