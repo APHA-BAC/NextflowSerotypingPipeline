@@ -31,6 +31,7 @@ RUN sudo apt-get -y install libfile-copy-recursive-perl
 RUN sudo apt-get -y install libio-socket-ssl-perl
 RUN sudo apt-get -y install libio-tee-perl
 RUN sudo apt-get -y install libunicode-string-perl
+RUN sudo apt-get -y install nano
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
@@ -49,6 +50,9 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
+
+RUN nano .bashrc 
+
 RUN /opt/conda/bin/shovill --check
 
 # Quast
