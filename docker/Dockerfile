@@ -32,10 +32,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
-
-RUN docker exec -it id_container bash
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
-RUN export TERM=xterm
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
@@ -45,18 +42,15 @@ COPY ./ ./
 RUN sh install-fastqc.sh
 
 # Shovill
-#RUN git clone https://github.com/lh3/seqtk.git;
-#RUN seqtk; make
-
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
      sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
      ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
+RUN /opt/conda/bin/conda init bash
+RUN source ~/.bashrc
+
 RUN /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
-
-RUN nano .bashrc 
-
 RUN /opt/conda/bin/shovill --check
 
 # Quast
