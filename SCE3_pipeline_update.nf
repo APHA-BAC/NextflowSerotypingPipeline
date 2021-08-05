@@ -53,6 +53,7 @@ process shovill {
     script:
     """    
     /opt/conda/bin/conda init bash
+    source /root/.bashrc
     /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
    > ${sample_id}_2.txt 
@@ -131,6 +132,7 @@ process seqsero2 {
     script:
     """     
    /opt/conda/bin/conda init bash
+   source /root/.bashrc
    /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i /home/WGS_Data/test_isolates/${sample_id}_{R1,R2}.fastq.gz -d /home/WGS_Results/test_isolates/${sample_id}/SeqSero2
     > ${sample_id}_5.txt
     """
