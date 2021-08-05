@@ -32,7 +32,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
+
+RUN docker exec -it id_container bash
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
+RUN export TERM=xterm
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
