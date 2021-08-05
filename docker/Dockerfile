@@ -9,29 +9,30 @@ LABEL about.documentation="https://github.com/APHA-BAC/NextflowSerotypingPipelin
 LABEL about.tags="Genomics, WGS"
 
 # Sudo
-RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y sudo
-RUN sudo apt-get -y install apt-utils
-RUN sudo apt-get -y install wget
-RUN sudo apt-get -y install git
-RUN sudo apt-get -y install curl
-RUN sudo apt-get -y install make
-#RUN sudo apt-get -y install openjdk-11-jdk
-RUN sudo apt-get -y install libz-dev
-RUN sudo apt-get -y install libbz2-dev
-RUN sudo apt-get -y install libncurses5-dev
-RUN sudo apt-get -y install libncursesw5-dev
-RUN sudo apt-get -y install libghc-bzlib-prof
-RUN sudo apt-get -y install gcc
-RUN sudo apt-get -y install zlib1g-dev
-RUN sudo apt-get -y install libcurl4-openssl-dev
-RUN sudo apt-get -y install python3
-#RUN sudo apt-get -y install default-jre
-#RUN sudo apt-get -y install default-jdk
-RUN sudo apt-get -y install libfile-copy-recursive-perl
-RUN sudo apt-get -y install libio-socket-ssl-perl
-RUN sudo apt-get -y install libio-tee-perl
-RUN sudo apt-get -y install libunicode-string-perl
-RUN sudo apt-get -y install nano
+RUN apt-get -y update 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q wget
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q git
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q make
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q openjdk-11-jdk
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libz-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libbz2-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncurses5-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncursesw5-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libghc-bzlib-prof
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q gcc
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jre
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jdk
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
