@@ -98,7 +98,14 @@ def GCcontent(fName):
 ##########################
 ##########################
 ##########################
-pathoData = glob.glob("/home/*/WGS_Data/*")
+
+#### HACK: passing directory in as input ###
+
+input_dir = sys.argv[1]
+
+###
+
+pathoData = glob.glob(input_dir + "*")
 pathoData = str(pathoData[0])
 print(pathoData)
 

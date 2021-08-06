@@ -292,7 +292,7 @@ process summary {
    
   script: 
   """ 
-  python /home/summary/summaryTable_Python3.py  
+  python /NextflowSerotypingPipeline/summaryTable_Python3.py \$PWD 
   """
 }
 
