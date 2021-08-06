@@ -175,7 +175,7 @@ process sistr {
 reads6 = Channel.fromFilePairs(params.reads)
 
 process most {
-   publishDir "/home/WGS_Results/test_isolates/${sample_id}/MOST", mode: 'copy'
+   publishDir "/home/WGS_Results/test_isolates/${sample_id}/MOST/", mode: 'copy'
 
 
     input:
