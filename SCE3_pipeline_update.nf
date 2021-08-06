@@ -53,7 +53,6 @@ process shovill {
     script:
     """    
     /opt/conda/bin/conda init bash
-    source ~/.bashrc
     /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
    > ${sample_id}_2.txt 
@@ -132,7 +131,6 @@ process seqsero2 {
     script:
     """     
    /opt/conda/bin/conda init bash
-   source ~/.bashrc
    /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i /home/WGS_Data/test_isolates/${sample_id}_{R1,R2}.fastq.gz -d /home/WGS_Results/test_isolates/${sample_id}/SeqSero2
     > ${sample_id}_5.txt
     """
@@ -189,7 +187,7 @@ process most {
    
     script:
     """     
-    python /opt/most/MOST-master/MOST.py -1 /home/WGS_Data/test_isolates/${sample_id}_R1.fastq.gz  -2 /home/WGS_Data/test_isolates/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory /home/WGS_Results/test_isolates/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    python /opt/most/MOST-master/MOST.py -1 /home/WGS_Data/test_isolates/${sample_id}_R1.fastq.gz  -2 /home/WGS_Data/test_isolates/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory ./MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
     if grep "predicted_serotype" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
     then
     grep "predicted_serotype" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
