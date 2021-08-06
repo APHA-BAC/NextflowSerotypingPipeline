@@ -133,6 +133,8 @@ RUN wget --no-check-certificate --content-disposition https://raw.githubusercont
 RUN mkdir /home/WGS_Data
 RUN mkdir /home/WGS_Results
 
+RUN pip install lxml
+
 # Pipeline run
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/WGS_Data
 RUN cd /home/$USER/nextflow
