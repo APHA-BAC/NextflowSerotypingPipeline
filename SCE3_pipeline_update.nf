@@ -53,7 +53,6 @@ process shovill {
     script:
     """    
     /opt/conda/bin/conda init bash
-    source ~/.bashrc
     /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
    > ${sample_id}_2.txt 
@@ -83,7 +82,7 @@ process quast {
    
     script:
     """
-    python /opt/quast-5.1.0rc1/quast.py -o /home/WGS_Results/test_isolates/${sample_id}/quast "${sample_id}_contigs.fa"
+    python /NextflowSerotypingPipeline/quast-5.1.0rc1/quast.py -o /home/WGS_Results/test_isolates/${sample_id}/quast "${sample_id}_contigs.fa"
     > ${sample_id}_3.txt
     """
 }
@@ -132,7 +131,6 @@ process seqsero2 {
     script:
     """     
    /opt/conda/bin/conda init bash
-   source ~/.bashrc
    /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i /home/WGS_Data/test_isolates/${sample_id}_{R1,R2}.fastq.gz -d /home/WGS_Results/test_isolates/${sample_id}/SeqSero2
     > ${sample_id}_5.txt
     """
@@ -175,7 +173,7 @@ process sistr {
 reads6 = Channel.fromFilePairs(params.reads)
 
 process most {
-   publishDir "/home/WGS_Results/test_isolates/${sample_id}/MOST/", mode: 'copy'
+   publishDir "/home/WGS_Results/test_isolates/${sample_id}/MOST", mode: 'copy'
 
 
     input:
@@ -188,21 +186,22 @@ process most {
 
    
     script:
-    """     
-    python /opt/most/MOST-master/MOST.py -1 /home/WGS_Data/test_isolates/${sample_id}_R1.fastq.gz  -2 /home/WGS_Data/test_isolates/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory ./MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
-    if grep "predicted_serotype" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
+    """
+    MOST_DIR=\$PWD/MOST     
+    python /opt/most/MOST-master/MOST.py -1 /home/WGS_Data/test_isolates/${sample_id}_R1.fastq.gz  -2 /home/WGS_Data/test_isolates/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory \$MOST_DIR -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    if grep "predicted_serotype" \$MOST_DIR/MOST/${sample_id}_R1.fastq.results.xml
     then
-    grep "predicted_serotype" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
+    grep "predicted_serotype" \$MOST_DIR/${sample_id}_R1.fastq.results.xml >> serovar1.txt
     if grep -q "ST-serotype" serovar1.txt
     then
-    awk '{print substr(\$3,1,5); }' serovar1.txt > serovar2.txt
+    awk '{print substr(\$2,1,5); }' serovar1.txt > serovar2.txt
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     else
     awk '{print substr(\$3,10); }' serovar1.txt > serovar2.txt   
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
     else
-    grep "profile" /home/WGS_Results/test_isolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
+    grep "profile" \$MOST_DIR/${sample_id}_R1.fastq.results.xml >> serovar1.txt
     awk '{print substr(\$3,1,5); }' serovar1.txt > serovar2.txt
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
@@ -293,7 +292,7 @@ process summary {
    
   script: 
   """ 
-  python /home/summary/summaryTable_Python3.py  
+  python /NextflowSerotypingPipeline/summaryTable_Python3.py \$PWD 
   """
 }
 
