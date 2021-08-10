@@ -141,4 +141,4 @@ RUN cd /home/$USER/nextflow
 
 RUN pip install lxml
 
-RUN bash ./nextflow run SCE3_pipeline_update.nf
+
