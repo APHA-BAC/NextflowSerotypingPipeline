@@ -124,7 +124,7 @@ RUN pip install scipy
 RUN mkdir /home/$USER/nextflow
 RUN cd /home/$USER/nextflow
 RUN curl -s https://get.nextflow.io | bash
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf" --out=/home/$USER/nextflow
+#RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf" --out=/home/$USER/nextflow
 
 RUN mkdir /home/summary
 RUN cd /home/summary
@@ -141,4 +141,4 @@ RUN cd /home/$USER/nextflow
 
 RUN pip install lxml
 
-
+RUN bash ./nextflow run SCE3_pipeline_update.nf
