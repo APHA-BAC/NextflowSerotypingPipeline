@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
+wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
 sudo unzip kmerid.zip -d /opt/ 
 rm kmerid.zip
 
