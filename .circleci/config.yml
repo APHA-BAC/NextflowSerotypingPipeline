@@ -30,7 +30,17 @@ jobs:
     steps:
       - checkout
       - run: |
+          echo ----BEFORE SOURCE----
+          which pip
+          
+          source ~/.bashrc
+          
+          echo ----AFTER SOURCE----
+          which pip
+          echo ----Pipping----
           pip install libxml
+
+          echo ----Running----
           /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
