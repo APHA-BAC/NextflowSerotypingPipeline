@@ -24,13 +24,13 @@ jobs:
           docker push $DOCKER_USER/salmonella-seq:$TAG
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
-  hello:
+  test_isolates:
     executor: nf-pipeline
 
     steps:
       - checkout
       - run: |
-          echo Jaro is awesome
+          bash -e ./nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
 workflows:
@@ -38,6 +38,6 @@ workflows:
     jobs:
       - build
 
-      - hello:
+      - test_isolates:
           requires:
             - build
