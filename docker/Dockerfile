@@ -139,6 +139,8 @@ RUN pip install lxml
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/WGS_Data
 RUN cd /home/$USER/nextflow
 
+ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 RUN pip install lxml
 
 #RUN bash ./nextflow run SCE3_pipeline_update.nf
