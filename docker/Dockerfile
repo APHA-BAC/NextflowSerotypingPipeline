@@ -47,6 +47,9 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
      ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
+# Add conda binaries to PATH
+ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 RUN /opt/conda/bin/conda init bash && \
       . ~/.bashrc && \
       /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0 && \
@@ -139,8 +142,4 @@ RUN pip install lxml
 RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/WGS_Data
 RUN cd /home/$USER/nextflow
 
-ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
 RUN pip install lxml
-
-#RUN bash ./nextflow run SCE3_pipeline_update.nf

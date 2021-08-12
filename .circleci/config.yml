@@ -30,9 +30,6 @@ jobs:
     steps:
       - checkout
       - run: |
-          which pip
-          which python
-          echo ----Running----
           /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
