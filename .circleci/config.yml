@@ -29,8 +29,10 @@ jobs:
 
     steps:
       - checkout
-      - run: |
-          /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+      - run:
+          no_output_timeout: 30m
+          command: |
+            /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
 workflows:
