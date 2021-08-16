@@ -27,7 +27,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jre
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jdk
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
