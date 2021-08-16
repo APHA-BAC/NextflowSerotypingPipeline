@@ -3,9 +3,12 @@ version: 2.1
 # Executor that runs tests in the image produced by the build step
 executors:
   nf-pipeline:
-    resource_class: large
     docker:
       - image: "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"
+
+  nf-machine:
+    machine:
+      image: ubuntu-1604:202007-01
 
 # Run tests and store artifacts
 jobs:
@@ -26,14 +29,14 @@ jobs:
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
-    executor: nf-pipeline
+    executor: nf-machine
 
     steps:
       - checkout
       - run:
           no_output_timeout: 30m
           command: |
-            /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+            docker run "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
 workflows:
