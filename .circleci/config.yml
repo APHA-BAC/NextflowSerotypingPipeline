@@ -39,7 +39,7 @@ jobs:
             echo memory: 
             df -h
             echo ********
-            docker run "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+            docker run -m="6g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
 workflows:
