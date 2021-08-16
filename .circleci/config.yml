@@ -44,6 +44,6 @@ workflows:
     jobs:
       # - build
 
-      - test_isolates:
+      - test_isolates
           # requires:
           #   - build
