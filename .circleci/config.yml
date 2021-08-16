@@ -42,8 +42,8 @@ jobs:
 workflows:
   validation:
     jobs:
-      - build
+      # - build
 
       - test_isolates:
-          requires:
-            - build
+          # requires:
+          #   - build
