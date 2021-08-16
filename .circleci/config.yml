@@ -36,7 +36,8 @@ jobs:
       - run:
           no_output_timeout: 30m
           command: |
-            echo memory: df -h
+            echo memory: 
+            df -h
             echo ********
             docker run "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" -m="7g" --memory-swap="100g" /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
