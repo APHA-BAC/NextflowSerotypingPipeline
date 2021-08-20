@@ -4,7 +4,7 @@
  * STEP 0 - define the input path to the sequences that will be analysed 
 */ 
 
-params.reads = "/home/WGS_Data/test_isolates/*_{R1,R2}.fastq.gz"
+params.reads = "$projectDir/test_isolates/*_{R1,R2}.fastq.gz"
 
 /*
  * STEP 1 - fastqc
