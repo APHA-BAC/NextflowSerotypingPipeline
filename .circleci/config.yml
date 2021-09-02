@@ -6,6 +6,10 @@ executors:
     docker:
       - image: "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"
 
+  nf-machine:
+    machine:
+      image: ubuntu-1604:202007-01
+
 # Run tests and store artifacts
 jobs:
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
@@ -24,13 +28,15 @@ jobs:
           docker push $DOCKER_USER/salmonella-seq:$TAG
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
-  hello:
-    executor: nf-pipeline
+  test_isolates:
+    executor: nf-machine
 
     steps:
       - checkout
-      - run: |
-          echo Jaro is awesome
+      - run:
+          no_output_timeout: 30m
+          command: |
+            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
 workflows:
@@ -38,6 +44,6 @@ workflows:
     jobs:
       - build
 
-      - hello:
+      - test_isolates:
           requires:
             - build

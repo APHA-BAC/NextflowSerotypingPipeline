@@ -27,7 +27,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jre
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jdk
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
@@ -46,6 +45,9 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.
      sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
      ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
+
+# Add conda binaries to PATH
+ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RUN /opt/conda/bin/conda init bash && \
       . ~/.bashrc && \
@@ -140,5 +142,3 @@ RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/c
 RUN cd /home/$USER/nextflow
 
 RUN pip install lxml
-
-#RUN bash ./nextflow run SCE3_pipeline_update.nf

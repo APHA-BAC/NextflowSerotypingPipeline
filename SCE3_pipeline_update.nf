@@ -4,7 +4,7 @@
  * STEP 0 - define the input path to the sequences that will be analysed 
 */ 
 
-params.reads = "/home/WGS_Data/test_isolates/*_{R1,R2}.fastq.gz"
+params.reads = "$projectDir/test_isolates/*_{R1,R2}.fastq.gz"
 
 /*
  * STEP 1 - fastqc
@@ -52,8 +52,7 @@ process shovill {
   
     script:
     """    
-    ####/opt/conda/bin/conda init bash
-    /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    /opt/conda/bin/shovill --ram 7 --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
    > ${sample_id}_2.txt 
    """
