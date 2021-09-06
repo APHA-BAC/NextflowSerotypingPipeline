@@ -36,7 +36,7 @@ jobs:
       - run:
           no_output_timeout: 30m
           command: |
-            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH" NXF_VER=21.04.3 /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
 # Orchestrates the validation tests 
 workflows:
