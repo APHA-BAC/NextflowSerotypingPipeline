@@ -125,7 +125,7 @@ RUN pip install scipy
 # Nextflow
 RUN mkdir /home/$USER/nextflow
 RUN cd /home/$USER/nextflow
-RUN curl -s https://get.nextflow.io | bash
+RUN curl -L0 https://github.com/nextflow-io/nextflow/releases/download/v21.04.1/nextflow-21.04.1-all | bash
 #RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf" --out=/home/$USER/nextflow
 
 RUN mkdir /home/summary
