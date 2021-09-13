@@ -94,7 +94,7 @@ workflows:
             
       - inclusivity:
            requires:
-             - test_isolates
+             - build
            matrix:
              parameters:
                case: ["0", "1", "2", "3"]          
