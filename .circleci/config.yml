@@ -92,7 +92,7 @@ workflows:
           requires:
             - build
             
-        - inclusivity:
+       - inclusivity:
           requires:
             - tinyreads
           matrix:
