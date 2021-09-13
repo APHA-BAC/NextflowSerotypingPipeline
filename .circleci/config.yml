@@ -94,7 +94,7 @@ workflows:
             
       - inclusivity:
            requires:
-             - tinyreads
+             - test_isolates
            matrix:
              parameters:
                case: ["0", "1", "2", "3"]          
