@@ -1,11 +1,11 @@
 version: 2.1
 
 commands:
-  # Run tests under BovTB-nf/tests/jobs/ and store artifacts
+  # Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
   run-test:
     parameters:
       script:
-        description: This test calls 'bash -e tests/jobs/<< script >>'
+        description: This test calls 'bash -e test_isolates/jobs/<< script >>'
         type: string
 
     steps:
@@ -31,9 +31,6 @@ commands:
           echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
           docker push $DOCKER_USER/salmonella-seq:$TAG
 
-
-
-
 # Executor that runs tests in the image produced by the build step
 executors:
   nf-pipeline:
@@ -44,7 +41,7 @@ executors:
     machine:
       image: ubuntu-1604:202007-01
 
-# Run tests and store artifacts
+# Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
 jobs:
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   build:
@@ -56,9 +53,23 @@ jobs:
       - build-and-push:
           tag: $CIRCLE_BRANCH
 
+  deploy: 
+    docker:
+      # Circleci base ubuntu image
+      - image: *build_img
 
+    steps:
+      - build-and-push:
+          tag: latest
 
-
+  inclusivity:
+    executor: nf-pipeline
+    parameters:
+      case:
+        type: string
+    steps:
+      - run-test:
+          script: "inclusivity.bash << parameters.case >>"
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
@@ -81,5 +92,11 @@ workflows:
           requires:
             - build
             
+        - inclusivity:
+          requires:
+            - tinyreads
+          matrix:
+            parameters:
+              case: ["0", "1", "2", "3"]          
             
             
