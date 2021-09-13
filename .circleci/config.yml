@@ -1,5 +1,39 @@
 version: 2.1
 
+commands:
+  # Run tests under BovTB-nf/tests/jobs/ and store artifacts
+  run-test:
+    parameters:
+      script:
+        description: This test calls 'bash -e tests/jobs/<< script >>'
+        type: string
+
+    steps:
+      - run: |
+          cd /NextflowSerotypingPipeline/
+          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
+          bash -e test_isolates/jobs/<< parameters.script >>
+      - store_artifacts:
+          path: /artifacts/
+
+  build-and-push:
+    parameters:
+      tag:
+        description: Tag to push built docker image to
+        type: string
+
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          TAG=$CIRCLE_BRANCH
+          docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
+          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+          docker push $DOCKER_USER/salmonella-seq:$TAG
+
+
+
+
 # Executor that runs tests in the image produced by the build step
 executors:
   nf-pipeline:
@@ -18,14 +52,9 @@ jobs:
       # Circleci base ubuntu image
       - image: &build_img cimg/base:2020.01
 
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: |
-          TAG=$CIRCLE_BRANCH
-          docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
-          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-          docker push $DOCKER_USER/salmonella-seq:$TAG
+
+
+
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
@@ -47,3 +76,6 @@ workflows:
       - test_isolates:
           requires:
             - build
+            
+            
+            
