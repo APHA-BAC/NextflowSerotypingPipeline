@@ -52,6 +52,10 @@ jobs:
       # Circleci base ubuntu image
       - image: &build_img cimg/base:2020.01
 
+    steps:
+      - build-and-push:
+          tag: $CIRCLE_BRANCH
+
 
 
 
