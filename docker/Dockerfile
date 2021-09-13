@@ -32,6 +32,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q gzip
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q rename
 
 # Pipeline
 WORKDIR /NextflowSerotypingPipeline/
