@@ -1,0 +1,5 @@
+serovar,assigned_wgs_cluster_row,ftp_R1,ftp_R2,accession,
+3-Derby,97,ftp.sra.ebi.ac.uk/vol1/run/ERR223/ERR2230776/S00660-16.R1.fastq.gz,ftp.sra.ebi.ac.uk/vol1/run/ERR223/ERR2230776/S00660-16.R2.fastq.gz,ERR2230776,
+3-Infantis,42,ftp.sra.ebi.ac.uk/vol1/run/ERR223/ERR2231037/L01514-15.R1.fastq.gz,ftp.sra.ebi.ac.uk/vol1/run/ERR223/ERR2231037/L01514-15.R2.fastq.gz,ERR2231037,
+3-Typhimurium,57,ftp.sra.ebi.ac.uk/vol1/run/ERR223/ERR2235662/S01353-16.R1.fastq.gz,ftp.sra.ebi.ac.uk/vol1/run/ERR223/ERR2235662/S01353-16.R2.fastq.gz,ERR2235662,
+3-Monophasic Typhimurium,70,ftp.sra.ebi.ac.uk/vol1/run/ERR220/ERR2208776/S02362-16.R1.fastq.gz,ftp.sra.ebi.ac.uk/vol1/run/ERR220/ERR2208776/S02362-16.R2.fastq.gz,ERR2208776,
