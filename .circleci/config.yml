@@ -93,10 +93,10 @@ workflows:
             - build
             
        - inclusivity:
-          requires:
-            - tinyreads
-          matrix:
-            parameters:
-              case: ["0", "1", "2", "3"]          
+           requires:
+             - tinyreads
+           matrix:
+             parameters:
+               case: ["0", "1", "2", "3"]          
             
             
