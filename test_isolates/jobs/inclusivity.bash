@@ -8,7 +8,7 @@
 #%    Tests the nextflow pipeline on a minimal dataset
 
 # Import
-source tests/utils/aliases.bash
+source test_isolates/utils/aliases.bash
 
 # Args
 TESTCASE=$1
