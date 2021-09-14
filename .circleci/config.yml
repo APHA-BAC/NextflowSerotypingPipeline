@@ -83,6 +83,15 @@ jobs:
           command: |
             docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
+
+  inclusivity:
+    executor: nf-machine
+
+    steps:
+      - run:
+          no_output_timeout: 30m
+
+
 # Orchestrates the validation tests 
 workflows:
   validation:
