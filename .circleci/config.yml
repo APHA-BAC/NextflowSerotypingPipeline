@@ -69,8 +69,6 @@ jobs:
       case:
         type: string
     steps:
-      - run:
-          no_output_timeout: 30m    
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
 
@@ -92,9 +90,9 @@ workflows:
     jobs:
       - build
 
-      - test_isolates:
-          requires:
-            - build
+#      - test_isolates:
+#          requires:
+#            - build
             
       - inclusivity:
            requires:
