@@ -71,7 +71,6 @@ jobs:
     steps:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
-          no_output_timeout: 30m
 
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
