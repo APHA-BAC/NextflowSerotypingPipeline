@@ -8,7 +8,7 @@ commands:
         description: This test calls 'bash -e test_isolates/jobs/<< script >>'
         type: string
 
-    steps:
+    steps:    
       - run: |
           cd /NextflowSerotypingPipeline/
           mkdir /WGS_Data/ /WGS_Results/ /artifacts/
@@ -68,6 +68,10 @@ jobs:
     parameters:
       case:
         type: string
+    steps:
+      - checkout
+      - run:
+          no_output_timeout: 30m        
     steps:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
