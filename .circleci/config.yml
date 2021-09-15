@@ -81,8 +81,10 @@ jobs:
         type: string
     steps:
       - run-test:
-          no_output_timeout: 30m
           script: "inclusivity.bash << parameters.case >>"
+      - run:
+          no_output_timeout: 30m
+          
 
 
 # Orchestrates the validation tests 
