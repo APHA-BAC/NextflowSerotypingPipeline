@@ -71,7 +71,6 @@ jobs:
     steps:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
-      - run:
           no_output_timeout: 30m
 
 
