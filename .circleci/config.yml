@@ -81,7 +81,7 @@ jobs:
       case:
         type: string
     steps:
-      - run-test:
+      - run:
           script: "inclusivity.bash << parameters.case >>"
           
 
