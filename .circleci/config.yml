@@ -90,9 +90,9 @@ workflows:
     jobs:
       - build
 
-#      - test_isolates:
-#          requires:
-#            - build
+      - test_isolates:
+          requires:
+            - build
             
       - inclusivity:
            requires:
