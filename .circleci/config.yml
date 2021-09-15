@@ -63,19 +63,6 @@ jobs:
       - build-and-push:
           tag: latest
 
-  inclusivity:
-    executor: nf-pipeline
-    parameters:
-      case:
-        type: string
-    steps:
-      - checkout
-      - run:
-          no_output_timeout: 30m        
-      - run-test:
-          script: "inclusivity.bash << parameters.case >>"
-
-
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
     executor: nf-machine
@@ -86,6 +73,15 @@ jobs:
           no_output_timeout: 30m
           command: |
             docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+
+  inclusivity:
+    executor: nf-pipeline
+    parameters:
+      case:
+        type: string
+    steps:
+      - run-test:
+          script: "inclusivity.bash << parameters.case >>"
 
 
 # Orchestrates the validation tests 
