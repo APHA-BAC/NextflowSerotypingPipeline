@@ -77,14 +77,16 @@ jobs:
   inclusivity:
     executor: nf-pipeline
     
+    steps:
+      - checkout
+      - run:
+          no_output_timeout: 30m
+    
     
     parameters:
       case:
         type: string
     steps:
-      - checkout    
-      - run:      
-          no_output_timeout: 30m    
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
           
