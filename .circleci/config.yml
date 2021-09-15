@@ -90,16 +90,13 @@ workflows:
     jobs:
       - build
 
-    steps:
-      - checkout
-      - run:
-          no_output_timeout: 30m
-
       - test_isolates:
           requires:
             - build
             
       - inclusivity:
+           no_output_timeout: 30m
+
            requires:
              - build
            matrix:
