@@ -76,13 +76,7 @@ jobs:
 
   inclusivity:
     executor: nf-pipeline
-    
-    steps:
-      - checkout
-      - run:
-          no_output_timeout: 30m
-    
-    
+        
     parameters:
       case:
         type: string
