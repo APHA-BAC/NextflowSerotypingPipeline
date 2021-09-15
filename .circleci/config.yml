@@ -71,21 +71,12 @@ jobs:
     steps:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
+      - run:
+          no_output_timeout: 30m
 
 
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
-    executor: nf-machine
-
-    steps:
-      - checkout
-      - run:
-          no_output_timeout: 30m
-          command: |
-            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
-
-
-  inclusivity:
     executor: nf-machine
 
     steps:
