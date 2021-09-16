@@ -84,14 +84,17 @@ jobs:
       - checkout
       - run:
           no_output_timeout: 30m
+          script: "inclusivity.bash << parameters.case >>"
+
+
 #          command: |
 #            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
     
     
     
-      - run-test:
-          script: "inclusivity.bash << parameters.case >>"
+#      - run-test:
+#          script: "inclusivity.bash << parameters.case >>"
          
 
 
