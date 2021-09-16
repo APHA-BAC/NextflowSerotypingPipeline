@@ -31,7 +31,6 @@ commands:
           docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
           echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
           docker push $DOCKER_USER/salmonella-seq:$TAG
-
 # Executor that runs tests in the image produced by the build step
 executors:
   nf-pipeline:
@@ -83,7 +82,11 @@ jobs:
     steps:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
-          
+
+          steps:    
+            - run:
+                no_output_timeout: 30m
+         
 
 
 # Orchestrates the validation tests 
@@ -101,6 +104,6 @@ workflows:
              - build
            matrix:
              parameters:
-               case: ["0", "1", "2", "3"]          
+               case: ["0", "1", "2", "3"]      
          
             
