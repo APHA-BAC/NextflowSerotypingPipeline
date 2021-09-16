@@ -1,38 +1,5 @@
 version: 2.1
 
-commands:
-  # Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
-#  run-test:
-#    parameters:
-#      script:
-#        description: This test calls 'bash -e test_isolates/jobs/<< script >>'
-#        type: string
-
-#    steps:    
-#      - run: |
-#          cd /NextflowSerotypingPipeline/
-#          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
-#          bash -e test_isolates/jobs/<< parameters.script >>
-
-#      - store_artifacts:
-#          path: /artifacts/
-
-  build-and-push:
-    parameters:
-      tag:
-        description: Tag to push built docker image to
-        type: string
-
-    steps:    
-      - checkout
-      - setup_remote_docker      
-      - run: |
-          TAG=$CIRCLE_BRANCH
-          docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
-          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-          docker push $DOCKER_USER/salmonella-seq:$TAG
- 
-
 # Executor that runs tests in the image produced by the build step
 executors:
   nf-pipeline:
@@ -43,7 +10,7 @@ executors:
     machine:
       image: ubuntu-1604:202007-01
 
-# Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
+# Run tests and store artifacts
 jobs:
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   build:
@@ -52,28 +19,23 @@ jobs:
       - image: &build_img cimg/base:2020.01
 
     steps:
-      - build-and-push:
-          tag: $CIRCLE_BRANCH
-
-  deploy: 
-    docker:
-      # Circleci base ubuntu image
-      - image: *build_img
-
-    steps:
-      - build-and-push:
-          tag: latest
-
+      - checkout
+      - setup_remote_docker
+      - run: |
+          TAG=$CIRCLE_BRANCH
+          docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
+          echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+          docker push $DOCKER_USER/salmonella-seq:$TAG
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
     executor: nf-machine
+
     steps:
       - checkout
       - run:
           no_output_timeout: 30m
           command: |
             docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
-
 
   inclusivity:
     executor: nf-pipeline        
@@ -90,6 +52,85 @@ jobs:
       - run:
           command: bash -e /NextflowSerotypingPipeline/test_isolates/jobs/inclusivity.bash
           no_output_timeout: 30m
+
+
+
+
+#commands:
+  # Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
+#  run-test:
+#    parameters:
+#      script:
+#        description: This test calls 'bash -e test_isolates/jobs/<< script >>'
+#        type: string
+
+#    steps:    
+#      - run: |
+#          cd /NextflowSerotypingPipeline/
+#          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
+#          bash -e test_isolates/jobs/<< parameters.script >>
+
+#      - store_artifacts:
+#          path: /artifacts/
+
+#  build-and-push:
+#    parameters:
+#      tag:
+#        description: Tag to push built docker image to
+#        type: string
+
+ #   steps:    
+ #     - checkout
+ #     - setup_remote_docker      
+ #     - run: |
+ #         TAG=$CIRCLE_BRANCH
+ #         docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
+ #         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+ #         docker push $DOCKER_USER/salmonella-seq:$TAG
+ 
+
+# Executor that runs tests in the image produced by the build step
+#executors:
+#  nf-pipeline:
+#    docker:
+#      - image: "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"
+
+ # nf-machine:
+ #   machine:
+ #     image: ubuntu-1604:202007-01
+
+# Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
+#jobs:
+  # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
+#  build:
+#    docker:
+      # Circleci base ubuntu image
+#      - image: &build_img cimg/base:2020.01
+
+#    steps:
+#      - build-and-push:
+#          tag: $CIRCLE_BRANCH
+
+#  deploy: 
+#    docker:
+      # Circleci base ubuntu image
+#      - image: *build_img
+
+#    steps:
+#      - build-and-push:
+#          tag: latest
+
+  # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
+ # test_isolates:
+ #   executor: nf-machine
+ #   steps:
+ #     - checkout
+ #     - run:
+ #         no_output_timeout: 30m
+ #         command: |
+ #           docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+
+
 
 
 
