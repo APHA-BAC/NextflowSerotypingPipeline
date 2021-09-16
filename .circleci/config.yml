@@ -14,10 +14,6 @@ commands:
           mkdir /WGS_Data/ /WGS_Results/ /artifacts/
           bash -e test_isolates/jobs/<< parameters.script >>
 
-      - run:
-          no_output_timeout: 30m
-
-
       - store_artifacts:
           path: /artifacts/
 
@@ -85,6 +81,15 @@ jobs:
       case:
         type: string
     steps:
+      - checkout
+      - run:
+          no_output_timeout: 30m
+          command: |
+            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+
+    
+    
+    
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
          
