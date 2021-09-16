@@ -13,7 +13,11 @@ commands:
           cd /NextflowSerotypingPipeline/
           mkdir /WGS_Data/ /WGS_Results/ /artifacts/
           bash -e test_isolates/jobs/<< parameters.script >>
-          
+
+      - run:
+          no_output_timeout: 30m
+
+
       - store_artifacts:
           path: /artifacts/
 
@@ -31,6 +35,7 @@ commands:
           docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
           echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
           docker push $DOCKER_USER/salmonella-seq:$TAG
+
 # Executor that runs tests in the image produced by the build step
 executors:
   nf-pipeline:
@@ -96,10 +101,6 @@ workflows:
             - build
             
       - inclusivity:
-           steps:
-             - run:
-                 no_output_timeout: 30m
-
            requires:
              - build
            matrix:
