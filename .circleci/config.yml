@@ -82,9 +82,6 @@ jobs:
     steps:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
-
-      - run:
-          no_output_timeout: 30m
          
 
 
@@ -99,6 +96,10 @@ workflows:
             - build
             
       - inclusivity:
+           steps:
+             - run:
+                 no_output_timeout: 30m
+
            requires:
              - build
            matrix:
