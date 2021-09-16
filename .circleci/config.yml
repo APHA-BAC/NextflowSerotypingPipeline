@@ -21,9 +21,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: 
-          no_output_timeout: 30m
-          command: |
+      - run: |
           TAG=$CIRCLE_BRANCH
           docker build -t $DOCKER_USER/salmonella-seq:$TAG -f ./docker/Dockerfile .
           echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
