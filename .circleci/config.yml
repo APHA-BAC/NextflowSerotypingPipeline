@@ -83,7 +83,7 @@ jobs:
       - run: |
           cd /NextflowSerotypingPipeline/
           mkdir /WGS_Data/ /WGS_Results/ /artifacts/
-          bash -e test_isolates/jobs/<< parameters.script >>
+#         bash -e test_isolates/jobs/<< parameters.script >>
 
 
       - run:
