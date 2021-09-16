@@ -80,6 +80,12 @@ jobs:
       case:
         type: string
     steps:
+      - run: |
+          cd /NextflowSerotypingPipeline/
+          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
+          bash -e test_isolates/jobs/<< parameters.script >>
+
+
       - run:
           command: bash -e /NextflowSerotypingPipeline/test_isolates/jobs/inclusivity.bash
           no_output_timeout: 30m
