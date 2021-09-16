@@ -14,8 +14,8 @@ commands:
 #          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
 #          bash -e test_isolates/jobs/<< parameters.script >>
 
-      - store_artifacts:
-          path: /artifacts/
+#      - store_artifacts:
+#          path: /artifacts/
 
   build-and-push:
     parameters:
