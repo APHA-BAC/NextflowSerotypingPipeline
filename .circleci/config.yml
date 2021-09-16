@@ -2,17 +2,17 @@ version: 2.1
 
 commands:
   # Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
-  run-test:
-    parameters:
-      script:
-        description: This test calls 'bash -e test_isolates/jobs/<< script >>'
-        type: string
+#  run-test:
+#    parameters:
+#      script:
+#        description: This test calls 'bash -e test_isolates/jobs/<< script >>'
+#        type: string
 
-    steps:    
-      - run: |
-          cd /NextflowSerotypingPipeline/
-          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
-          bash -e test_isolates/jobs/<< parameters.script >>
+#    steps:    
+#      - run: |
+#          cd /NextflowSerotypingPipeline/
+#          mkdir /WGS_Data/ /WGS_Results/ /artifacts/
+#          bash -e test_isolates/jobs/<< parameters.script >>
 
       - store_artifacts:
           path: /artifacts/
