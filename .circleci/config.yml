@@ -23,9 +23,7 @@ commands:
         description: Tag to push built docker image to
         type: string
 
-    steps:
-      - no_output_timeout: 30m
-    
+    steps:    
       - checkout
       - setup_remote_docker
       - run: |
@@ -83,7 +81,7 @@ jobs:
         type: string
     steps:
       - run-test:
-          script: "inclusivity.bash << parameters.case >>"
+          command: "inclusivity.bash << parameters.case >>"
 
 
 
