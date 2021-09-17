@@ -48,7 +48,7 @@ jobs:
     docker:
       # Circleci base ubuntu image
       - image: &build_img cimg/base:2020.01
-
+      
     steps:
       - build-and-push:
           tag: $CIRCLE_BRANCH
@@ -65,16 +65,15 @@ jobs:
   # Docker image containing the nextflow pipeline $CIRCLE_BRANCH
   test_isolates:
     executor: nf-machine
-
     steps:
       - checkout
       - run:
           no_output_timeout: 30m
           command: |
             docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+
   inclusivity:
-    executor: nf-pipeline
-        
+    executor: nf-pipeline        
     parameters:
       case:
         type: string
@@ -82,8 +81,6 @@ jobs:
       - run-test:
           script: "inclusivity.bash << parameters.case >>"
           
-
-
 # Orchestrates the validation tests 
 workflows:
   validation:
