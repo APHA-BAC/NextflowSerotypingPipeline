@@ -151,6 +151,6 @@ workflows:
              - build
            matrix:
              parameters:
-               case: ["0", "1", "2", "3"]      
+               case: ["0", "1", "2"]      
          
             
