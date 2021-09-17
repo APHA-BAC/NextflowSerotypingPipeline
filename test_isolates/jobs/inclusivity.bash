@@ -13,8 +13,8 @@ source /NextflowSerotypingPipeline/test_isolates/utils/aliases.bash
 # Args
 TESTCASE=$1
 
-serovar=$(/NextflowSerotypingPipeline/test_isolates/utils/print_csv_value './NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE serovar)
-accession=$(/NextflowSerotypingPipeline/test_isolates/utils/print_csv_value './NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE accession)
+serovar=$(/NextflowSerotypingPipeline/test_isolates/utils/print_csv_value.py './NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE serovar)
+accession=$(/NextflowSerotypingPipeline/test_isolates/utils/print_csv_value.py './NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE accession)
 
 # Fetch SRA Data
 prefetch $accession -O ./
@@ -27,7 +27,7 @@ mv ${accession}_1.fastq.gz /WGS_Data/${accession}_R1.fastq.gz
 mv ${accession}_2.fastq.gz /WGS_Data/${accession}_R2.fastq.gz
 
 # Run nextflow
-/NextflowSerotypingPipeline/test_isolates/utils/nextflowtest
+/NextflowSerotypingPipeline/test_isolates/utils/nextflowtest.bash
 
 # Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
