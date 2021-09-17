@@ -52,7 +52,7 @@ jobs:
 
 
       - run:
-          command: bash -e /NextflowSerotypingPipeline/test_isolates/jobs/inclusivity.bash
+          command: sudo bash -e /NextflowSerotypingPipeline/test_isolates/jobs/inclusivity.bash
           no_output_timeout: 30m
 
 
