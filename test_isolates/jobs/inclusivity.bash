@@ -13,8 +13,8 @@ source /NextflowSerotypingPipeline/test_isolates/utils/aliases.bash
 # Args
 TESTCASE=$1
 
-serovar=$(print_csv_value '/NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE serovar)
-accession=$(print_csv_value '/NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE accession)
+serovar=$(print_csv_value './NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE serovar)
+accession=$(print_csv_value './NextflowSerotypingPipeline/test_isolates/data/inclusivity_cases.csv' $TESTCASE accession)
 
 # Fetch SRA Data
 prefetch $accession -O ./
