@@ -29,6 +29,23 @@ mv ${accession}_2.fastq.gz /WGS_Data/${accession}_R2.fastq.gz
 # Run nextflow
 nextflowtest
 
+
+#check dir contents
+for file in /NextflowSerotypingPipeline/WGS_Data/*; do
+  echo "${file##*/}"
+done
+
+for file in /NextflowSerotypingPipeline/WGS_Results/*; do
+  echo "${file##*/}"
+done
+
+for entry in "/NextflowSerotypingPipeline/WGS_Results"/*
+do
+  echo "$entry"
+done
+#check dir contents
+
+
 # Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
 assert_first_csv_row $WGS_CLUSTER_CSV "Outcome" "Pass"
