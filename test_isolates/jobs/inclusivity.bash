@@ -113,6 +113,18 @@ for entry in "/home/$USER/WGS_Results/test_isolates"/*
 do
   echo "$entry"
 done
+
+
+for entry in "/home/WGS_Results/test_isolates"/*
+do
+  echo "$entry"
+done
+
+
+for entry in "/home/WGS_Results/test_isolates/ERR2230776"/*
+do
+  echo "$entry"
+done
 #check dir contents
 
 
