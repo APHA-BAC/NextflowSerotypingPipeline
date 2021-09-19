@@ -43,6 +43,76 @@ for entry in "/NextflowSerotypingPipeline/WGS_Results"/*
 do
   echo "$entry"
 done
+
+
+for file in /WGS_Data/*; do
+  echo "${file##*/}"
+done
+
+for file in /WGS_Results/*; do
+  echo "${file##*/}"
+done
+
+for entry in "/WGS_Results"/*
+do
+  echo "$entry"
+done
+
+
+for file in /WGS_Data/test_isolates/*; do
+  echo "${file##*/}"
+done
+
+for file in /WGS_Results/test_isolates/*; do
+  echo "${file##*/}"
+done
+
+for entry in "/WGS_Results/test_isolates"/*
+do
+  echo "$entry"
+done
+
+
+for file in /home/WGS_Data/*; do
+  echo "${file##*/}"
+done
+
+for file in /home/WGS_Results/*; do
+  echo "${file##*/}"
+done
+
+for entry in "/home/WGS_Results"/*
+do
+  echo "$entry"
+done
+
+
+for file in /home/$USER/WGS_Data/*; do
+  echo "${file##*/}"
+done
+
+for file in /home/$USER/WGS_Results/*; do
+  echo "${file##*/}"
+done
+
+for entry in "/home/$USER/WGS_Results"/*
+do
+  echo "$entry"
+done
+
+
+for file in /home/$USER/WGS_Data/test_isolates*; do
+  echo "${file##*/}"
+done
+
+for file in /home/$USER/WGS_Results/test_isolates*; do
+  echo "${file##*/}"
+done
+
+for entry in "/home/$USER/WGS_Results/test_isolates"/*
+do
+  echo "$entry"
+done
 #check dir contents
 
 
