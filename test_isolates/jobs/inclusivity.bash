@@ -153,9 +153,21 @@ do
 done
 
 find  /home/ -name '*SummaryTable*'
+find  /home/ -name '*.csv*'
+
 find  /WGS_Results/ -name '*SummaryTable*'
 find  /NextflowSerotypingPipeline/ -name '*SummaryTable*'
 find  /test_isolates/ -name '*SummaryTable*'
+find  /NextflowSerotypingPipeline/test_isolates/ -name '*SummaryTable*'
+find  /NextflowSerotypingPipeline/WGS_Results/ -name '*SummaryTable*'
+find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
+find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
+
+find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Table*'
+find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Summary*'
+find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
+
+find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
 
 
 #check dir contents
