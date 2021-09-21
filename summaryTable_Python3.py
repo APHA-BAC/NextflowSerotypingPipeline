@@ -101,19 +101,28 @@ def GCcontent(fName):
 
 #### HACK: passing directory in as input ###
 
-input_dir = sys.argv[1]
+#input_dir = sys.argv[1]
 
+#pathoData = glob.glob(input_dir + "*")
+#pathoData = str(pathoData[0])
+#print(pathoData)
+
+#pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
+#runName = pathoData.split(os.sep)[-1]
+#dirs = filterDirs(pathoResults)
 ###
 
-pathoData = glob.glob(input_dir + "*")
+pathoData = glob.glob("/home/WGS_Data/*")
 pathoData = str(pathoData[0])
-print(pathoData)
 
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
 runName = pathoData.split(os.sep)[-1]
 dirs = filterDirs(pathoResults)
+
+print(pathoData)
 print(pathoResults)
 print(dirs)
+
 
 tabo = [["StrainID", "Consensus", "#ReadsR1", "GC%R1", "R1Kmerid", "ContaminationFlag", "MOST", "Most_light", "st", "MLST",
          "MLST mean cov", "SeqSero", "SS comment", "N50", "serogroup", "serovar", "serovar_antigen", "serovar_cgmlst", "vaccine", "mono", "sseJ"]]
