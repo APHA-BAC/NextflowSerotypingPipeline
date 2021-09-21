@@ -34,57 +34,68 @@ nextflowtest
 for file in /NextflowSerotypingPipeline/WGS_Data/*; do
   echo "${file##*/}"
 done
+#*
 
 for file in /NextflowSerotypingPipeline/WGS_Results/*; do
   echo "${file##*/}"
 done
+#*
 
 for entry in "/NextflowSerotypingPipeline/WGS_Results"/*
 do
   echo "$entry"
 done
-
+#/NextflowSerotypingPipeline/WGS_Results/*
 
 for file in /WGS_Data/*; do
   echo "${file##*/}"
 done
+#ERR2235_R1...fastq.gz
+#ERR2235_R2...fastq.gz
 
 for file in /WGS_Results/*; do
   echo "${file##*/}"
 done
+#*
 
 for entry in "/WGS_Results"/*
 do
   echo "$entry"
 done
-
+#/WGS_Results/*
 
 for file in /WGS_Data/test_isolates/*; do
   echo "${file##*/}"
 done
+#*
 
 for file in /WGS_Results/test_isolates/*; do
   echo "${file##*/}"
 done
+#*
 
 for entry in "/WGS_Results/test_isolates"/*
 do
   echo "$entry"
 done
+#/WGS_Results/test_isolates/*
 
 
 for file in /home/WGS_Data/*; do
   echo "${file##*/}"
 done
+#test_isolates
 
 for file in /home/WGS_Results/*; do
   echo "${file##*/}"
 done
+#test_isolates
 
 for entry in "/home/WGS_Results"/*
 do
   echo "$entry"
 done
+#/home/WGS_Results/test_isolates
 
 
 for file in /home/$USER/WGS_Data/*; do
@@ -140,6 +151,11 @@ for entry in "/home/WGS_Results/test_isolates/ERR2208776"/*
 do
   echo "$entry"
 done
+
+find  /home/ -name '*SummaryTable*'
+find  /WGS_Results/ -name '*SummaryTable*'
+find  /NextflowSerotypingPipeline/ -name '*SummaryTable*'
+find  /test_isolates/ -name '*SummaryTable*'
 
 
 #check dir contents
