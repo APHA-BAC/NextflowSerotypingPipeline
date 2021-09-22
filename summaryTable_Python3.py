@@ -99,9 +99,12 @@ def GCcontent(fName):
 ##########################
 ##########################
 
+
 #### HACK: passing directory in as input ###
 
 input_dir = sys.argv[1]
+
+###
 
 pathoData = glob.glob(input_dir + "*")
 pathoData = str(pathoData[0])
@@ -110,7 +113,7 @@ print(pathoData)
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
 runName = pathoData.split(os.sep)[-1]
 dirs = filterDirs(pathoResults)
-###
+
 
 #pathoData = glob.glob("/home/*/WGS_Data/*")
 #pathoData = str(pathoData[0])
@@ -118,6 +121,7 @@ dirs = filterDirs(pathoResults)
 #runName = pathoData.split(os.sep)[-1]
 #dirs = filterDirs(pathoResults)
 
+print (input_dir)
 print(pathoData)
 print(pathoResults)
 print(dirs)
