@@ -112,7 +112,7 @@ def GCcontent(fName):
 #dirs = filterDirs(pathoResults)
 ###
 
-pathoData = glob.glob("/home/WGS_Data/*")
+pathoData = glob.glob("/home/test_isolates/WGS_Data/*")
 pathoData = str(pathoData[0])
 
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
