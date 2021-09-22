@@ -120,11 +120,10 @@ dirs = filterDirs(pathoResults)
 #pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
 #runName = pathoData.split(os.sep)[-1]
 #dirs = filterDirs(pathoResults)
-
-print (input_dir)
-print(pathoData)
-print(pathoResults)
-print(dirs)
+#print (input_dir)
+#print(pathoData)
+#print(pathoResults)
+#print(dirs)
 
 
 tabo = [["StrainID", "Consensus", "#ReadsR1", "GC%R1", "R1Kmerid", "ContaminationFlag", "MOST", "Most_light", "st", "MLST",
