@@ -103,9 +103,9 @@ def GCcontent(fName):
 
 input_dir = sys.argv[1]
 
-#print (len(sys.argv))
-#print (sys.argv[0])
-#print (sys.argv[1])
+print (len(sys.argv))
+print (sys.argv[0])
+print (sys.argv[1])
 #print (input_dir)
 
 ###
