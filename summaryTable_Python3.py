@@ -101,7 +101,10 @@ def GCcontent(fName):
 
 #### HACK: passing directory in as input ###
 
-input_dir = sys.argv[1]
+#input_dir = sys.argv[1]
+
+input_dir = sys.argv[0]
+
 
 print (len(sys.argv))
 print (sys.argv[0])
