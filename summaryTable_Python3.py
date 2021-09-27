@@ -111,6 +111,7 @@ print (input_dir)
 ###
 
 pathoData = glob.glob(input_dir + "*")
+print(pathoData)
 pathoData = str(pathoData[0])
 print(pathoData)
 
