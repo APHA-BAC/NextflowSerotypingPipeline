@@ -103,24 +103,24 @@ def GCcontent(fName):
 
 input_dir = sys.argv[1]
 
-print (len(sys.argv))
-print (sys.argv[0])
-print (sys.argv[1])
-print (input_dir)
+#print (len(sys.argv))
+#print (sys.argv[0])
+#print (sys.argv[1])
+#print (input_dir)
 
 ###
 
 pathoData = glob.glob(input_dir + "*")
-print(pathoData)
+#print(pathoData)
 pathoData = str(pathoData[0])
-print(pathoData)
+#print(pathoData)
 
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
-print(pathoResults)
+#print(pathoResults)
 runName = pathoData.split(os.sep)[-1]
-print(runName)
+#print(runName)
 dirs = filterDirs(pathoResults)
-print(dirs)
+#print(dirs)
 
 
 tabo = [["StrainID", "Consensus", "#ReadsR1", "GC%R1", "R1Kmerid", "ContaminationFlag", "MOST", "Most_light", "st", "MLST",
