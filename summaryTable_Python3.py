@@ -103,6 +103,12 @@ def GCcontent(fName):
 
 input_dir = sys.argv[1]
 
+print (len(sys.argv))
+print (sys.argv[0])
+print (sys.argv[1])
+print (sys.argv[2])
+print (input_dir)
+
 ###
 
 pathoData = glob.glob(input_dir + "*")
@@ -110,6 +116,7 @@ pathoData = str(pathoData[0])
 print(pathoData)
 
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
+print(pathoResults)
 runName = pathoData.split(os.sep)[-1]
 dirs = filterDirs(pathoResults)
 
