@@ -117,7 +117,9 @@ print(pathoData)
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
 print(pathoResults)
 runName = pathoData.split(os.sep)[-1]
+print(runName)
 dirs = filterDirs(pathoResults)
+print(dirs)
 
 
 tabo = [["StrainID", "Consensus", "#ReadsR1", "GC%R1", "R1Kmerid", "ContaminationFlag", "MOST", "Most_light", "st", "MLST",
