@@ -167,10 +167,14 @@ done
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Summary*'
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
 
-#find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
+
+find  /NextflowSerotypingPipeline/work/ -name '*Table*'
+find  /NextflowSerotypingPipeline/work/ -name '*Summary*'
+find  /NextflowSerotypingPipeline/work/ -name '*.csv*'
+
 #check dir contents
 
-python /NextflowSerotypingPipeline/summaryTable_Python3.py 
+
 
 # Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
