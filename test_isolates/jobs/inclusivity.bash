@@ -159,6 +159,7 @@ done
 #find  /NextflowSerotypingPipeline/ -name '*SummaryTable*'
 #find  /test_isolates/ -name '*SummaryTable*'
 #find  /NextflowSerotypingPipeline/test_isolates/ -name '*SummaryTable*'
+#find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*SummaryTable*'
 #find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
 #find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
@@ -166,7 +167,6 @@ done
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Table*'
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Summary*'
 
-find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
 find  /WGS_Results/ -name '*.csv*'
 find  /home/WGS_Results/test_isolates/ -name '*test_isolates*'
 find  /home/WGS_Results/test_isolates/ -name '*SummaryTable*'
