@@ -94,23 +94,18 @@ def GCcontent(fName):
     else:
         return val, round(100*float(Cs+Gs)/allb, 2)
 
-
+    
 ##########################
 ##########################
 ##########################
 
 #### HACK: passing directory in as input ###
-
-#input_dir = sys.argv[1]
-
-input_dir = sys.argv[0]
-
+input_dir = sys.argv[1]
 
 print (len(sys.argv))
 print (sys.argv[0])
 print (sys.argv[1])
 print (input_dir)
-
 ###
 
 pathoData = glob.glob(input_dir + "*")
