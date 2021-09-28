@@ -152,6 +152,13 @@ do
   echo "$entry"
 done
 
+for entry in "/WGS_Results"/*
+do
+  echo "$entry"
+done
+
+
+
 #find  /home/ -name '*SummaryTable*'
 #find  /home/ -name '*.csv*'
 
