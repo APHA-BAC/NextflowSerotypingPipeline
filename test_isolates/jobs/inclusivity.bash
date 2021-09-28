@@ -165,10 +165,12 @@ done
 
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Table*'
 #find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Summary*'
-#find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
 
+find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
+find  /WGS_Results/ -name '*.csv*'
 find  /home/WGS_Results/test_isolates/ -name '*test_isolates*'
 find  /home/WGS_Results/test_isolates/ -name '*SummaryTable*'
+find  /home/WGS_Results/test_isolates/ -name '*.csv*'
 find  /NextflowSerotypingPipeline/work/ -name '*Table*'
 find  /NextflowSerotypingPipeline/work/ -name '*Summary*'
 find  /NextflowSerotypingPipeline/work/ -name '*.csv*'
