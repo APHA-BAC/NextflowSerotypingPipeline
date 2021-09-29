@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.1 
 
 commands:
   # Run tests under NextflowSerotypingPipeline/test_isolates/jobs/ and store artifacts
