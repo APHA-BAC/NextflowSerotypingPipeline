@@ -152,7 +152,7 @@ do
   echo "$entry"
 done
 
-for entry in "/WGS_Results"/*
+for entry in "/home/WGS_Results/test_isolates"/*
 do
   echo "$entry"
 done
@@ -183,7 +183,7 @@ done
 #find  /NextflowSerotypingPipeline/work/ -name '*.csv*'
 #check dir contents
 
-python /NextflowSerotypingPipeline/summaryTable_Python3.py \$PWD  
+#python /NextflowSerotypingPipeline/summaryTable_Python3.py \$PWD  
 
 # Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
