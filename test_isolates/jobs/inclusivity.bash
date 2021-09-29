@@ -132,6 +132,11 @@ nextflowtest
 #done
 
 
+for entry in "/WGS_Data"/*
+do
+  echo "$entry"
+done
+
 for entry in "/home/WGS_Data"/*
 do
   echo "$entry"
