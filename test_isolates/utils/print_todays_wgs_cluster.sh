@@ -9,5 +9,6 @@
 
 echo /home/WGS_Results/test_isolates/test_isolates_SummaryTable.csv
 
+
 #TODAY=`date +%d%b%y`
 #echo /WGS_Results/Results_reads_${TODAY}/reads_AssignedWGSCluster_${TODAY}.csv
