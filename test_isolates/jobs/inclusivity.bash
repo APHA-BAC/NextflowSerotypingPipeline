@@ -132,6 +132,48 @@ nextflowtest
 #done
 
 
+for entry in "/home/WGS_Data"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/test_isolates"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/test_isolates/ERR2230776"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/test_isolates/ERR2231037"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/test_isolates/ERR2235662"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/test_isolates/ERR2208776"/*
+do
+  echo "$entry"
+done
+
+
+
+for entry in "/home/WGS_Results"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Results/test_isolates"/*
+do
+  echo "$entry"
+done
+
 for entry in "/home/WGS_Results/test_isolates/ERR2230776"/*
 do
   echo "$entry"
@@ -152,10 +194,7 @@ do
   echo "$entry"
 done
 
-for entry in "/home/WGS_Results/test_isolates"/*
-do
-  echo "$entry"
-done
+
 
 
 
