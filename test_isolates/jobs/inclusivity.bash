@@ -29,7 +29,7 @@ mv ${accession}_2.fastq.gz /WGS_Data/${accession}_R2.fastq.gz
 # Run nextflow
 nextflowtest
 
-
+ 
 #check dir contents
 #for file in /NextflowSerotypingPipeline/WGS_Data/*; do
 #  echo "${file##*/}"
