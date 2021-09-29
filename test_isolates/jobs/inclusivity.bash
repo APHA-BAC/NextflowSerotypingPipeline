@@ -89,7 +89,7 @@ nextflowtest
 #for file in /home/WGS_Results/*; do
 #  echo "${file##*/}"
 #done
-#test_isolates
+#test_isolates 
 
 #for entry in "/home/WGS_Results"/*
 #do
