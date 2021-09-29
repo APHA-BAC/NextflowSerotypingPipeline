@@ -465,7 +465,7 @@ for diro in dirs:
 
     tabo = tabo+[[strainName, consensus, readsR1, GCR1, R1Kmerid, kmeridFlag, mostType, light, st, mlst,
                   meanMLSTCov, seqseroType, comment, N50, serogroup, serovar, serovar_antigen, serovar_cgmlst, vaccine, mono, sseJ]]
-    #writeCSV(os.path.join("/fake_dir/fake_dirA/", "fake_test_isolates"+"_SummaryTable.csv"), tabo)
+    writeCSV(os.path.join("/fake_dir/fake_dirA/", "fake_test_isolates"+"_SummaryTable.csv"), tabo)
     
     
-    writeCSV(os.path.join(pathoResults, runName+"_SummaryTable.csv"), tabo)
+    #writeCSV(os.path.join(pathoResults, runName+"_SummaryTable.csv"), tabo)
