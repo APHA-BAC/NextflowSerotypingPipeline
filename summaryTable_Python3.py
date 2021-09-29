@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Javier Nunez, CSU, APHA
+# Javier Nunez, CSU, APHA 
 # This script extraction the results from respective pipeline programs and presents them in a summary table
 
 import csv
