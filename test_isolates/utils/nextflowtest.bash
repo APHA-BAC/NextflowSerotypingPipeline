@@ -9,5 +9,5 @@
 
 /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf \
 --outdir "/WGS_Results/" \
---reads "/WGS_Data/*_{R1,R2}.fastq.gz" \
+--reads "/home/WGS_Data/test_isolates/*_{R1,R2}.fastq.gz" \
 -with-report /artifacts/report.html
