@@ -276,7 +276,7 @@ done
 #find  /NextflowSerotypingPipeline/work/ -name '*.csv*'
 #check dir contents
 
-#python /NextflowSerotypingPipeline/summaryTable_Python3.py \$PWD  
+python /NextflowSerotypingPipeline/summaryTable_Python3.py  
 
 # Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
