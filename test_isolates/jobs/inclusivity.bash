@@ -23,8 +23,8 @@ rm ./$accession/*.sra
 rm -r ./$accession
 
 gzip ${accession}_1.fastq ${accession}_2.fastq
-mv ${accession}_1.fastq.gz /WGS_Data/${accession}_R1.fastq.gz
-mv ${accession}_2.fastq.gz /WGS_Data/${accession}_R2.fastq.gz
+mv ${accession}_1.fastq.gz /home/WGS_Data/test_isolates/${accession}_R1.fastq.gz
+mv ${accession}_2.fastq.gz /home/WGS_Data/test_isolates/${accession}_R2.fastq.gz
 
 # Run nextflow
 nextflowtest
