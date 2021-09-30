@@ -136,6 +136,26 @@ do
   echo "$entry"
 done
 
+for entry in "/home/WGS_Data/TestIsolates/ERR2230776"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/TestIsolates/ERR2231037"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/TestIsolates/ERR2235662"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Data/TestIsolates/ERR2208776"/*
+do
+  echo "$entry"
+done
+
 for entry in "/WGS_Data"/*
 do
   echo "$entry"
@@ -172,6 +192,31 @@ do
 done
 
 
+
+for entry in "/home/WGS_Results/TestIsolates"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Results/TestIsolates/ERR2230776"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Results/TestIsolates/ERR2231037"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Results/TestIsolates/ERR2235662"/*
+do
+  echo "$entry"
+done
+
+for entry in "/home/WGS_Results/TestIsolates/ERR2208776"/*
+do
+  echo "$entry"
+done
 
 for entry in "/home/WGS_Results"/*
 do
