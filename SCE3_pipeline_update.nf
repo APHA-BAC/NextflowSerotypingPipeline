@@ -245,8 +245,7 @@ process srst2 {
     else 
     > ${sample_id}_8.txt
     fi
-        """
-    
+        """    
 }
 
 
