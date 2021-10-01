@@ -6,6 +6,7 @@
 
 params.reads = "/home/WGS_Data/TestIsolates/*_{R1,R2}.fastq.gz"
 
+
 /*
  * STEP 1 - fastqc
 */ 
