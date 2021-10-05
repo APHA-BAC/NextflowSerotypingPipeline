@@ -134,8 +134,8 @@ RUN mkdir /home/summary
 RUN cd /home/summary
 RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_Python3.py
 
-RUN mkdir /home/WGS_Data/TestIsolates
-RUN mkdir /home/WGS_Results/TestIsolates
+RUN mkdir /home/WGS_Data
+RUN mkdir /home/WGS_Results
 
 RUN pip install lxml
 
