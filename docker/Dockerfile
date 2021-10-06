@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-################## METADATA ##########################
+################## METADATA ###########################
 
 LABEL base.image=ubuntu:20.04
 LABEL software="Salmonella Serotyping Pipeline Image"
