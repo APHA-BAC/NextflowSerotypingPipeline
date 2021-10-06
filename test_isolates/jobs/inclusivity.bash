@@ -150,4 +150,4 @@ done
 #Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
 assert_first_csv_row $WGS_CLUSTER_CSV "Consensus" "$serovar"
-assert_first_csv_row $WGS_CLUSTER_CSV "serovar" "$serovar"
+#assert_first_csv_row $WGS_CLUSTER_CSV "serovar" "$serovar"
