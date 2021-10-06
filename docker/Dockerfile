@@ -96,8 +96,8 @@ RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
 RUN sudo apt-get -y install nodejs
 RUN sudo apt-get -y install npm
 RUN npm install -g github-files-fetcher
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter" --out=/opt/kmerid/ref
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
+RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
+RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
 
 # SeqSero2
 RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
