@@ -29,107 +29,6 @@ mv ${accession}_2.fastq.gz /home/WGS_Data/TestIsolates/${accession}_R2.fastq.gz
 # Run nextflow
 nextflowtest
 
- 
-#check dir contents
-#for file in /NextflowSerotypingPipeline/WGS_Data/*; do
-#  echo "${file##*/}"
-#done
-#*
-
-#for file in /NextflowSerotypingPipeline/WGS_Results/*; do
-#  echo "${file##*/}"
-#done
-#*
-
-#for entry in "/NextflowSerotypingPipeline/WGS_Results"/*
-#do
-#  echo "$entry"
-#done
-#/NextflowSerotypingPipeline/WGS_Results/*
-
-#for file in /WGS_Data/*; do
-#  echo "${file##*/}"
-#done
-#ERR2235_R1...fastq.gz
-#ERR2235_R2...fastq.gz
-
-#for file in /WGS_Results/*; do
-#  echo "${file##*/}"
-#done
-#*
-
-#for entry in "/WGS_Results"/*
-#do
-#  echo "$entry"
-#done
-#/WGS_Results/*
-
-#for file in /WGS_Data/test_isolates/*; do
-#  echo "${file##*/}"
-#done
-#*
-
-#for file in /WGS_Results/test_isolates/*; do
-#  echo "${file##*/}"
-#done
-#*
-
-#for entry in "/WGS_Results/test_isolates"/*
-#do
-#  echo "$entry"
-#done
-#/WGS_Results/test_isolates/*
-
-
-#for file in /home/WGS_Data/*; do
-#  echo "${file##*/}"
-#done
-#test_isolates
-
-#for file in /home/WGS_Results/*; do
-#  echo "${file##*/}"
-#done
-#test_isolates 
-
-#for entry in "/home/WGS_Results"/*
-#do
-#  echo "$entry"
-#done
-#/home/WGS_Results/test_isolates
-
-
-#for file in /home/$USER/WGS_Data/*; do
-#  echo "${file##*/}"
-#done
-
-#for file in /home/$USER/WGS_Results/*; do
-#  echo "${file##*/}"
-#done
-
-#for entry in "/home/$USER/WGS_Results"/*
-#do
-#  echo "$entry"
-#done
-
-
-#for file in /home/$USER/WGS_Data/test_isolates*; do
-#  echo "${file##*/}"
-#done
-
-#for file in /home/$USER/WGS_Results/test_isolates*; do
-#  echo "${file##*/}"
-#done
-
-#for entry in "/home/$USER/WGS_Results/test_isolates"/*
-#do
-#  echo "$entry"
-#done
-
-
-#for entry in "/home/WGS_Results/test_isolates"/*
-#do
-#  echo "$entry"
-#done
 
 for entry in "/home/WGS_Data/TestIsolates"/*
 do
@@ -248,37 +147,7 @@ do
   echo "$entry"
 done
 
-
-
-
-
-#find  /home/ -name '*SummaryTable*'
-#find  /home/ -name '*.csv*'
-
-#find  /WGS_Results/ -name '*SummaryTable*'
-#find  /NextflowSerotypingPipeline/ -name '*SummaryTable*'
-#find  /test_isolates/ -name '*SummaryTable*'
-#find  /NextflowSerotypingPipeline/test_isolates/ -name '*SummaryTable*'
-#find  /NextflowSerotypingPipeline/WGS_Results/ -name '*.csv*'
-#find  /NextflowSerotypingPipeline/WGS_Results/ -name '*SummaryTable*'
-#find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
-#find  /NextflowSerotypingPipeline/test_isolates/ -name '*Summary*'
-
-#find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Table*'
-#find  /NextflowSerotypingPipeline/WGS_Results/ -name '*Summary*'
-
-#find  /WGS_Results/ -name '*.csv*'
-#find  /home/WGS_Results/test_isolates/ -name '*test_isolates*'
-#find  /home/WGS_Results/test_isolates/ -name '*SummaryTable*'
-#find  /home/WGS_Results/test_isolates/ -name '*.csv*'
-#find  /NextflowSerotypingPipeline/work/ -name '*Table*'
-#find  /NextflowSerotypingPipeline/work/ -name '*Summary*'
-#find  /NextflowSerotypingPipeline/work/ -name '*.csv*'
-#check dir contents
-
-#python /NextflowSerotypingPipeline/summaryTable_Python3.py  
-
-# Check results
+#Check results
 WGS_CLUSTER_CSV=$(print_todays_wgs_cluster)
-assert_first_csv_row $WGS_CLUSTER_CSV "Consensus" "Pass"
+assert_first_csv_row $WGS_CLUSTER_CSV "Consensus" "Consensus"
 assert_first_csv_row $WGS_CLUSTER_CSV "serovar" "$serovar"
