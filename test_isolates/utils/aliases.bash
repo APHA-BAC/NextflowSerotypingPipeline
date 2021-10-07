@@ -10,7 +10,7 @@ shopt -s expand_aliases
 
 alias nextflowtest="bash test_isolates/utils/nextflowtest.bash"
 
-alias print_todays_wgs_cluster="sh test_isolates/utils/print_todays_wgs_cluster.sh"
+alias print_path_to_summary_table="sh test_isolates/utils/print_path_to_summary_table.sh"
 
 alias assert_first_csv_row="python test_isolates/utils/assert_first_csv_row.py"
 
