@@ -74,7 +74,7 @@ jobs:
       - run:
           no_output_timeout: 30m
           command: |
-            docker run -m="7g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
+            docker run -m="7g" --memory-swap="10g" "$DOCKER_USER/salmonella-seq:$CIRCLE_BRANCH"  /NextflowSerotypingPipeline/nextflow run SCE3_pipeline_update.nf
 
   inclusivity:
     executor: nf-pipeline        
@@ -90,10 +90,6 @@ workflows:
   validation:
     jobs:
       - build
-
-      - test_isolates:
-          requires:
-            - build
             
       - inclusivity:
            requires:
