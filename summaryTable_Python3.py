@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Javier Nunez, CSU, APHA
+# Javier Nunez, CSU, APHA 
 # This script extraction the results from respective pipeline programs and presents them in a summary table
 
 import csv
@@ -94,24 +94,46 @@ def GCcontent(fName):
     else:
         return val, round(100*float(Cs+Gs)/allb, 2)
 
+    
+###########################
+###########################
+###########################
 
-##########################
-##########################
-##########################
 
-#### HACK: passing directory in as input ###
-
-input_dir = sys.argv[1]
-
-###
-
-pathoData = glob.glob(input_dir + "*")
+pathoData = glob.glob("/home/WGS_Data/*")
+print(pathoData)
 pathoData = str(pathoData[0])
 print(pathoData)
 
 pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
+print(pathoResults)
 runName = pathoData.split(os.sep)[-1]
+print(runName)
 dirs = filterDirs(pathoResults)
+print(dirs)
+
+
+
+#### HACK: passing directory in as input ###
+#input_dir = sys.argv[1]
+
+#print (len(sys.argv))
+#print (sys.argv[0])
+#print (sys.argv[1])
+#print (input_dir)
+###
+
+#pathoData = glob.glob(input_dir + "*")
+#print(pathoData)
+#pathoData = str(pathoData[0])
+#print(pathoData)
+
+#pathoResults = pathoData.replace("WGS_Data", "WGS_Results")
+#print(pathoResults)
+#runName = pathoData.split(os.sep)[-1]
+#print(runName)
+#dirs = filterDirs(pathoResults)
+#print(dirs)
 
 
 tabo = [["StrainID", "Consensus", "#ReadsR1", "GC%R1", "R1Kmerid", "ContaminationFlag", "MOST", "Most_light", "st", "MLST",
@@ -457,5 +479,8 @@ for diro in dirs:
         sseJ = "NA"
 
     tabo = tabo+[[strainName, consensus, readsR1, GCR1, R1Kmerid, kmeridFlag, mostType, light, st, mlst,
-                  meanMLSTCov, seqseroType, comment, N50, serogroup, serovar, serovar_antigen, serovar_cgmlst, vaccine, mono, sseJ]]
+                  meanMLSTCov, seqseroType, comment, N50, serogroup, serovar, serovar_antigen, serovar_cgmlst, vaccine, mono, sseJ]]        
     writeCSV(os.path.join(pathoResults, runName+"_SummaryTable.csv"), tabo)
+    
+    #writeCSV(os.path.join("/home/WGS_Results/test_isolates/", "test_isolates"+"_SummaryTable.csv"), tabo)
+   
