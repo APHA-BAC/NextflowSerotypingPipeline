@@ -14,7 +14,7 @@ commands:
           no_output_timeout: 30m
           command: |
             cd /NextflowSerotypingPipeline/
-            mkdir /home/WGS_Data/TestIsolates/ /home/WGS_Results/TestIsolates/ /artifacts/
+            mkdir $HOME/WGS_Data/TestIsolates/ $HOME/WGS_Results/TestIsolates/ /artifacts/
             bash -e test_isolates/jobs/<< parameters.script >>
           
       - store_artifacts:
