@@ -4,15 +4,19 @@
  * STEP 0 - define the input path to the sequences that will be analysed 
 */ 
 
-params.reads = "/home/WGS_Data/TestIsolates/*_{R1,R2}.fastq.gz"
+params.runID = "TestIsolates"
+println params.runID
+
+readPath = "$HOME/WGS_Data/${params.runID}/*_{R1,R2}.fastq.gz"
+println readPath
 
 /*
  * STEP 1 - fastqc
 */ 
-reads = Channel.fromFilePairs(params.reads)
+reads = Channel.fromFilePairs(readPath)
 
 process fastqc {
-    publishDir "/home/WGS_Results/TestIsolates/${sample_id}/FASTQC_Reports", mode: 'move'
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports", mode: 'move'
 
     input:
     tuple sample_id, file(reads_file) from reads   
@@ -34,10 +38,10 @@ process fastqc {
 /*
  * STEP 2 - shovill
 */ 
-reads1 = Channel.fromFilePairs(params.reads)
+reads1 = Channel.fromFilePairs(readPath)
 
 process shovill {
-    publishDir "/home/WGS_Results/TestIsolates/${sample_id}/shovill", mode: 'copy'
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/shovill", mode: 'copy'
     
     input:
     tuple sample_id, file(reads_file) from reads1
@@ -63,13 +67,13 @@ process shovill {
  * STEP 3 - quast 
 */ 
 
-reads2 = Channel.fromFilePairs(params.reads)
+reads2 = Channel.fromFilePairs(readPath)
 quast_ch
 .join(reads2)
 .set { quast_in }
 
 process quast {
-    publishDir "/home/WGS_Results/TestIsolates/${sample_id}/quast",  mode: 'copy'
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/quast",  mode: 'copy'
     
     input:
     set sample_id, file("${sample_id}_contigs.fa"), file (reads_file) from quast_in
@@ -81,7 +85,7 @@ process quast {
    
     script:
     """
-    python /NextflowSerotypingPipeline/quast-5.1.0rc1/quast.py -o /home/WGS_Results/TestIsolates/${sample_id}/quast "${sample_id}_contigs.fa"
+    python /NextflowSerotypingPipeline/quast-5.1.0rc1/quast.py -o $HOME/WGS_Results/${params.runID}/${sample_id}/quast "${sample_id}_contigs.fa"
     > ${sample_id}_3.txt
     """
 }
@@ -90,10 +94,10 @@ process quast {
 /*
  * STEP 4 - kmerid 
 */ 
-reads3 = Channel.fromFilePairs(params.reads)
+reads3 = Channel.fromFilePairs(readPath)
 
 process kmerid {
-    publishDir "/home/WGS_Results/TestIsolates/${sample_id}/Kmerid",  mode: 'copy'
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid",  mode: 'copy'
 
     input:
     tuple sample_id, file(reads_file) from reads3
@@ -105,7 +109,7 @@ process kmerid {
  
     script:
     """     
-    python /opt/kmerid/kmerid_python3.py -f /home/WGS_Data/TestIsolates/${sample_id}_R1.fastq.gz  -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
+    python /opt/kmerid/kmerid_python3.py -f $HOME/WGS_Data/${params.runID}/${sample_id}_R1.fastq.gz  -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
    > ${sample_id}_4.txt 
     """
 }
@@ -114,10 +118,10 @@ process kmerid {
 /*
  * STEP 5 - seqsero2 
 */ 
-reads4 = Channel.fromFilePairs(params.reads)
+reads4 = Channel.fromFilePairs(readPath)
 
 process seqsero2 {
-   publishDir "/home/WGS_Results/TestIsolates/${sample_id}/SeqSero2", mode: 'copy'
+   publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2", mode: 'copy'
 
 
     input:
@@ -130,7 +134,7 @@ process seqsero2 {
     script:
     """     
    #/opt/conda/bin/conda init bash
-   /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i \$PWD/${sample_id}_{R1,R2}.fastq.gz -d /home/WGS_Results/TestIsolates/${sample_id}/SeqSero2 > ${sample_id}_5.txt
+   /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i \$PWD/${sample_id}_{R1,R2}.fastq.gz -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 > ${sample_id}_5.txt
     
     """
 }
@@ -139,14 +143,14 @@ process seqsero2 {
 /*
  * STEP 6 - sistr 
 */ 
-reads5 = Channel.fromFilePairs(params.reads)
+reads5 = Channel.fromFilePairs(readPath)
 sistr_ch
 .join(reads5)
 .set { sistr_in }
 
 
 process sistr {
-   publishDir "/home/WGS_Results/TestIsolates/${sample_id}/sistr", mode: 'move'
+   publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/sistr", mode: 'move'
 
 
     input:
@@ -169,10 +173,10 @@ process sistr {
 /*
  * STEP 7 - MOST 
 */ 
-reads6 = Channel.fromFilePairs(params.reads)
+reads6 = Channel.fromFilePairs(readPath)
 
 process most {
-   publishDir "/home/WGS_Results/TestIsolates/${sample_id}/MOST", mode: 'copy'
+   publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/MOST", mode: 'copy'
 
 
     input:
@@ -186,10 +190,10 @@ process most {
    
     script:
     """    
-    python /opt/most/MOST-master/MOST.py -1 \$PWD/${sample_id}_R1.fastq.gz  -2 \$PWD/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory /home/WGS_Results/TestIsolates/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
-    if grep "predicted_serotype" /home/WGS_Results/TestIsolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
+    python /opt/most/MOST-master/MOST.py -1 \$PWD/${sample_id}_R1.fastq.gz  -2 \$PWD/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/${params.runID}/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    if grep "predicted_serotype" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
     then
-    grep "predicted_serotype" /home/WGS_Results/TestIsolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
+    grep "predicted_serotype" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
     if grep -q "ST-serotype" serovar1.txt
     then
     awk '{print substr(\$2,1,5); }' serovar1.txt > serovar2.txt
@@ -199,7 +203,7 @@ process most {
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
     else
-    grep "profile" /home/WGS_Results/TestIsolates/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
+    grep "profile" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
     awk '{print substr(\$3,1,5); }' serovar1.txt > serovar2.txt
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
@@ -212,14 +216,14 @@ process most {
  * STEP 8 - srst2
 */ 
 
-reads7 = Channel.fromFilePairs(params.reads)
+reads7 = Channel.fromFilePairs(readPath)
 most_out_ch
 .join(reads7)
 .set { sero_in }
 
 
 process srst2 {
-   publishDir "/home/WGS_Results/TestIsolates/${sample_id}/srst2", mode: 'copy'
+   publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/srst2", mode: 'copy'
 
 
     input:
@@ -239,7 +243,7 @@ process srst2 {
     then
     export SRST2_BOWTIE2=/opt/srst2/bowtie2-2.2.3/bowtie2
     export SRST2_BOWTIE2_BUILD=/opt/srst2/bowtie2-2.2.3/bowtie2-build
-    srst2.py  --input_pe ${sample_id}_R1.fastq.gz ${sample_id}_R2.fastq.gz --forward _R1 --reverse _R2 --output /home/WGS_Results/TestIsolates/${sample_id}/srst2/ --log --gene_db /opt/srst2/VaccineDifferentiation/allVacDB9h1_clustered.fasta
+    srst2.py  --input_pe ${sample_id}_R1.fastq.gz ${sample_id}_R2.fastq.gz --forward _R1 --reverse _R2 --output $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/ --log --gene_db /opt/srst2/VaccineDifferentiation/allVacDB9h1_clustered.fasta
     > ${sample_id}_8.txt    
     else 
     > ${sample_id}_8.txt
@@ -251,7 +255,7 @@ process srst2 {
 /*
  * STEP 9 - summary 
 */ 
-reads_summ = Channel.fromFilePairs(params.reads)
+reads_summ = Channel.fromFilePairs(readPath)
 
 process summary {
 
@@ -289,7 +293,7 @@ process summary {
    
   script: 
   """ 
-  python /NextflowSerotypingPipeline/summaryTable_Python3.py
+  python /NextflowSerotypingPipeline/summaryTable_reworked.py ${params.runID}
   """
 }
 
@@ -298,8 +302,8 @@ process summary {
  * STEP 10 - remove text files 
 */ 
 
-reads8 = Channel.fromFilePairs(params.reads)
-reads_summ1 = Channel.fromFilePairs(params.reads)
+reads8 = Channel.fromFilePairs(readPath)
+reads_summ1 = Channel.fromFilePairs(readPath)
 
 process remove {
 
@@ -339,13 +343,13 @@ process remove {
    
   script: 
   """ 
-  rm /home/WGS_Results/TestIsolates/${sample_id}/FASTQC_Reports/${sample_id}_1.txt
-  rm /home/WGS_Results/TestIsolates/${sample_id}/shovill/${sample_id}_2.txt 
-  rm /home/WGS_Results/TestIsolates/${sample_id}/quast/${sample_id}_3.txt
-  rm /home/WGS_Results/TestIsolates/${sample_id}/Kmerid/${sample_id}_4.txt
-  rm /home/WGS_Results/TestIsolates/${sample_id}/SeqSero2/${sample_id}_5.txt
-  rm /home/WGS_Results/TestIsolates/${sample_id}/sistr/${sample_id}_6.txt
-  rm /home/WGS_Results/TestIsolates/${sample_id}/MOST/${sample_id}_7.txt
-  rm /home/WGS_Results/TestIsolates/${sample_id}/srst2/${sample_id}_8.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports/${sample_id}_1.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/${sample_id}_2.txt 
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/quast/${sample_id}_3.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid/${sample_id}_4.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2/${sample_id}_5.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/sistr/${sample_id}_6.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_7.txt
+  rm $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt
   """
 }
