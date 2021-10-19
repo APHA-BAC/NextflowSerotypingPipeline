@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Originally by:    Javier Nunez, CSU, APHA
+#                   Dolapo Ajayi, Bacterial Genomic Epidemiology, APHA  
 # Edits by:         Jaromir Guzinski, Bacterial Genomic Epidemiology, APHA
 #                   Aaron Fishman, CSU, APHA
 # Reworked by:      Joshua Potter, Core Bioinformatics, APHA, October 2021
