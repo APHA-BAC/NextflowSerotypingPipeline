@@ -7,4 +7,4 @@
 #% DESCRIPTION
 #%    Prints the filepath of the Nextflow run Summary Table CSV. 
 
-echo /home/WGS_Results/TestIsolates/TestIsolates_SummaryTable.csv
+echo $HOME/WGS_Results/TestIsolates/TestIsolates_SummaryTable.csv
