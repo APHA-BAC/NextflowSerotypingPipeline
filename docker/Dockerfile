@@ -125,22 +125,21 @@ RUN rm srst2.zip
 RUN pip install scipy
 
 # Nextflow
-RUN mkdir /home/$USER/nextflow
-RUN cd /home/$USER/nextflow
+RUN mkdir $HOME/nextflow
+RUN cd $HOME/nextflow
 RUN curl -L0 https://github.com/nextflow-io/nextflow/releases/download/v21.04.1/nextflow-21.04.1-all | bash
-#RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/master/SCE3_pipeline_update.nf" --out=/home/$USER/nextflow
 
-RUN mkdir /home/summary
-RUN cd /home/summary
+RUN mkdir $HOME/summary
+RUN cd $HOME/summary
 RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_Python3.py
 
-RUN mkdir /home/WGS_Data
-RUN mkdir /home/WGS_Results
+RUN mkdir $HOME/WGS_Data
+RUN mkdir $HOME/WGS_Results
 
 RUN pip install lxml
 
 # Pipeline run
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=/home/WGS_Data
-RUN cd /home/$USER/nextflow
+#RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=$HOME/WGS_Data
+RUN cd $HOME/nextflow
 
 RUN pip install lxml
