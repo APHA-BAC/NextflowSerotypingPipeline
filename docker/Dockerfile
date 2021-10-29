@@ -28,6 +28,11 @@ RUN bash install/install-conda.sh
 COPY ./install-shovill.sh ./install/install-shovill.sh
 RUN bash install/install-shovill.sh
 
+COPY ./install-quast.sh ./install/install-quast.sh
+RUN bash install/install-quast.sh
+
+#TODO set -e
+
 # # Sudo
 # RUN apt-get -y update 
 # RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
