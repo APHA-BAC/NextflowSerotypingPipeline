@@ -8,138 +8,148 @@ LABEL about.summary="Salmonella Serotyping Pipeline"
 LABEL about.documentation="https://github.com/APHA-BAC/NextflowSerotypingPipeline"
 LABEL about.tags="Genomics, WGS"
 
-# Sudo
-RUN apt-get -y update 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q wget
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q git
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q make
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q openjdk-11-jdk
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libz-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libbz2-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncurses5-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncursesw5-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libghc-bzlib-prof
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q gcc
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jre
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q gzip
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q rename
 
-# Pipeline
-WORKDIR /NextflowSerotypingPipeline/
+################## DEPENDENCIES ######################
+
+# Copy repository
+WORKDIR /root/pipeline/
 COPY ./ ./
 
-# FastQC
-RUN sh install-fastqc.sh
+# RETURN
+RUN bash install.bash
 
-# Shovill
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
-     sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
-     ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
-     rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
+# # Sudo
+# RUN apt-get -y update 
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q wget
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q git
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q make
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q openjdk-11-jdk
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libz-dev
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libbz2-dev
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncurses5-dev
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncursesw5-dev
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libghc-bzlib-prof
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q gcc
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q default-jre
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q gzip
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q rename
 
-# Add conda binaries to PATH
-ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# # Pipeline
+# WORKDIR /NextflowSerotypingPipeline/
+# COPY ./ ./
 
-RUN /opt/conda/bin/conda init bash && \
-      . ~/.bashrc && \
-      /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0 && \
-      /opt/conda/bin/shovill --check
+# # FastQC
+# RUN sh install-fastqc.sh
 
-# Quast
-RUN sudo ln -s /usr/bin/python3 /usr/bin/python
-RUN sudo apt-get -y install python3-pip
-RUN sudo python -m pip install -U pip
-RUN sudo python -m pip install -U matplotlib
+# # Shovill
+# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh  && \
+#      sudo chmod +x Miniconda3-py37_4.8.3-Linux-x86_64.sh && \
+#      ./Miniconda3-py37_4.8.3-Linux-x86_64.sh -b -p /opt/conda && \     
+#      rm Miniconda3-py37_4.8.3-Linux-x86_64.sh
 
-RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/quast/quast-5.1.0rc1.tar.gz
-RUN tar -xvf quast-5.1.0rc1.tar.gz
-RUN rm quast-5.1.0rc1.tar.gz
+# # Add conda binaries to PATH
+# ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN ./quast-5.1.0rc1/install.sh
-RUN sudo ln -s /quast-5.1.0rc1/quast.py /usr/local/bin
+# RUN /opt/conda/bin/conda init bash && \
+#       . ~/.bashrc && \
+#       /opt/conda/bin/conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0 && \
+#       /opt/conda/bin/shovill --check
 
-# MOST 
-RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/most/most.zip
-RUN unzip most.zip
-RUN sudo cp -r most /opt
-RUN sudo chmod +x /opt/most/MOST-master/MOST.py
-RUN rm -rf most
-RUN rm most.zip
+# # Quast
+# RUN sudo ln -s /usr/bin/python3 /usr/bin/python
+# RUN sudo apt-get -y install python3-pip
+# RUN sudo python -m pip install -U pip
+# RUN sudo python -m pip install -U matplotlib
 
-RUN pip install lxml==4.5.2
-RUN pip install biopython==1.73
-RUN /opt/conda/bin/conda install -c bioconda emboss
-RUN /opt/conda/bin/conda install -c kantorlab blastn
-RUN sudo apt-get -y install libncurses5
+# RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/quast/quast-5.1.0rc1.tar.gz
+# RUN tar -xvf quast-5.1.0rc1.tar.gz
+# RUN rm quast-5.1.0rc1.tar.gz
 
-# Kmerid
-RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
-RUN sudo unzip kmerid.zip -d /opt/ 
-RUN rm kmerid.zip
+# RUN ./quast-5.1.0rc1/install.sh
+# RUN sudo ln -s /quast-5.1.0rc1/quast.py /usr/local/bin
 
-RUN cd /opt/kmerid && \
-     sudo make all
-RUN sudo chmod +x /opt/kmerid/setup_refs.py
-RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
+# # MOST 
+# RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/most/most.zip
+# RUN unzip most.zip
+# RUN sudo cp -r most /opt
+# RUN sudo chmod +x /opt/most/MOST-master/MOST.py
+# RUN rm -rf most
+# RUN rm most.zip
 
-RUN sudo apt-get -y install nodejs
-RUN sudo apt-get -y install npm
-RUN npm install -g github-files-fetcher
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
-RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
+# RUN pip install lxml==4.5.2
+# RUN pip install biopython==1.73
+# RUN /opt/conda/bin/conda install -c bioconda emboss
+# RUN /opt/conda/bin/conda install -c kantorlab blastn
+# RUN sudo apt-get -y install libncurses5
 
-# SeqSero2
-RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
+# # Kmerid
+# RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
+# RUN sudo unzip kmerid.zip -d /opt/ 
+# RUN rm kmerid.zip
 
-# Sistr
-RUN pip install --upgrade pip
-RUN pip install wheel
-RUN pip install numpy pandas==1.1.5
+# RUN cd /opt/kmerid && \
+#      sudo make all
+# RUN sudo chmod +x /opt/kmerid/setup_refs.py
+# RUN sudo chmod +x /opt/kmerid/kmerid_python3.py
 
-RUN /opt/conda/bin/conda config --add channels defaults
-RUN /opt/conda/bin/conda config --add channels conda-forge
-RUN /opt/conda/bin/conda config --add channels r
-RUN /opt/conda/bin/conda config --add channels bioconda
-RUN /opt/conda/bin/conda install sistr_cmd
+# RUN sudo apt-get -y install nodejs
+# RUN sudo apt-get -y install npm
+# RUN npm install -g github-files-fetcher
+# RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
+# RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
 
-# Srst2
-RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/srst2/srst2.zip
-RUN unzip srst2.zip
-RUN sudo cp -r srst2 /opt
-RUN sudo chmod +x /opt/srst2/scripts/srst2.py
-RUN sudo ln -s /opt/srst2/scripts/srst2.py /usr/local/bin
-RUN rm -rf srst2
-RUN rm srst2.zip
+# # SeqSero2
+# RUN /opt/conda/bin/conda install -c bioconda seqsero2=1.1.1
 
-RUN pip install scipy
+# # Sistr
+# RUN pip install --upgrade pip
+# RUN pip install wheel
+# RUN pip install numpy pandas==1.1.5
 
-# Nextflow
-RUN mkdir $HOME/nextflow
-RUN cd $HOME/nextflow
-RUN curl -L0 https://github.com/nextflow-io/nextflow/releases/download/v21.04.1/nextflow-21.04.1-all | bash
+# RUN /opt/conda/bin/conda config --add channels defaults
+# RUN /opt/conda/bin/conda config --add channels conda-forge
+# RUN /opt/conda/bin/conda config --add channels r
+# RUN /opt/conda/bin/conda config --add channels bioconda
+# RUN /opt/conda/bin/conda install sistr_cmd
 
-RUN mkdir $HOME/summary
-RUN cd $HOME/summary
-RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_Python3.py
+# # Srst2
+# RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/srst2/srst2.zip
+# RUN unzip srst2.zip
+# RUN sudo cp -r srst2 /opt
+# RUN sudo chmod +x /opt/srst2/scripts/srst2.py
+# RUN sudo ln -s /opt/srst2/scripts/srst2.py /usr/local/bin
+# RUN rm -rf srst2
+# RUN rm srst2.zip
 
-RUN mkdir $HOME/WGS_Data
-RUN mkdir $HOME/WGS_Results
+# RUN pip install scipy
 
-RUN pip install lxml
+# # Nextflow
+# RUN mkdir $HOME/nextflow
+# RUN cd $HOME/nextflow
+# RUN curl -L0 https://github.com/nextflow-io/nextflow/releases/download/v21.04.1/nextflow-21.04.1-all | bash
 
-# Pipeline run
-#RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=$HOME/WGS_Data
-RUN cd $HOME/nextflow
+# RUN mkdir $HOME/summary
+# RUN cd $HOME/summary
+# RUN wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_Python3.py
 
-RUN pip install lxml
+# RUN mkdir $HOME/WGS_Data
+# RUN mkdir $HOME/WGS_Results
+
+# RUN pip install lxml
+
+# # Pipeline run
+# #RUN fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=$HOME/WGS_Data
+# RUN cd $HOME/nextflow
+
+# RUN pip install lxml

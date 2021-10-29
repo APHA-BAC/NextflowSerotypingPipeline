@@ -1,33 +1,28 @@
 set -e
 
-# Apt-get
-sudo apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    openjdk-11-jdk \
-    wget \
-    make \
-    git \
-    curl \
-    libz-dev \
-    libbz2-dev \
-    libncurses5-dev \
-    libncursesw5-dev \
-    libghc-bzlib-prof \
-    gcc \
-    unzip \
-    zlib1g-dev
+apt-get -y update
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q make
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q gcc
 
-sudo apt-get install -y libcurl4-openssl-dev
-sudo apt-get install -y python3 \
-    python3-numpy \
-    python3-pip \
-    vim \
-    nano \
-    bc
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q git
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q wget
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl
 
-# python 
-# TODO: Version pin pandas to 1.15
-pip3 install biopython pandas gitpython
-sudo ln -s /usr/bin/python3 /usr/bin/python
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libz-dev
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libbz2-dev
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncurses5-dev
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncursesw5-dev
 
-# Install the dependencies
-# sh install-fastqc.sh
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libghc-bzlib-prof
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
