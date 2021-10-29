@@ -37,6 +37,10 @@ RUN bash install/install-most.sh
 COPY ./install-kmerid.sh ./install/install-kmerid.sh
 RUN bash install/install-kmerid.sh
 
+COPY ./install-seqsero2.sh ./install/install-seqsero2.sh
+RUN bash install/install-seqsero2.sh
+
+
 #TODO set -e
 
 # # Sudo
