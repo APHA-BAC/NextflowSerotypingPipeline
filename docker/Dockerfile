@@ -52,7 +52,7 @@ RUN bash install/install-nextflow.sh
 COPY ./setup-environment.sh ./install/setup-environment.sh
 RUN bash install/setup-environment.sh
 
-
+COPY ./ ./
 #TODO set -e
 
 # # Sudo
