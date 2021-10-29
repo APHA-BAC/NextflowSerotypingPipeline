@@ -34,6 +34,9 @@ RUN bash install/install-quast.sh
 COPY ./install-most.sh ./install/install-most.sh
 RUN bash install/install-most.sh
 
+COPY ./install-kmerid.sh ./install/install-kmerid.sh
+RUN bash install/install-kmerid.sh
+
 #TODO set -e
 
 # # Sudo
