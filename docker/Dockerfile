@@ -31,6 +31,9 @@ RUN bash install/install-shovill.sh
 COPY ./install-quast.sh ./install/install-quast.sh
 RUN bash install/install-quast.sh
 
+COPY ./install-most.sh ./install/install-most.sh
+RUN bash install/install-most.sh
+
 #TODO set -e
 
 # # Sudo
