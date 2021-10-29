@@ -13,10 +13,13 @@ LABEL about.tags="Genomics, WGS"
 
 # Copy repository
 WORKDIR /root/pipeline/
-COPY ./ ./
+COPY ./install/ ./install/
 
 # RETURN
-RUN bash install.bash
+RUN bash install/install.bash
+
+COPY ./install-fastqc.sh ./install/install-fastqc.sh
+RUN bash install/install-fastqc.sh
 
 # # Sudo
 # RUN apt-get -y update 

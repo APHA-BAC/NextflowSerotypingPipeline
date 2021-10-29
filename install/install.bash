@@ -1,5 +1,7 @@
 set -e
 
+# TODO: DRY up the apt-get so it's in one call
+
 apt-get -y update
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
