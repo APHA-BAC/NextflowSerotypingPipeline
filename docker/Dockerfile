@@ -40,6 +40,8 @@ RUN bash install/install-kmerid.sh
 COPY ./install-seqsero2.sh ./install/install-seqsero2.sh
 RUN bash install/install-seqsero2.sh
 
+COPY ./install-sistr.sh ./install/install-sistr.sh
+RUN bash install/install-sistr.sh
 
 #TODO set -e
 
