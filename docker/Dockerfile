@@ -46,6 +46,9 @@ RUN bash install/install-sistr.sh
 COPY ./install-srst2.sh ./install/install-srst2.sh
 RUN bash install/install-srst2.sh
 
+COPY ./install-nextflow.sh ./install/install-nextflow.sh
+RUN bash install/install-nextflow.sh
+
 #TODO set -e
 
 # # Sudo
