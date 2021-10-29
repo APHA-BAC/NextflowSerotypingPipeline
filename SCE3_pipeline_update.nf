@@ -293,7 +293,7 @@ process summary {
    
   script: 
   """ 
-  python /NextflowSerotypingPipeline/summaryTable_reworked.py ${params.runID}
+  python ./summaryTable_reworked.py ${params.runID}
   """
 }
 

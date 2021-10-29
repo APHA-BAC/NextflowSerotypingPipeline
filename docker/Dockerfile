@@ -49,6 +49,10 @@ RUN bash install/install-srst2.sh
 COPY ./install-nextflow.sh ./install/install-nextflow.sh
 RUN bash install/install-nextflow.sh
 
+COPY ./setup-environment.sh ./install/setup-environment.sh
+RUN bash install/setup-environment.sh
+
+
 #TODO set -e
 
 # # Sudo
