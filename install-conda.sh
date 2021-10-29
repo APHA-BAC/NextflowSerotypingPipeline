@@ -18,5 +18,8 @@ source ~/.bashrc
 conda create -n salmpipe python=3.7
 conda activate salmpipe
 
+# Link to path
+sudo ln -s /usr/bin/python3 /usr/bin/python
+
 # Matplotlib
 pip install matplotlib
