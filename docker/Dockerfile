@@ -12,7 +12,7 @@ LABEL about.tags="Genomics, WGS"
 ################## DEPENDENCIES ######################
 
 # Copy repository
-WORKDIR /root/pipeline/
+WORKDIR /root/NextflowSerotypingPipeline/
 COPY ./install/ ./install/
 
 # RETURN

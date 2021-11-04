@@ -17,6 +17,5 @@ sudo apt-get -y install npm
 sudo npm install -g github-files-fetcher
 
 # TODO: download from somewhere that's not this repo's branch 
-# fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Acinetobacter" --out=/opt/kmerid/ref
-sudo fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
-sudo fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
+sudo fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
+sudo fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Salmonella" --out=/opt/kmerid/ref

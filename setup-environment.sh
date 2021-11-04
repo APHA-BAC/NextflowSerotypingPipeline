@@ -5,13 +5,8 @@ set -e
 mkdir $HOME/WGS_Data
 mkdir $HOME/WGS_Results
 
-###################################################################################################
-# Retrieve test isolates
-cd $HOME
-
-fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/circleci-project-setup/test_isolates" --out=$HOME/WGS_Data
-
-cd $HOME/nextflow
-# Updated this next line, which wasn't working:
-fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/SCE3_pipeline_update.nf" --out=$HOME/nextflow
-
+#################################################################################################
+# Summary table script
+mkdir $HOME/summary # Changed to $HOME for SC3 - We don't want summary installed in /home/summary
+cd $HOME/summary
+wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_reworked.py
