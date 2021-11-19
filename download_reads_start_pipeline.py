@@ -55,13 +55,13 @@ def rename_WGS(readFiles, homeWGSDir):
     print("\n\n")
 
 
-def start_pipeline_and_close(homeWGSDir, nextflowDir):
+def start_pipeline_and_exit(outDir, nextflowDir):
     oldWork = os.path.join(nextflowDir, "work")
     if os.path.exists(oldWork):
         print("Removing old working directory:", oldWork)
         shutil.rmtree(oldWork)
     os.chdir(nextflowDir)
-    nfCommand = "./nextflow SCE3_pipeline_update.nf --reads {}".format(os.path.join(homeWGSDir, "*_{R1,R2}.fastq.gz"))
+    nfCommand = "./nextflow SCE3_pipeline_update.nf --runID {}".format(outDir)
     print(nfCommand)
     subprocess.Popen(nfCommand, shell=True)
     sys.exit()
@@ -76,6 +76,6 @@ if __name__ == '__main__':
     homeWGSDir = retrieve_from_bucket(s3Key, outDir)
     rename_WGS(readFiles, homeWGSDir)
     print("Setup complete. Please find downloaded and renamed readfiles in: {}\n\n".format(os.path.expanduser("~/WGS_Data/{}".format(outDir))))
-    start_pipeline_and_close(homeWGSDir, nextflowDir)
+    start_pipeline_and_exit(homeWGSDir, nextflowDir)
 
 
