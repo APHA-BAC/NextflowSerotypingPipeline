@@ -7,6 +7,8 @@
 #% DESCRIPTION
 #%    Tests the nextflow pipeline on a minimal dataset
 
+set -e
+
 # Import
 source test_isolates/utils/aliases.bash
 
