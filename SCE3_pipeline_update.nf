@@ -85,7 +85,7 @@ process quast {
    
     script:
     """
-    python /NextflowSerotypingPipeline/quast-5.1.0rc1/quast.py -o $HOME/WGS_Results/${params.runID}/${sample_id}/quast "${sample_id}_contigs.fa"
+    python /usr/local/bin/quast.py -o $HOME/WGS_Results/${params.runID}/${sample_id}/quast "${sample_id}_contigs.fa"
     > ${sample_id}_3.txt
     """
 }
@@ -293,7 +293,7 @@ process summary {
    
   script: 
   """ 
-  python /NextflowSerotypingPipeline/summaryTable_reworked.py ${params.runID}
+  python $HOME/summary/summaryTable_reworked.py ${params.runID}
   """
 }
 
