@@ -19,8 +19,11 @@ serovar=$(print_csv_value './test_isolates/data/inclusivity_cases.csv' $TESTCASE
 accession=$(print_csv_value './test_isolates/data/inclusivity_cases.csv' $TESTCASE accession)
 
 # Fetch SRA Data
-prefetch $accession -O ./
-fasterq-dump ./$accession
+# TODO: call prefetch from $PATH rather than /usr/local/bin/
+#       it is being explicitly caleed in this way to disambiguate from the conda install
+#       which is prioritised in the path.
+/usr/local/bin/prefetch $accession -O ./
+/usr/local/bin/fasterq-dump ./$accession
 rm ./$accession/*.sra
 rm -r ./$accession
 

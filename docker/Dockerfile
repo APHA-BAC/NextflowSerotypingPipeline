@@ -49,6 +49,9 @@ RUN bash install/install-srst2.sh
 COPY ./install-nextflow.sh ./install/install-nextflow.sh
 RUN bash install/install-nextflow.sh
 
+COPY ./install-sra-toolkit.sh ./install/install-sra-toolkit.sh
+RUN bash install/install-sra-toolkit.sh
+
 COPY ./setup-environment.sh ./install/setup-environment.sh
 RUN bash install/setup-environment.sh
 
