@@ -19,7 +19,7 @@ process fastp_qual_trim {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
-    tuple sampleID, readPair from reads
+    tuple sample_id, readPair from reads
 
     output:
     tuple sampleID, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
@@ -27,7 +27,7 @@ process fastp_qual_trim {
 
     script:
     """
-    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sampleID}_R1.fastq.gz --out2 ${sampleID}_R2.fastq.gz > ${sampleID}_fastp.log 2>&1
+    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
     """
 }
 
