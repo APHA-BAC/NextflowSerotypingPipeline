@@ -11,11 +11,12 @@ readPath = "$HOME/WGS_Data/${params.runID}/*_{R1,R2}.fastq.gz"
 println readPath
 
 /*
- * STEP i - fastp quality trimming
+ * PRE-STEP i - fastp quality trimming
 */
 reads = Channel.fromFilePairs(readPath)
 
 process fastp_qual_trim {
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
     tuple sampleID, readPair from reads
