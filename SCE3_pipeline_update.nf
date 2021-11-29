@@ -22,7 +22,7 @@ process fastp_qual_trim {
     tuple sample_id, readPair from reads
 
     output:
-    tuple sampleID, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
+    tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
     file("*_fastp.log")
 
     script:
