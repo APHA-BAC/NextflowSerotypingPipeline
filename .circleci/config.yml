@@ -20,6 +20,9 @@ commands:
       - store_artifacts:
           path: /artifacts/
 
+      - store_artifacts:
+          path: /root/WGS_Data/
+
   build-and-push:
     parameters:
       tag:
