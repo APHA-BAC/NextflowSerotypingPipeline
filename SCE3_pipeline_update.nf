@@ -8,7 +8,19 @@ params.runID = "TestIsolates"
 println params.runID
 
 readPath = "$HOME/WGS_Data/${params.runID}/*_{R1,R2}.fastq.gz"
+publishDirectory = "$HOME/WGS_Results/${params.runID}/"
+
 println readPath
+
+
+/* Initial pre-processing run at the start of the nextflow run */ 
+process preProcess {
+    """
+    # Save the git-sha into the results folder
+    mkdir -p $publishDirectory
+    git rev-parse HEAD > $publishDirectory/sha
+    """
+}
 
 /*
  * STEP 1 - fastqc
