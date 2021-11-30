@@ -23,11 +23,11 @@ process fastp_qual_trim {
 
     output:
     file("*_fastp.log")
-    tuple sample_id, file("*_cleaned_{R1,R2}.fastq.gz") into cleanedReads
+    tuple sample_id, file("*_{R1,R2}.fastq.gz") into cleanedReads
 
     script:
     """
-    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_cleaned_R1.fastq.gz --out2 ${sample_id}_cleaned_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
+    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
     """
 }
 
@@ -51,8 +51,8 @@ process subsampling {
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_subsampling.log
     READFILE2=$(echo $READFILE1 | sed -e 's/_R1.fastq.gz/_R2.fastq.gz/')
-    OUTNAME1=$(basename $READFILE1 | sed -e 's/_cleaned_R1.fastq.gz/_R1.fastq/')
-    OUTNAME2=$(basename $READFILE2 | sed -e 's/_cleaned_R2.fastq.gz/_R2.fastq/')
+    OUTNAME1=$(basename $READFILE1 | sed -e 's/_R1.fastq.gz/_R1.fastq/')
+    OUTNAME2=$(basename $READFILE2 | sed -e 's/_R2.fastq.gz/_R2.fastq/')
     if [ $READCOUNT -gt 4500000 ]
     then
         echo "Greater than 4.5M reads, subsampling to 4M..." >> !{sample_id}_subsampling.log
