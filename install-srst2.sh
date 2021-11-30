@@ -2,6 +2,8 @@
 set -e
 cd $HOME
 
+pip install scipy
+
 # TODO: download direct form author
 wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/srst2/srst2.zip
 unzip srst2.zip

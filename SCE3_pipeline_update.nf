@@ -11,15 +11,35 @@ readPath = "$HOME/WGS_Data/${params.runID}/*_{R1,R2}.fastq.gz"
 println readPath
 
 /*
+ * PRE-STEP i - fastp quality trimming
+*/
+reads = Channel.fromFilePairs(readPath)
+
+process fastp_qual_trim {
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
+
+    input:
+    tuple sample_id, readPair from reads
+
+    output:
+    tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
+    file("*_fastp.log")
+
+    script:
+    """
+    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
+    """
+}
+
+/*
  * STEP 1 - fastqc
 */ 
-reads = Channel.fromFilePairs(readPath)
 
 process fastqc {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports", mode: 'move'
 
     input:
-    tuple sample_id, file(reads_file) from reads   
+    tuple sample_id, file(reads_file) from reads1
 
     output:  
     file("${sample_id}_{R1,R2}_fastqc.{html,zip}")
@@ -38,13 +58,12 @@ process fastqc {
 /*
  * STEP 2 - shovill
 */ 
-reads1 = Channel.fromFilePairs(readPath)
 
 process shovill {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/shovill", mode: 'copy'
     
     input:
-    tuple sample_id, file(reads_file) from reads1
+    tuple sample_id, file(reads_file) from reads2
   
     output:
     file "*" into shovill_all_ch
@@ -67,9 +86,8 @@ process shovill {
  * STEP 3 - quast 
 */ 
 
-reads2 = Channel.fromFilePairs(readPath)
 quast_ch
-.join(reads2)
+.join(reads3)
 .set { quast_in }
 
 process quast {
@@ -94,13 +112,12 @@ process quast {
 /*
  * STEP 4 - kmerid 
 */ 
-reads3 = Channel.fromFilePairs(readPath)
 
 process kmerid {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid",  mode: 'copy'
 
     input:
-    tuple sample_id, file(reads_file) from reads3
+    tuple sample_id, file(reads_file) from reads4
 
     output:  
     file("${sample_id}_R1.tsv")
@@ -118,14 +135,13 @@ process kmerid {
 /*
  * STEP 5 - seqsero2 
 */ 
-reads4 = Channel.fromFilePairs(readPath)
 
 process seqsero2 {
    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2", mode: 'copy'
 
 
     input:
-    tuple sample_id, file(reads_file) from reads4
+    tuple sample_id, file(reads_file) from reads5
 
     output:
     file("${sample_id}_5.txt") into out5_ch   
@@ -143,9 +159,8 @@ process seqsero2 {
 /*
  * STEP 6 - sistr 
 */ 
-reads5 = Channel.fromFilePairs(readPath)
 sistr_ch
-.join(reads5)
+.join(reads6)
 .set { sistr_in }
 
 
@@ -173,14 +188,13 @@ process sistr {
 /*
  * STEP 7 - MOST 
 */ 
-reads6 = Channel.fromFilePairs(readPath)
 
 process most {
    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/MOST", mode: 'copy'
 
 
     input:
-    tuple sample_id, file(reads_file) from reads6
+    tuple sample_id, file(reads_file) from reads7
 
     output:
     file("${sample_id}_7.txt") into out7_ch   
@@ -216,9 +230,8 @@ process most {
  * STEP 8 - srst2
 */ 
 
-reads7 = Channel.fromFilePairs(readPath)
 most_out_ch
-.join(reads7)
+.join(reads8)
 .set { sero_in }
 
 
@@ -255,12 +268,11 @@ process srst2 {
 /*
  * STEP 9 - summary 
 */ 
-reads_summ = Channel.fromFilePairs(readPath)
 
 process summary {
 
   input:  
-  val read from reads_summ.count()
+  val read from reads_summ1.count()
   .view()
 
   val c1 from out1_ch.count()
@@ -300,18 +312,15 @@ process summary {
 
 /*
  * STEP 10 - remove text files 
-*/ 
-
-reads8 = Channel.fromFilePairs(readPath)
-reads_summ1 = Channel.fromFilePairs(readPath)
+*/
 
 process remove {
 
   input:  
-  tuple sample_id, file(reads_file) from reads8   
+  tuple sample_id, file(reads_file) from reads9   
 
   input:  
-  val read_rem from reads_summ1.count()
+  val read_rem from reads_summ2.count()
   .view()
 
   val c1_rem from out1_ch_rem.count()
