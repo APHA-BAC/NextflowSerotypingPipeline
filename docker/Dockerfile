@@ -21,6 +21,9 @@ RUN bash install/install.bash
 COPY ./install-fastp.sh ./install/install-fastp.sh
 RUN bash install/install-fastp.sh
 
+COPY ./install-seqtk.sh ./install/install-seqtk.sh
+RUN bash install/install-seqtk.sh
+
 COPY ./install-fastqc.sh ./install/install-fastqc.sh
 RUN bash install/install-fastqc.sh
 
