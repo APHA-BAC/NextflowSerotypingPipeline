@@ -23,6 +23,12 @@ commands:
       - store_artifacts:
           path: /root/WGS_Data/
 
+      - store_artifacts:
+          path: /root/WGS_Results/
+
+      - store_artifacts:
+          path: /root/NextflowSerotypingPipeline/
+
   build-and-push:
     parameters:
       tag:
