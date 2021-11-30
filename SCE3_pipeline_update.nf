@@ -14,7 +14,7 @@ println readPath
 
 
 /* Initial pre-processing run at the start of the nextflow run */ 
-process preProcess {
+process pre_process {
     """
     # Save the git-sha into the results folder
     mkdir -p $publishDirectory
