@@ -22,13 +22,56 @@ process fastp_qual_trim {
     tuple sample_id, readPair from reads
 
     output:
-    tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
     file("*_fastp.log")
+    tuple sample_id, file("*_{R1,R2}.fastq.gz") into cleanedReads
 
     script:
     """
     fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
     """
+}
+
+/*
+ * PRE-STEP ii - seqtk subsampling
+*/
+
+process subsampling {
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/subsampling", mode: 'copy'
+
+    input:
+    tuple sample_id, readPair from cleanedReads
+    
+    output:
+    file("*_subsampling.log")
+    tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
+
+    shell:
+    '''
+    READFILE1=$(echo !{readPair[0]})
+    READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
+    echo $READCOUNT > !{sample_id}_subsampling.log
+    READFILE2=$(echo $READFILE1 | sed -e 's/_R1.fastq.gz/_R2.fastq.gz/')
+    OUTNAME1=$(basename $READFILE1 | sed -e 's/_R1.fastq.gz/_R1.fastq/')
+    OUTNAME2=$(basename $READFILE2 | sed -e 's/_R2.fastq.gz/_R2.fastq/')
+    if [ $READCOUNT -gt 4500000 ]
+    then
+        echo "Greater than 4.5M reads, subsampling to 4M..." >> !{sample_id}_subsampling.log
+        echo $READFILE1 >> !{sample_id}_subsampling.log
+        echo $OUTNAME1 >> !{sample_id}_subsampling.log
+        /opt/conda/bin/seqtk sample -s100 $READFILE1 4000000 > $OUTNAME1
+        gzip --fast $OUTNAME1
+        echo $READFILE2 >> !{sample_id}_subsampling.log
+        echo $OUTNAME2 >> !{sample_id}_subsampling.log
+        /opt/conda/bin/seqtk sample -s100 $READFILE2 4000000 > $OUTNAME2
+        gzip --fast $OUTNAME2
+        echo "Done." >> !{sample_id}_subsampling.log
+    else
+        echo "Fewer than 4.5M reads, skipping." >> !{sample_id}_subsampling.log
+        mv $READFILE1 .
+        mv $READFILE2 .
+        echo "Done." >> !{sample_id}_subsampling.log
+    fi
+    '''
 }
 
 /*
