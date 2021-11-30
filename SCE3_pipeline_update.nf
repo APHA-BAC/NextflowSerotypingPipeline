@@ -49,27 +49,27 @@ process subsampling {
     '''
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
-    echo $READCOUNT > !{sample_id}_subsampling.out
+    echo $READCOUNT > !{sample_id}_subsampling.log
     READFILE2=$(echo $READFILE1 | sed -e 's/_R1.fastq.gz/_R2.fastq.gz/')
     OUTNAME1=$(basename $READFILE1 | sed -e 's/_cleaned_R1.fastq.gz/_R1.fastq/')
     OUTNAME2=$(basename $READFILE2 | sed -e 's/_cleaned_R2.fastq.gz/_R2.fastq/')
     if [ $READCOUNT -gt 4500000 ]
     then
-        echo "Greater than 4.5M reads, subsampling to 4M..." >> !{sample_id}_subsampling.out
-        echo $READFILE1 >> !{sample_id}_subsampling.out
-        echo $OUTNAME1 >> !{sample_id}_subsampling.out
+        echo "Greater than 4.5M reads, subsampling to 4M..." >> !{sample_id}_subsampling.log
+        echo $READFILE1 >> !{sample_id}_subsampling.log
+        echo $OUTNAME1 >> !{sample_id}_subsampling.log
         /opt/conda/bin/seqtk sample -s100 $READFILE1 4000000 > $OUTNAME1
         gzip --fast $OUTNAME1
-        echo $READFILE2 >> !{sample_id}_subsampling.out
-        echo $OUTNAME2 >> !{sample_id}_subsampling.out
+        echo $READFILE2 >> !{sample_id}_subsampling.log
+        echo $OUTNAME2 >> !{sample_id}_subsampling.log
         /opt/conda/bin/seqtk sample -s100 $READFILE2 4000000 > $OUTNAME2
         gzip --fast $OUTNAME2
-        echo "Done." >> !{sample_id}_subsampling.out
+        echo "Done." >> !{sample_id}_subsampling.log
     else
-        echo "Fewer than 4.5M reads, skipping." >> !{sample_id}_subsampling.out
+        echo "Fewer than 4.5M reads, skipping." >> !{sample_id}_subsampling.log
         mv $READFILE1 .
         mv $READFILE2 .
-        echo "Done." >> !{sample_id}_subsampling.out
+        echo "Done." >> !{sample_id}_subsampling.log
     fi
     '''
 }
