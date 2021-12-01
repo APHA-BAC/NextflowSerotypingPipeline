@@ -28,6 +28,9 @@ ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:
 COPY ./install-conda.sh ./install/install-conda.sh
 RUN bash install/install-conda.sh
 
+COPY ./install-seqtk.sh ./install/install-seqtk.sh
+RUN bash install/install-seqtk.sh
+
 COPY ./install-shovill.sh ./install/install-shovill.sh
 RUN bash install/install-shovill.sh
 

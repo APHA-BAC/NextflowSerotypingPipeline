@@ -7,6 +7,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q make
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q gcc
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q bc
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q git
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q wget
