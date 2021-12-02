@@ -3,28 +3,15 @@ import os
 import glob
 import argparse
 
-RESULTS_DIRECTORY = '/home/aaronfishman/temp/salmonella-results/'
-READS_DIRECTORY = "/home/aaronfishman/temp/salmonella-reads/" 
-
-# TODO: get plate name from Josh's cpde
-def run_pipeline(reads, results, plate_name):
-    run([
-        "sudo", "docker", "run", "-it", 
-        "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
-        "-v", f"{results}:/root/WGS_Results/{plate_name}/", 
-        "jguzinski/salmonella-seq:prod",
-        "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
-        "--runID", plate_name
-    ])
+# TODO: Rename directories to BGE defaults
+DEFAULT_READS_DIRECTORY = '/home/aaronfishman/temp/reads/'
+DEFAULT_RESULTS_DIRECTORY = '/home/aaronfishman/temp/results/'
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
-        See python's subprocess.run command for args/kwargs
+        
         Parameters:
             cmd (list): List of strings defining the command, see (subprocess.run in python docs)
-            cwd (str): Set surr
-        Returns:
-            None
     """
     # TODO: store stdout to a file
     returncode = subprocess.run(cmd).returncode
@@ -35,15 +22,16 @@ def run(cmd):
             cmd failed with exit code %i
         *****""" % (cmd, returncode))
 
-def rename_WGS(readFiles, homeWGSDir):
-    for readFile in readFiles:
-        if "_R1" in readFile:
-            newName = readFile.split("_")[0] + "_R1.fastq.gz"
-        elif "_R2" in readFile:
-            newName = readFile.split("_")[0] + "_R2.fastq.gz"
-        print("Renaming readfile {} --> {}".format(readFile, newName))
-        os.rename("{}/{}".format(homeWGSDir, readFile), "{}/{}".format(homeWGSDir, newName))
-    print("\n\n")
+def run_pipeline(reads, results, plate_name, image="jguzinski/salmonella-seq:prod"):
+    """ Run the Salmonella pipeline using docker """
+    run([
+        "sudo", "docker", "run", "-it", 
+        "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
+        "-v", f"{results}:/root/WGS_Results/{plate_name}/", 
+        image,
+        "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
+        "--runID", plate_name
+    ])
 
 def download_s3(s3_uri, destination):
     """ Recursively download a S3 Object """
@@ -62,9 +50,9 @@ def s3_object_release_date(s3_key):
     # Extract date
     return contents[0].split()[0].split("-")
 
-
 def s3_uri_to_plate_name(s3_key):
     """ Convert a S3 URI from CSU to a plate name with consistent naming convention """
+    
     # Remove trailing slash
     s3_key = s3_key.strip('/')
 
@@ -96,14 +84,17 @@ def rename_fastq_file(filepath):
     renamed = f"{directory}/{sample_name}_R{read_number}.fastq.gz"
     os.rename(filepath, renamed)
 
-
-def run_plate(s3_uri):
+def run_plate(s3_uri, reads_dir, results_dir):
     """ Download, process and store a plate of raw Salmonella data """
 
-    # 
-    plate_name = s3_uri_to_plate_name(s3_uri.strip('/'))
-    plate_reads_dir = READS_DIRECTORY + plate_name + '/'
-    plate_results_dir = RESULTS_DIRECTORY + plate_name + '/'
+    # Add trailing slash to directory names
+    reads_dir = os.path.join(reads_dir, '')
+    results_dir = os.path.join(results_dir, '')
+
+    # Storage paths
+    plate_name = s3_uri_to_plate_name(s3_uri)
+    plate_reads_dir = reads_dir + plate_name + '/'
+    plate_results_dir = results_dir + plate_name + '/'
 
     # Download
     download_s3(s3_uri, plate_reads_dir)
@@ -111,17 +102,19 @@ def run_plate(s3_uri):
     for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
         rename_fastq_file(filepath)
 
-    # Run
+    # Process
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name)
 
     # TODO: Backup in fsx
 
 if __name__ == '__main__':
     # Parse
-    parser = argparse.ArgumentParser(description="Run pipeline on a routine Salmonella Plate")
-    parser.add_argument("s3_uri", help="s3 uri to the plate you want to run")
-    
+    parser = argparse.ArgumentParser(description="run pipeline on a routine Salmonella Plate")
+    parser.add_argument("s3_uri", help="s3 uri that corresponds to the fastq plate to run")
+    parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
+    parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
+
     args = parser.parse_args()
 
     # Run
-    run_plate(args.s3_uri)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir)
