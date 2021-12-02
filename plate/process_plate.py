@@ -37,23 +37,26 @@ def download_s3(s3_uri, destination):
 
 
 def s3_object_release_date(s3_key):
-    lsCommand = "aws s3 ls {}/".format(s3_key)
-    contents = [x.decode("utf-8") for x in subprocess.check_output(lsCommand, shell=True).splitlines()]
-    releaseDate = contents[0].split()[0]
-    outfmtDate = releaseDate.split("-")[2] + releaseDate.split("-")[1] + releaseDate.split("-")[0][2:4]
+    """ Date s3 object was published. Returns a 3 element list with format [year, month, day] """
 
-    return outfmtDate
+    # Retrieve metadata from S3
+    ls_cmd = f"aws s3 ls {s3_key}/"
+    contents = [x.decode("utf-8") for x in subprocess.check_output(ls_cmd, shell=True).splitlines()]
+    
+    # Extract date
+    return contents[0].split()[0].split("-")
+
 
 def s3_uri_to_plate_name(s3_key):
     """ Convert a S3 URI from CSU to a plate name with consistent naming convention """
     # Remove trailing slash
     s3_key = s3_key.strip('/')
 
-    # Formate
-    date = s3_object_release_date(s3_key)
+    # Format
+    year, month, day = s3_object_release_date(s3_key)
     run_name = s3_key.split("/")[-1]
 
-    return f"{date}_APHA_{run_name}"
+    return f"{day}{month}{year[-2:]}_APHA_{run_name}"
 
 def rename_WGS(readFiles, homeWGSDir):
     for readFile in [os.path.basename(x) for x in readFiles]:
