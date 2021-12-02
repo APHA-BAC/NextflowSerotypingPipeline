@@ -1,6 +1,7 @@
 import subprocess
 import os
 import glob
+import argparse
 
 RESULTS_DIRECTORY = '/home/aaronfishman/temp/salmonella-results/'
 READS_DIRECTORY = "/home/aaronfishman/temp/salmonella-reads/" 
@@ -73,11 +74,8 @@ def rename_WGS(readFiles, homeWGSDir):
         os.rename("{}/{}".format(homeWGSDir, readFile), "{}/{}".format(homeWGSDir, newName))
     print("\n\n")
 
-if __name__ == '__main__':
-    # TODO: Use Josh's interactive plate selection code
 
-    s3_uri = 's3://s3-csu-001/temp/new-plate/'
-
+def run_plate(s3_uri):
     plate_name = check_WGS(s3_uri)
     plate_reads_dir = READS_DIRECTORY + plate_name + '/'
     plate_results_dir = RESULTS_DIRECTORY + plate_name + '/'
@@ -86,26 +84,11 @@ if __name__ == '__main__':
     rename_WGS(glob.glob(plate_reads_dir+'/*.fastq.gz'), plate_reads_dir)
 
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Run pipeline on a routine Salmonella Plate")
+    parser.add_argument("s3_uri", help="s3 uri to the plate you want to run")
     
-    quit()
+    args = parser.parse_args()
 
-
-    # Download raw reads from S3 --> EC2
-
-   
-    plate_name = "new-plate"
-
-    # Run plate
-    plate_reads_dir = READS_DIRECTORY + plate_name + '/'
-
-    # TODO: Backup raw reads from EC2 --> FSX
-    # Integrity checks should be done, Josh's script already does this
-
-    
-
-    # Run the pipeline
-
-    run_pipeline(plate_reads_dir, plate_results_dir, plate_name)
-
-    # TODO: Backup to fsx
-    
+    run_plate(args.s3_uri)
