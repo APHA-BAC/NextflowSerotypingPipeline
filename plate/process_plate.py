@@ -1,5 +1,5 @@
 import subprocess
-
+import os
 
 RESULTS_DIRECTORY = '/home/aaronfishman/temp/salmonella-results/'
 READS_DIRECTORY = "/home/aaronfishman/temp/salmonella-reads/" 
@@ -37,14 +37,38 @@ def download_s3(s3_uri, destination):
 
 
 def s3_uri_to_plate_name(s3_uri):
-    return ""
+    # <date ddmmyy>_APHA_<plate_name>
+    run_name = os.path.basename(s3_uri.strip('/'))
+
+    return run_name
+
+    # Retrieve and display information about the WGS data to be retrieved
+def check_WGS(s3Key):
+    s3Key = s3Key.strip('/')
+
+    # TODO: Bit of a tidy, not that bad though really
+    # print("This is your chosen WGS location: {}'\n".format(s3Key))
+    lsCommand = "aws s3 ls {}/".format(s3Key)
+    contents = [x.decode("utf-8") for x in subprocess.check_output(lsCommand, shell=True).splitlines()]
+    releaseDate = contents[0].split()[0]
+    outfmtDate = releaseDate.split("-")[2] + releaseDate.split("-")[1] + releaseDate.split("-")[0][2:4]
+    readFiles = [x.split()[3] for x in contents]
+    # print("This location contains the following readfiles:\n")
+    # print(", ".join(readFiles) + "\n")
+    # print("Number of read-pairs (isolates):", len([x for x in readFiles if "_R1" in x]))
+    # print("This data was released on: {}\n".format(releaseDate))
+    runDir = s3Key.split("/")[-1]
+    outDir = "{}_APHA_{}".format(outfmtDate, runDir)
+    return outDir
 
 if __name__ == '__main__':
     # TODO: Use Josh's interactive plate selection code
 
     s3_uri = 's3://s3-csu-001/temp/new-plate/'
 
-    plate_name = <date ddmmyy>_APHA_<plate_name>
+    plate_name = check_WGS(s3_uri)
+
+    print("plate_name", plate_name)
 
     quit()
 
