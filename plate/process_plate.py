@@ -1,5 +1,6 @@
 import subprocess
 import os
+import glob
 
 RESULTS_DIRECTORY = '/home/aaronfishman/temp/salmonella-results/'
 READS_DIRECTORY = "/home/aaronfishman/temp/salmonella-reads/" 
@@ -63,7 +64,7 @@ def check_WGS(s3Key):
 
 
 def rename_WGS(readFiles, homeWGSDir):
-    for readFile in readFiles:
+    for readFile in [os.path.basename(x) for x in readFiles]:
         if "_R1" in readFile:
             newName = readFile.split("_")[0] + "_R1.fastq.gz"
         elif "_R2" in readFile:
@@ -78,10 +79,13 @@ if __name__ == '__main__':
     s3_uri = 's3://s3-csu-001/temp/new-plate/'
 
     plate_name = check_WGS(s3_uri)
+    plate_reads_dir = READS_DIRECTORY + plate_name + '/'
+    plate_results_dir = RESULTS_DIRECTORY + plate_name + '/'
 
-    download_s3(s3_uri, RESULTS_DIRECTORY+plate_name)
+    download_s3(s3_uri, plate_reads_dir)
+    rename_WGS(glob.glob(plate_reads_dir+'/*.fastq.gz'), plate_reads_dir)
 
-
+    run_pipeline(plate_reads_dir, plate_results_dir, plate_name)
     
     quit()
 
@@ -97,7 +101,7 @@ if __name__ == '__main__':
     # TODO: Backup raw reads from EC2 --> FSX
     # Integrity checks should be done, Josh's script already does this
 
-    plate_results_dir = RESULTS_DIRECTORY + plate_name + '/'
+    
 
     # Run the pipeline
 
