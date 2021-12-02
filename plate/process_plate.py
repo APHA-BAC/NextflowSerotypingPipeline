@@ -61,6 +61,17 @@ def check_WGS(s3Key):
     outDir = "{}_APHA_{}".format(outfmtDate, runDir)
     return outDir
 
+
+def rename_WGS(readFiles, homeWGSDir):
+    for readFile in readFiles:
+        if "_R1" in readFile:
+            newName = readFile.split("_")[0] + "_R1.fastq.gz"
+        elif "_R2" in readFile:
+            newName = readFile.split("_")[0] + "_R2.fastq.gz"
+        print("Renaming readfile {} --> {}".format(readFile, newName))
+        os.rename("{}/{}".format(homeWGSDir, readFile), "{}/{}".format(homeWGSDir, newName))
+    print("\n\n")
+
 if __name__ == '__main__':
     # TODO: Use Josh's interactive plate selection code
 
@@ -68,11 +79,11 @@ if __name__ == '__main__':
 
     plate_name = check_WGS(s3_uri)
 
-    print("plate_name", plate_name)
+    download_s3(s3_uri, RESULTS_DIRECTORY+plate_name)
 
+
+    
     quit()
-
-    download_s3(s3_uri, )
 
 
     # Download raw reads from S3 --> EC2
