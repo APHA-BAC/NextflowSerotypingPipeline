@@ -8,7 +8,7 @@ READS_DIRECTORY = "/home/aaronfishman/temp/salmonella-reads/"
 
 # TODO: get plate name from Josh's cpde
 def run_pipeline(reads, results, plate_name):
-    subprocess.run([
+    run([
         "sudo", "docker", "run", "-it", 
         "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
         "-v", f"{results}:/root/WGS_Results/{plate_name}/", 
@@ -16,6 +16,24 @@ def run_pipeline(reads, results, plate_name):
         "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
         "--runID", plate_name
     ])
+
+def run(cmd):
+    """ Run a command and assert that the process exits with a non-zero exit code.
+        See python's subprocess.run command for args/kwargs
+        Parameters:
+            cmd (list): List of strings defining the command, see (subprocess.run in python docs)
+            cwd (str): Set surr
+        Returns:
+            None
+    """
+    # TODO: store stdout to a file
+    returncode = subprocess.run(cmd).returncode
+
+    if returncode:
+        raise Exception("""*****
+            %s
+            cmd failed with exit code %i
+        *****""" % (cmd, returncode))
 
 def rename_WGS(readFiles, homeWGSDir):
     for readFile in readFiles:
@@ -28,13 +46,11 @@ def rename_WGS(readFiles, homeWGSDir):
     print("\n\n")
 
 def download_s3(s3_uri, destination):
-    subprocess.run(["aws", "s3", "cp", "--recursive",
+    """ Recursively download a S3 Object """
+    run(["aws", "s3", "cp", "--recursive",
         s3_uri,
         destination
     ])
-
-    # TODO: throw exception if it fails
-
 
 def s3_object_release_date(s3_key):
     """ Date s3 object was published. Returns a 3 element list with format [year, month, day] """
@@ -58,15 +74,27 @@ def s3_uri_to_plate_name(s3_key):
 
     return f"{day}{month}{year[-2:]}_APHA_{run_name}"
 
-def rename_WGS(readFiles, homeWGSDir):
-    for readFile in [os.path.basename(x) for x in readFiles]:
-        if "_R1" in readFile:
-            newName = readFile.split("_")[0] + "_R1.fastq.gz"
-        elif "_R2" in readFile:
-            newName = readFile.split("_")[0] + "_R2.fastq.gz"
-        print("Renaming readfile {} --> {}".format(readFile, newName))
-        os.rename("{}/{}".format(homeWGSDir, readFile), "{}/{}".format(homeWGSDir, newName))
-    print("\n\n")
+def rename_fastq_file(filepath):
+    """ Rename a fastq file from CSU's convention to BGE """
+
+    # Parse
+    directory = os.path.dirname(filepath)
+    filename = os.path.basename(filepath) + '/'
+    sample_name = filename.split("_")[0]
+
+    # Determine Read Number
+    if "_R1" in filename:
+        read_number = 1
+
+    elif "_R2" in filename:
+        read_number = 2
+
+    else:
+        raise Exception("Unable to determine read pair number: ", filename)
+
+    # Rename
+    renamed = f"{directory}/{sample_name}_R{read_number}.fastq.gz"
+    os.rename(filepath, renamed)
 
 
 def run_plate(s3_uri):
@@ -74,15 +102,16 @@ def run_plate(s3_uri):
 
     # 
     plate_name = s3_uri_to_plate_name(s3_uri.strip('/'))
-    print("name", plate_name)
-    quit()
-
     plate_reads_dir = READS_DIRECTORY + plate_name + '/'
     plate_results_dir = RESULTS_DIRECTORY + plate_name + '/'
 
+    # Download
     download_s3(s3_uri, plate_reads_dir)
-    rename_WGS(glob.glob(plate_reads_dir+'/*.fastq.gz'), plate_reads_dir)
 
+    for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
+        rename_fastq_file(filepath)
+
+    # Run
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name)
 
     # TODO: Backup in fsx
