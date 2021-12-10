@@ -29,3 +29,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
+
+cp ./install-fastp.sh ./install/install-fastp.sh
+bash -e install/install-fastp.sh
+
+cp ./install-fastqc.sh ./install/install-fastqc.sh
+bash -e install/install-fastqc.sh
