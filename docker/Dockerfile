@@ -18,7 +18,15 @@ COPY ./install/ ./install/
 # RETURN
 RUN bash install/install.bash
 
+COPY ./install-fastp.sh ./install/install-fastp.sh
+RUN bash install/install-fastp.sh
 
+COPY ./install-fastqc.sh ./install/install-fastqc.sh
+RUN bash install/install-fastqc.sh
+
+ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+COPY ./install-conda.sh ./install/install-conda.sh
+RUN bash install/install-conda.sh
 
 COPY ./install-seqtk.sh ./install/install-seqtk.sh
 RUN bash install/install-seqtk.sh
