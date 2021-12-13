@@ -16,6 +16,8 @@ source ~/.bashrc
 # Now this is where things change. I create a specific Conda environment for the pipeline
 # Any other projects on the SCE3 machine will thus be unaffected by conda and pip installs within this environment
 conda create -n salmpipe python=3.7
+#line below added based on advice here: https://github.com/conda/conda/issues/7980
+eval "$(conda shell.bash hook)"
 conda activate salmpipe
 
 # Link to path
