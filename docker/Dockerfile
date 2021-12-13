@@ -11,7 +11,7 @@ LABEL about.tags="Genomics, WGS"
 
 ################## ARGS #############################
 
-ARG SALMO_PATH="/NextflowSerotypingPipeline/"
+ARG SALMO_PATH="/root/NextflowSerotypingPipeline/"
 
 
 ################## DEPENDENCIES ######################
