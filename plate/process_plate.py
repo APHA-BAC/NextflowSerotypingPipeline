@@ -4,8 +4,8 @@ import glob
 import argparse
 
 # TODO: Rename directories to BGE defaults
-DEFAULT_READS_DIRECTORY = '/home/aaronfishman/temp/reads/'
-DEFAULT_RESULTS_DIRECTORY = '/home/aaronfishman/temp/results/'
+DEFAULT_READS_DIRECTORY = os.path.expanduser('~/salmonella-reads/')
+DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/salmonella-results/')
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
