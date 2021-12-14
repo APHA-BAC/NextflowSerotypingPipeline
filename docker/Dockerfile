@@ -24,9 +24,9 @@ COPY ./ ./
 
 RUN bash install/install.bash
 
-ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-COPY ./install-conda.sh ./install/install-conda.sh
-RUN bash install/install-conda.sh
+#ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#COPY ./install-conda.sh ./install/install-conda.sh
+#RUN bash install/install-conda.sh
 
 
 
