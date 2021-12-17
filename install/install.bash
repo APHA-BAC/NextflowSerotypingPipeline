@@ -27,16 +27,14 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
     python3
 
 
+cp ./install-conda.sh ./install/install-conda.sh
+bash -e install/install-conda.sh
+
 cp ./install-fastp.sh ./install
 bash -e ./install/install-fastp.sh
 
 cp ./install-fastqc.sh ./install/install-fastqc.sh
 bash -e install/install-fastqc.sh
-
-PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-cp ./install-conda.sh ./install/install-conda.sh
-bash -e install/install-conda.sh
 
 cp ./install-seqtk.sh ./install/install-seqtk.sh
 bash -e install/install-seqtk.sh

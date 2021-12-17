@@ -23,8 +23,8 @@ COPY ./ ./
 
 # RETURN
 
-RUN bash install/install.bash
 ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN bash install/install.bash
 
 
 #ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
