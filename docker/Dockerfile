@@ -19,9 +19,6 @@ ARG SALMO_PATH="/root/NextflowSerotypingPipeline/"
 WORKDIR $SALMO_PATH
 COPY ./ ./
 
-
-
-
 #RUN chmod +x ./bin/*
 
 # RETURN
