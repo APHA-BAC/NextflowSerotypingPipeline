@@ -1,7 +1,6 @@
 set -e
 
-# TODO: DRY up the apt-get so it's in one call
-
+# Apt Packages
 apt-get -y update
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
     sudo \
@@ -26,6 +25,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
     nano \
     python3
 
+# Bioinformatics Tools
 bash install/install-conda.sh
 bash install/install-fastp.sh
 bash install/install-fastqc.sh

@@ -19,6 +19,8 @@ ARG SALMO_PATH="/root/NextflowSerotypingPipeline/"
 WORKDIR $SALMO_PATH
 COPY ./ ./
 
-# RETURN
+# Set conda paths. The ENV declaration is required for the $PATH var to remain updated after build
 ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Install dependencies
 RUN bash install/install.bash
