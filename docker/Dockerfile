@@ -19,19 +19,6 @@ ARG SALMO_PATH="/root/NextflowSerotypingPipeline/"
 WORKDIR $SALMO_PATH
 COPY ./ ./
 
-#RUN chmod +x ./bin/*
-
 # RETURN
-
 ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN bash install/install.bash
-
-
-#ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-#COPY ./install-conda.sh ./install/install-conda.sh
-#RUN bash install/install-conda.sh
-
-
-
-
-#COPY ./ ./
