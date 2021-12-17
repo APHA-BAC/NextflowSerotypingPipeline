@@ -1,7 +1,8 @@
 ###########################################################################################
 # Quast
-cd $HOME
 set -e
+
+cd $HOME
 
 # TODO: don't download from master branch, download directly from the authour
 

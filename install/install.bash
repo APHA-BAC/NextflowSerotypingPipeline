@@ -26,21 +26,17 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
     nano \
     python3
 
-
-bash -e install/install-conda.sh
-bash -e install/install-fastp.sh
-bash -e install/install-fastqc.sh
-bash -e install/install-seqtk.sh
-bash -e install/install-shovill.sh
-bash -e install/install-quast.sh
-bash -e install/install-most.sh
-bash -e install/install-kmerid.sh
-bash -e install/install-seqsero2.sh
-bash -e install/install-sistr.sh
-bash -e install/install-srst2.sh
-bash -e install/install-nextflow.sh
-bash -e install/install-sra-toolkit.sh
-bash -e install/setup-environment.sh
-
-
-
+bash install/install-conda.sh
+bash install/install-fastp.sh
+bash install/install-fastqc.sh
+bash install/install-seqtk.sh
+bash install/install-shovill.sh
+bash install/install-quast.sh
+bash install/install-most.sh
+bash install/install-kmerid.sh
+bash install/install-seqsero2.sh
+bash install/install-sistr.sh
+bash install/install-srst2.sh
+bash install/install-nextflow.sh
+bash install/install-sra-toolkit.sh
+bash install/setup-environment.sh
