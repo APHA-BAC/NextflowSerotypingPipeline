@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 mkdir /home/$USER/nextflow
 cd /home/$USER/nextflow
 curl -s https://get.nextflow.io | bash
