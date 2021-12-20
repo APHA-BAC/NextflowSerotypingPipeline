@@ -23,6 +23,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
     libio-tee-perl \
     libunicode-string-perl \
     nano \
+    gzip \
     python3
 
 # Bioinformatics Tools
