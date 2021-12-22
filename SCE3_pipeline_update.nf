@@ -245,7 +245,7 @@ process seqsero2 {
     script:
     """     
    #/opt/conda/bin/conda init bash
-   /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i \$PWD/${sample_id}_{R1,R2}.fastq.gz -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 > ${sample_id}_5.txt
+   /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]} > ${sample_id}_5.txt
     
     """
 }
