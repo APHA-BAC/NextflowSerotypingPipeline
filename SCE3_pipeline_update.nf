@@ -36,8 +36,9 @@ process count_reads {
     tuple sample_id, readPair from reads
 
     output:
-    env(READCOUNT) into countOutCh1
-    tuple sample_id, readPair into countOutCh2
+    env(READCOUNT) into countStr1, countStr2
+    val sample_id into names1, names2
+    val readPair into files1, files2
     file("*_readcount.txt")
 
     shell:
@@ -48,39 +49,32 @@ process count_reads {
     '''
 }
 
-countIntCh = countOutCh1.toInteger()
+countInt1 = countStr1.toInteger()
+countInt2 = countStr2.toInteger()
 
-skipCh = Channel.create()
-runCh = Channel.create()
+names1
+    .merge(countInt1)
+    .merge(files1)
+    .filter {it[1] >= params.minReads}
+    .view()
+    .set{runCh}
 
-/*
- * PRE-STEP i - assign to channel
-*/
-process run_or_skip {
-    input:
-    val readCount from countIntCh
-    tuple sample_id, readPair from countOutCh2
-
-    exec:
-    if (readCount >= params.minReads){
-        println "Pass"
-        runCh.bind([sample_id, readPair])
-    }
-    else {
-        println "Fail"
-        skipCh.bind([sample_id, readPair])
-    }
-}
+names2
+    .merge(countInt2)
+    .merge(files2)
+    .filter {it[1] < params.minReads}
+    .view()
+    .set{skipCh}
 
 /*
- * PRE-STEP i - fastp quality trimming
+ * PRE-STEP ii - fastp quality trimming
 */
 
 process fastp_qual_trim {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
-    tuple sample_id, readPair from runCh
+    tuple sample_id, readCount, readFile1, readFile2 from runCh
 
     output:
     file("*_fastp.log")
@@ -88,12 +82,12 @@ process fastp_qual_trim {
 
     script:
     """
-    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
+    fastp --in1 ${readFile1} --in2 ${readFile2} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
     """
 }
 
 /*
- * PRE-STEP ii - seqtk subsampling
+ * PRE-STEP iii - seqtk subsampling
 */
 
 process subsampling {
@@ -116,21 +110,21 @@ process subsampling {
     OUTNAME2=$(basename $READFILE2 | sed -e 's/_R2.fastq.gz/_R2.fastq/')
     if [ $READCOUNT -gt 4500000 ]
     then
-        echo "Greater than 4.5M reads, subsampling to 4M..." >> !{sample_id}_subsampling.log
-        echo $READFILE1 >> !{sample_id}_subsampling.log
-        echo $OUTNAME1 >> !{sample_id}_subsampling.log
+        echo "Greater than 4.5M reads, subsampling to 4M" >> !{sample_id}_subsampling.log
+        # echo $READFILE1 >> !{sample_id}_subsampling.log
+        # echo $OUTNAME1 >> !{sample_id}_subsampling.log
         /opt/conda/bin/seqtk sample -s100 $READFILE1 4000000 > $OUTNAME1
         gzip --fast $OUTNAME1
-        echo $READFILE2 >> !{sample_id}_subsampling.log
-        echo $OUTNAME2 >> !{sample_id}_subsampling.log
+        # echo $READFILE2 >> !{sample_id}_subsampling.log
+        # echo $OUTNAME2 >> !{sample_id}_subsampling.log
         /opt/conda/bin/seqtk sample -s100 $READFILE2 4000000 > $OUTNAME2
         gzip --fast $OUTNAME2
-        echo "Done." >> !{sample_id}_subsampling.log
+        # echo "Done." >> !{sample_id}_subsampling.log
     else
-        echo "Fewer than 4.5M reads, skipping." >> !{sample_id}_subsampling.log
+        echo "Fewer than 4.5M reads, skipping" >> !{sample_id}_subsampling.log
         mv $READFILE1 .
         mv $READFILE2 .
-        echo "Done." >> !{sample_id}_subsampling.log
+        # echo "Done." >> !{sample_id}_subsampling.log
     fi
     '''
 }
@@ -230,7 +224,7 @@ process kmerid {
  
     script:
     """     
-    python /opt/kmerid/kmerid_python3.py -f $HOME/WGS_Data/${params.runID}/${sample_id}_R1.fastq.gz  -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
+    python /opt/kmerid/kmerid_python3.py -f ${reads_file[0]} -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
    > ${sample_id}_4.txt 
     """
 }
@@ -326,6 +320,7 @@ process most {
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
     > ${sample_id}_7.txt
+    rm -r $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp
     """
 }
 
