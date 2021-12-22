@@ -14,7 +14,6 @@ publishDirectory = "$HOME/WGS_Results/${params.runID}/"
 
 println readPath
 
-/*
 Initial pre-processing run at the start of the nextflow run
 process pre_process {
     """
@@ -23,7 +22,7 @@ process pre_process {
     git rev-parse HEAD > $publishDirectory/sha
     """
 }
-*/ 
+
 
 /*
  * PRE-STEP i - count reads
@@ -111,20 +110,14 @@ process subsampling {
     if [ $READCOUNT -gt 4500000 ]
     then
         echo "Greater than 4.5M reads, subsampling to 4M" >> !{sample_id}_subsampling.log
-        # echo $READFILE1 >> !{sample_id}_subsampling.log
-        # echo $OUTNAME1 >> !{sample_id}_subsampling.log
         /opt/conda/bin/seqtk sample -s100 $READFILE1 4000000 > $OUTNAME1
         gzip --fast $OUTNAME1
-        # echo $READFILE2 >> !{sample_id}_subsampling.log
-        # echo $OUTNAME2 >> !{sample_id}_subsampling.log
         /opt/conda/bin/seqtk sample -s100 $READFILE2 4000000 > $OUTNAME2
         gzip --fast $OUTNAME2
-        # echo "Done." >> !{sample_id}_subsampling.log
     else
         echo "Fewer than 4.5M reads, skipping" >> !{sample_id}_subsampling.log
         mv $READFILE1 .
         mv $READFILE2 .
-        # echo "Done." >> !{sample_id}_subsampling.log
     fi
     '''
 }
