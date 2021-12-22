@@ -1,8 +1,10 @@
 #!/usr/bin/env nextflow
 
 /*
- * STEP 0 - define the input path to the sequences that will be analysed 
+ * PRE-STEP 0 - define the input path to the sequences that will be analysed 
 */ 
+
+params.minReads = 50000
 
 params.runID = "TestIsolates"
 println params.runID
@@ -12,8 +14,8 @@ publishDirectory = "$HOME/WGS_Results/${params.runID}/"
 
 println readPath
 
-
-/* Initial pre-processing run at the start of the nextflow run */ 
+/*
+Initial pre-processing run at the start of the nextflow run
 process pre_process {
     """
     # Save the git-sha into the results folder
@@ -21,17 +23,64 @@ process pre_process {
     git rev-parse HEAD > $publishDirectory/sha
     """
 }
+*/ 
+
+/*
+ * PRE-STEP i - count reads
+*/
+reads = Channel.fromFilePairs(readPath)
+process count_reads {
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/readcount", mode: 'move'
+
+    input:
+    tuple sample_id, readPair from reads
+
+    output:
+    env(READCOUNT) into countOutCh1
+    tuple sample_id, readPair into countOutCh2
+    file("*_readcount.txt")
+
+    shell:
+    '''
+    READFILE1=$(echo !{readPair[0]})
+    READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
+    echo $READCOUNT > !{sample_id}_readcount.txt
+    '''
+}
+
+countIntCh = countOutCh1.toInteger()
+
+skipCh = Channel.create()
+runCh = Channel.create()
+
+/*
+ * PRE-STEP i - assign to channel
+*/
+process run_or_skip {
+    input:
+    val readCount from countIntCh
+    tuple sample_id, readPair from countOutCh2
+
+    exec:
+    if (readCount >= params.minReads){
+        println "Pass"
+        runCh.bind([sample_id, readPair])
+    }
+    else {
+        println "Fail"
+        skipCh.bind([sample_id, readPair])
+    }
+}
 
 /*
  * PRE-STEP i - fastp quality trimming
 */
-reads = Channel.fromFilePairs(readPath)
 
 process fastp_qual_trim {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
-    tuple sample_id, readPair from reads
+    tuple sample_id, readPair from runCh
 
     output:
     file("*_fastp.log")
