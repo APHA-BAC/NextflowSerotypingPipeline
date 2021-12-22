@@ -4,7 +4,10 @@
  * PRE-STEP 0 - define the input path to the sequences that will be analysed 
 */ 
 
-params.minReads = 50000
+params.minReads = 500000
+params.subsampThreshold = 3500000
+subsamp = params.subsampThreshold - 500000
+println subsamp
 
 params.runID = "TestIsolates"
 println params.runID
@@ -14,7 +17,8 @@ publishDirectory = "$HOME/WGS_Results/${params.runID}/"
 
 println readPath
 
-Initial pre-processing run at the start of the nextflow run
+/* Initial pre-processing run at the start of the nextflow run */
+
 process pre_process {
     """
     # Save the git-sha into the results folder
@@ -107,15 +111,15 @@ process subsampling {
     READFILE2=$(echo $READFILE1 | sed -e 's/_R1.fastq.gz/_R2.fastq.gz/')
     OUTNAME1=$(basename $READFILE1 | sed -e 's/_R1.fastq.gz/_R1.fastq/')
     OUTNAME2=$(basename $READFILE2 | sed -e 's/_R2.fastq.gz/_R2.fastq/')
-    if [ $READCOUNT -gt 4500000 ]
+    if [ $READCOUNT -gt !{params.subsampThreshold} ]
     then
-        echo "Greater than 4.5M reads, subsampling to 4M" >> !{sample_id}_subsampling.log
-        /opt/conda/bin/seqtk sample -s100 $READFILE1 4000000 > $OUTNAME1
+        echo "Greater than !{params.subsampThreshold} reads, subsampling to !{subsamp}" >> !{sample_id}_subsampling.log
+        /opt/conda/bin/seqtk sample -s100 $READFILE1 !{subsamp} > $OUTNAME1
         gzip --fast $OUTNAME1
-        /opt/conda/bin/seqtk sample -s100 $READFILE2 4000000 > $OUTNAME2
+        /opt/conda/bin/seqtk sample -s100 $READFILE2 !{subsamp} > $OUTNAME2
         gzip --fast $OUTNAME2
     else
-        echo "Fewer than 4.5M reads, skipping" >> !{sample_id}_subsampling.log
+        echo "Fewer than !{params.subsampThreshold} reads, skipping" >> !{sample_id}_subsampling.log
         mv $READFILE1 .
         mv $READFILE2 .
     fi
