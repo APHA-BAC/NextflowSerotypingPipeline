@@ -1,8 +1,13 @@
 #!/usr/bin/env nextflow
 
 /*
- * STEP 0 - define the input path to the sequences that will be analysed 
+ * PRE-STEP 0 - define the input path to the sequences that will be analysed 
 */ 
+
+params.minReads = 500000
+params.subsampThreshold = 3500000
+subsamp = params.subsampThreshold - 500000
+println subsamp
 
 params.runID = "TestIsolates"
 println params.runID
@@ -12,8 +17,8 @@ publishDirectory = "$HOME/WGS_Results/${params.runID}/"
 
 println readPath
 
+/* Initial pre-processing run at the start of the nextflow run */
 
-/* Initial pre-processing run at the start of the nextflow run */ 
 process pre_process {
     """
     # Save the git-sha into the results folder
@@ -22,16 +27,57 @@ process pre_process {
     """
 }
 
+
 /*
- * PRE-STEP i - fastp quality trimming
+ * PRE-STEP i - count reads
 */
 reads = Channel.fromFilePairs(readPath)
+process count_reads {
+    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/readcount", mode: 'move'
+
+    input:
+    tuple sample_id, readPair from reads
+
+    output:
+    env(READCOUNT) into countStr1, countStr2
+    val sample_id into names1, names2
+    val readPair into files1, files2
+    file("*_readcount.txt")
+
+    shell:
+    '''
+    READFILE1=$(echo !{readPair[0]})
+    READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
+    echo $READCOUNT > !{sample_id}_readcount.txt
+    '''
+}
+
+countInt1 = countStr1.toInteger()
+countInt2 = countStr2.toInteger()
+
+names1
+    .merge(countInt1)
+    .merge(files1)
+    .filter {it[1] >= params.minReads}
+    .view()
+    .set{runCh}
+
+names2
+    .merge(countInt2)
+    .merge(files2)
+    .filter {it[1] < params.minReads}
+    .view()
+    .set{skipCh}
+
+/*
+ * PRE-STEP ii - fastp quality trimming
+*/
 
 process fastp_qual_trim {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
-    tuple sample_id, readPair from reads
+    tuple sample_id, readCount, readFile1, readFile2 from runCh
 
     output:
     file("*_fastp.log")
@@ -39,12 +85,12 @@ process fastp_qual_trim {
 
     script:
     """
-    fastp --in1 ${readPair[0]} --in2 ${readPair[1]} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
+    fastp --in1 ${readFile1} --in2 ${readFile2} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz > ${sample_id}_fastp.log 2>&1
     """
 }
 
 /*
- * PRE-STEP ii - seqtk subsampling
+ * PRE-STEP iii - seqtk subsampling
 */
 
 process subsampling {
@@ -65,23 +111,17 @@ process subsampling {
     READFILE2=$(echo $READFILE1 | sed -e 's/_R1.fastq.gz/_R2.fastq.gz/')
     OUTNAME1=$(basename $READFILE1 | sed -e 's/_R1.fastq.gz/_R1.fastq/')
     OUTNAME2=$(basename $READFILE2 | sed -e 's/_R2.fastq.gz/_R2.fastq/')
-    if [ $READCOUNT -gt 4500000 ]
+    if [ $READCOUNT -gt !{params.subsampThreshold} ]
     then
-        echo "Greater than 4.5M reads, subsampling to 4M..." >> !{sample_id}_subsampling.log
-        echo $READFILE1 >> !{sample_id}_subsampling.log
-        echo $OUTNAME1 >> !{sample_id}_subsampling.log
-        /opt/conda/bin/seqtk sample -s100 $READFILE1 4000000 > $OUTNAME1
+        echo "Greater than !{params.subsampThreshold} reads, subsampling to !{subsamp}" >> !{sample_id}_subsampling.log
+        /opt/conda/bin/seqtk sample -s100 $READFILE1 !{subsamp} > $OUTNAME1
         gzip --fast $OUTNAME1
-        echo $READFILE2 >> !{sample_id}_subsampling.log
-        echo $OUTNAME2 >> !{sample_id}_subsampling.log
-        /opt/conda/bin/seqtk sample -s100 $READFILE2 4000000 > $OUTNAME2
+        /opt/conda/bin/seqtk sample -s100 $READFILE2 !{subsamp} > $OUTNAME2
         gzip --fast $OUTNAME2
-        echo "Done." >> !{sample_id}_subsampling.log
     else
-        echo "Fewer than 4.5M reads, skipping." >> !{sample_id}_subsampling.log
+        echo "Fewer than !{params.subsampThreshold} reads, skipping" >> !{sample_id}_subsampling.log
         mv $READFILE1 .
         mv $READFILE2 .
-        echo "Done." >> !{sample_id}_subsampling.log
     fi
     '''
 }
@@ -181,7 +221,7 @@ process kmerid {
  
     script:
     """     
-    python /opt/kmerid/kmerid_python3.py -f $HOME/WGS_Data/${params.runID}/${sample_id}_R1.fastq.gz  -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
+    python /opt/kmerid/kmerid_python3.py -f ${reads_file[0]} -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
    > ${sample_id}_4.txt 
     """
 }
@@ -205,7 +245,7 @@ process seqsero2 {
     script:
     """     
    #/opt/conda/bin/conda init bash
-   /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -i \$PWD/${sample_id}_{R1,R2}.fastq.gz -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 > ${sample_id}_5.txt
+   /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]} > ${sample_id}_5.txt
     
     """
 }
@@ -277,6 +317,11 @@ process most {
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
     > ${sample_id}_7.txt
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.pileup
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.fa
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.fa.fai
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.bam
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.bam.bai
     """
 }
 

@@ -6,6 +6,7 @@ import argparse
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
+DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
@@ -22,7 +23,7 @@ def run(cmd):
             cmd failed with exit code %i
         *****""" % (cmd, returncode))
 
-def run_pipeline(reads, results, plate_name, image="jguzinski/salmonella-seq:prod"):
+def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE):
     """ Run the Salmonella pipeline using docker """
     run([
         "sudo", "docker", "run", "-it", 
@@ -103,7 +104,7 @@ def run_plate(s3_uri, reads_dir, results_dir):
         rename_fastq_file(filepath)
 
     # Process
-    run_pipeline(plate_reads_dir, plate_results_dir, plate_name)
+    run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
 
     # TODO: Backup in fsx
 
@@ -113,6 +114,7 @@ if __name__ == '__main__':
     parser.add_argument("s3_uri", help="s3 uri that corresponds to the fastq plate to run")
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
+    parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
 
     args = parser.parse_args()
 
