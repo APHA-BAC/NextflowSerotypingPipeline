@@ -317,7 +317,11 @@ process most {
     mv serovar2.txt  ${sample_id}_serovar.tsv 
     fi
     > ${sample_id}_7.txt
-    rm -r $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.pileup
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.fa
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.fa.fai
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.bam
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.bam.bai
     """
 }
 
