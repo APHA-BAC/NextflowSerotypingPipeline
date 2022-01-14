@@ -3,7 +3,7 @@ set -e
 cd $HOME
 
 # TODO: download directly from authour
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
+wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/KMERID-PHE/master/pipeline_component_software/KmerID/kmerid.zip
 unzip kmerid.zip
 sudo cp -r kmerid /opt
 sudo make -C /opt/kmerid all # Changed this so no need to change directory
