@@ -5,7 +5,7 @@ set -e
 cd $HOME
 
 # I have changed this to follow the style of other installations into /opt
-wget --no-check-certificate --content-disposition https://github.com/ablab/quast/releases/download/quast-5.1.0rc1/quast-5.1.0rc1.tar.gz
+wget --no-check-certificate --content-disposition https://github.com/ablab/quast/releases/download/quast_5.1.0rc1/quast-5.1.0rc1.tar.gz
 tar -xzf quast-5.1.0rc1.tar.gz
 
 sudo cp -r quast-5.1.0rc1 /opt
