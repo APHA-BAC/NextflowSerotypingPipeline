@@ -170,7 +170,7 @@ process shovill {
   
     script:
     """    
-    /opt/conda/bin/shovill --ram 7 --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
    > ${sample_id}_2.txt 
    """

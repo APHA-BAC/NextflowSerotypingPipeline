@@ -24,3 +24,5 @@ ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:
 
 # Install dependencies
 RUN bash install/install.bash
+
+RUN mkdir /artifacts/
