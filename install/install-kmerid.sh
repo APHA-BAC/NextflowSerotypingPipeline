@@ -2,7 +2,6 @@
 set -e
 cd $HOME
 
-# TODO: download directly from authour
 wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/KMERID-PHE/master/pipeline_component_software/KmerID/kmerid.zip
 unzip kmerid.zip
 sudo cp -r kmerid /opt
@@ -16,6 +15,5 @@ sudo apt-get -y install nodejs
 sudo apt-get -y install npm
 sudo npm install -g github-files-fetcher
 
-# TODO: download from somewhere that's not this repo's branch 
-sudo fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
-sudo fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/tree/master/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
+sudo fetcher --url="https://github.com/APHA-BAC/KMERID-PHE/tree/master/kmerid_ref/Citrobacter" --out=/opt/kmerid/ref
+sudo fetcher --url="https://github.com/APHA-BAC/KMERID-PHE/tree/master/kmerid_ref/Salmonella" --out=/opt/kmerid/ref
