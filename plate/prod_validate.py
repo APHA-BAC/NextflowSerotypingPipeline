@@ -2,13 +2,56 @@ import process_plate
 import pandas as pd
 import os
 
+pd.set_option("display.max_rows", None, "display.max_columns", None)
+
+def load_summary_table(csv_path):
+    # Load
+    df = pd.read_csv(results_csv_path)
+
+    # Validate
+    columns = df.columns.to_list()
+    if not 'StrainID' in columns:
+        raise Exception(f"StrainID column missing: {csv_path}")
+
+    if not 'Consensus' in columns:
+        raise Exception(f"Consensus column missing: {csv_path}")
+
+    if not df.StrainID.is_unique:
+        raise Exception(f"StrainID column is not unique: {csv_path}")
+
+    return df
+
 # process_plate.run_pipeline("/home/joshuapotter/wgs-reads/validation_test", "/home/joshuapotter/wgs-results/validation_test", "validation_test", "jguzinski/salmonella-seq:master")
 
-results_dir = "/home/joshuapotter/wgs-results/validation_test"
+results_csv_path = "../validation250/validation250_fastpTrimmed_SummaryTable.csv"
+expected_csv_path = "../validation250/validation_test_SummaryTable.csv"
 
-expected_df = pd.read_csv(os.path.expanduser("~/NextflowSerotypingPipeline/validation250/validation250_fastpTrimmed_SummaryTable.csv"))
+# Load
+expected_df = load_summary_table(results_csv_path)[["StrainID", "Consensus"]]
+results_df = load_summary_table(expected_csv_path)
 
-# print(expected_df)
+# Rename Columns
+expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus"})
+results_df = results_df.rename(columns={"Consensus": "ActualConsensus"})
+actual_df = results_df
+
+# Join
+merged = expected_df.merge(results_df, on='StrainID')
+
+# Evaluate
+merged['Outcome'] = 'unset'
+merged.loc[merged['ActualConsensus']==merged['ExpectedConsensus'], 'Outcome'] = 'success'
+merged.loc[merged['ActualConsensus']!=merged['ExpectedConsensus'], 'Outcome'] = 'fail'
+merged.loc[merged['ActualConsensus'].isna(), 'success'] = 'missing'
+
+# Outcome
+if (merged["Outcome"] == "success").all():
+    print("Validation successful")
+else:
+    print("Validation failed :(")
+
+
+quit()
 
 expected_dict = {}
 
@@ -19,7 +62,7 @@ for i, row in expected_df.iterrows():
         raise Exception(f"Duplicate strain ID in expected_dict {strain_id}")
     expected_dict[strain_id] = consensus
 
-results_df = pd.read_csv(os.path.join(results_dir ,"validation_test_SummaryTable.csv"))
+
 
 # print(results_df)
 
