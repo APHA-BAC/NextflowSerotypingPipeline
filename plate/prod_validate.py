@@ -4,9 +4,11 @@ import os
 
 pd.set_option("display.max_rows", None, "display.max_columns", None)
 
+DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
+
 def load_summary_table(csv_path):
     # Load
-    df = pd.read_csv(results_csv_path)
+    df = pd.read_csv(csv_path)
 
     # Validate
     columns = df.columns.to_list()
@@ -21,36 +23,47 @@ def load_summary_table(csv_path):
 
     return df
 
-# process_plate.run_pipeline("/home/joshuapotter/wgs-reads/validation_test", "/home/joshuapotter/wgs-results/validation_test", "validation_test", "jguzinski/salmonella-seq:master")
+def analyse_results(expected_csv_path, actual_csv_path):
+    # Load
+    expected_df = load_summary_table(expected_csv_path)[["StrainID", "Consensus"]]
+    actual_df = load_summary_table(actual_csv_path)
 
-results_csv_path = "../validation250/validation250_fastpTrimmed_SummaryTable.csv"
-expected_csv_path = "../validation250/validation_test_SummaryTable.csv"
+    # Rename Columns
+    expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus"})
+    actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus"})
 
-# Load
-expected_df = load_summary_table(results_csv_path)[["StrainID", "Consensus"]]
-results_df = load_summary_table(expected_csv_path)
+    # Join
+    merged = expected_df.merge(actual_df, on='StrainID')
 
-# Rename Columns
-expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus"})
-results_df = results_df.rename(columns={"Consensus": "ActualConsensus"})
-actual_df = results_df
+    # Evaluate
+    merged['Outcome'] = 'unset'
+    merged.loc[merged['ActualConsensus']==merged['ExpectedConsensus'], 'Outcome'] = 'success'
+    merged.loc[merged['ActualConsensus']!=merged['ExpectedConsensus'], 'Outcome'] = 'fail'
+    merged.loc[merged['ActualConsensus'].isna(), 'success'] = 'missing'
 
-# Join
-merged = expected_df.merge(results_df, on='StrainID')
+    # Outcome
+    return merged
 
-# Evaluate
-merged['Outcome'] = 'unset'
-merged.loc[merged['ActualConsensus']==merged['ExpectedConsensus'], 'Outcome'] = 'success'
-merged.loc[merged['ActualConsensus']!=merged['ExpectedConsensus'], 'Outcome'] = 'fail'
-merged.loc[merged['ActualConsensus'].isna(), 'success'] = 'missing'
+def validate(
+    expected_csv_path
+    image=DEFAULT_IMAGE
+):
+    reads_path = "/home/joshuapotter/wgs-reads/validation_test"
+    results_path = "/home/joshuapotter/wgs-results/validation_test"
 
-# Outcome
-if (merged["Outcome"] == "success").all():
-    print("Validation successful")
-else:
-    print("Validation failed :(")
+    #process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
 
+    results_csv_path = "../validation250/validation250_fastpTrimmed_SummaryTable.csv"
+    expected_csv_path = "../validation250/validation_test_SummaryTable.csv"
 
+    merged = analyse_results(expected_csv_path, results_csv_path)
+
+    if (merged["Outcome"] == "success").all():
+        print("Successful validation! :)")
+    else:
+        print("Validation failed :(")
+
+validate()
 quit()
 
 expected_dict = {}
