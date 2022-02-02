@@ -1,12 +1,16 @@
 import process_plate
 import pandas as pd
 import os
-
-pd.set_option("display.max_rows", None, "display.max_columns", None)
+import argparse
 
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
+DEFAULT_READS_DIR = '/home/joshuapotter/wgs-reads/validation_test/'
+DEFAULT_RESULTS_DIR = '/home/joshuapotter/wgs-results/validation_test/'
+DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation_test_SummaryTable.csv'
+DEFAULT_OUTCOME_PATH = './outcome.csv'
 
 def load_summary_table(csv_path):
+    """ Returns a DataFrame containing Consensus and unique StrainID columns """
     # Load
     df = pd.read_csv(csv_path)
 
@@ -24,6 +28,7 @@ def load_summary_table(csv_path):
     return df
 
 def analyse_results(expected_csv_path, actual_csv_path):
+    """ Returns a merged DataFrame containing an Outcome column that indicates consistency """
     # Load
     expected_df = load_summary_table(expected_csv_path)[["StrainID", "Consensus"]]
     actual_df = load_summary_table(actual_csv_path)
@@ -45,71 +50,32 @@ def analyse_results(expected_csv_path, actual_csv_path):
     return merged
 
 def validate(
-    expected_csv_path
-    image=DEFAULT_IMAGE
+    reads_path,
+    results_path,
+    expected_csv_path,
+    outcome_csv_path,
+    image
 ):
-    reads_path = "/home/joshuapotter/wgs-reads/validation_test"
-    results_path = "/home/joshuapotter/wgs-results/validation_test"
-
     #process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
-
     results_csv_path = "../validation250/validation250_fastpTrimmed_SummaryTable.csv"
-    expected_csv_path = "../validation250/validation_test_SummaryTable.csv"
 
     merged = analyse_results(expected_csv_path, results_csv_path)
+
+    merged.to_csv(outcome_csv_path)
 
     if (merged["Outcome"] == "success").all():
         print("Successful validation! :)")
     else:
         print("Validation failed :(")
 
-validate()
-quit()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Validate a docker image")
+    parser.add_argument("--reads", default=DEFAULT_READS_DIR, help="Directory containing fastq reads")
+    parser.add_argument("--results", default=DEFAULT_RESULTS_DIR, help="Output directory for writing sequenced results")
+    parser.add_argument("--expected", default=DEFAULT_EXPECTED_CSV_PATH, help="Path to csv that contains expected results")
+    parser.add_argument("--outcome", default=DEFAULT_OUTCOME_PATH, help="Output outcome csv")
+    parser.add_argument("--image", default=DEFAULT_IMAGE, help="Docker image")
 
-expected_dict = {}
+    args = parser.parse_args()
 
-for i, row in expected_df.iterrows():
-    strain_id = row["StrainID"]
-    consensus = row["Consensus"]
-    if strain_id in expected_dict:
-        raise Exception(f"Duplicate strain ID in expected_dict {strain_id}")
-    expected_dict[strain_id] = consensus
-
-
-
-# print(results_df)
-
-results_dict = {}
-
-for i, row in results_df.iterrows():
-    strain_id = row["StrainID"]
-    consensus = row["Consensus"]
-    if strain_id in results_dict:
-        raise Exception(f"Duplicate strain ID in results_dict {strain_id}")
-    results_dict[strain_id] = consensus
-
-# print(results_dict)
-
-outcomes = []
-
-for strain_id, consensus in expected_dict.items():
-    if strain_id not in results_dict:
-        outcome = "MISSING"
-        actual = "missing"
-    elif results_dict[strain_id] == consensus:
-        outcome = "SUCCESS"
-        actual = results_dict[strain_id]
-    else:
-        outcome = "FAIL"
-        actual = results_dict[strain_id]
-    outcomes.append({"StrainID":strain_id,
-        "Outcome":outcome,
-        "Expected":consensus,
-        "Actual":actual})
-
-outcome_df = pd.DataFrame(outcomes).sort_values("StrainID")
-
-if (outcome_df["Outcome"] == "SUCCESS").all():
-    print("Successful validation! :)")
-else:
-    print("Validation failed :(")
+    validate(args.reads, args.results, args.expected, args.outcome, args.image)
