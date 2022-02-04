@@ -1,0 +1,251 @@
+,StrainID,ExpectedConsensus,ActualConsensus,#ReadsR1,GC%R1,R1Kmerid,ContaminationFlag,MOST,Most_light,st,MLST,MLST mean cov,SeqSero,SS comment,N50,serogroup,serovar,serovar_antigen,serovar_cgmlst,vaccine,mono,sseJ,ReadLenRange,#Contigs,#Contigs>25Kbp,#Contigs>50Kbp,AssemblySize,AssemblyGC,L50,Outcome,success
+0,L00064-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+1,L00086-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+2,L00088-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+3,L00091-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+4,L00100-13,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+5,L00117-17,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+6,L00133-13,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+7,L00184-15,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+8,L00234-16,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+9,L00268-11,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+10,L00301-11,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+11,L00304-11,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+12,L00325-11,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+13,L00326-11,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+14,L00350-15,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+15,L00400-14,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+16,L00413-15,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+17,L00416-14,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+18,L00435-08,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+19,L00485-11,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+20,L00503-11,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+21,L00504-14,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+22,L00520-11,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+23,L00520-12,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+24,L00527-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+25,L00541-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+26,L00571-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+27,L00603-11,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+28,L00636-17,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+29,L00705-15,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+30,L00750-11,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+31,L00763-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+32,L00809-10,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+33,L00826-11,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+34,L00861-14,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+35,L00912-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+36,L00923-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+37,L00942-13,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+38,L00970-13,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+39,L00974-13,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+40,L00981-13,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+41,L00987-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+42,L00991-13,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+43,L01014-13,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+44,L01030-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+45,L01177-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+46,L01178-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+47,L01179-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+48,L01182-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+49,L01211-09,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+50,L01259-11,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+51,L01293-13,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+52,L01326-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+53,L01401-13,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+54,L01470-14,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+55,L01473-14,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+56,L01477-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+57,L01508-16,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+58,L01510-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+59,L01512-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+60,L01514-15,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+61,L01515-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+62,L01516-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+63,L01525-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+64,L01528-13,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+65,L01530-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+66,L01573-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+67,L01709-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+68,L01712-13,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+69,L01866-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+70,L01882-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+71,L01884-15,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+72,L01893-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+73,L01898-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+74,L01967-13,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+75,L02036-15,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+76,L02079-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+77,L02090-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+78,L02276-16,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+79,L02280-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+80,L02315-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+81,L02319-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+82,L02326-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+83,L02328-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+84,L02334-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+85,L02365-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+86,L02377-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+87,L02395-16,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+88,L02407-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+89,L02490-15,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+90,L02502-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+91,L02525-16,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+92,L02609-16,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+93,L02927-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+94,L03123-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+95,L03179-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+96,L03258-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+97,L03289-16,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+98,L03308-15,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+99,L03574-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+100,L03832-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+101,L03864-15,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+102,L04277-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+103,S00018-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+104,S00019-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+105,S00042-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+106,S00044-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+107,S00123-13,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+108,S00225-17,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+109,S00372-98,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+110,S00374-14,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+111,S00376-11,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+112,S00432-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+113,S00529-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+114,S00530-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+115,S00632-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+116,S00660-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+117,S00665-10,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+118,S00705-14,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+119,S00763-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+120,S00766-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+121,S00801-14,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+122,S00940-17,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+123,S00946-17,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+124,S00953-13,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+125,S00958-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+126,S00988-12,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+127,S01055-16,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+128,S01073-14,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+129,S01159-12,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+130,S01166-08,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+131,S01226-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+132,S01227-16,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+133,S01265-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+134,S01341-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+135,S01344-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+136,S01381-14,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+137,S01383-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+138,S01458-14,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+139,S01490-08,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+140,S01510-16,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+141,S01581-11,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+142,S01695-12,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+143,S01841-13,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+144,S01937-11,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+145,S02003-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+146,S02095-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+147,S02097-12,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+148,S02098-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+149,S02237-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+150,S02238-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+151,S02242-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+152,S02293-12,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+153,S02307-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+154,S02362-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+155,S02458-16,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+156,S02469-17,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+157,S02507-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+158,S02508-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+159,S02554-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+160,S02574-17,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+161,S02704-13,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+162,S02785-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+163,S02854-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+164,S02855-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+165,S02857-11,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+166,S02894-15,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+167,S02908-15,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+168,S02909-15,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+169,S02963-13,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+170,S02996-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+171,S03001-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+172,S03014-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+173,S03016-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+174,S03027-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+175,S03055-10,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+176,S03055-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+177,S03087-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+178,S03117-16,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+179,S03159-16,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+180,S03197-13,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+181,S03209-14,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+182,S03297-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+183,S03318-16,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+184,S03319-16,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+185,S03357-11,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+186,S03368-11,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+187,S03405-16,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+188,S03535-16,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+189,S03598-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+190,S03731-13,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+191,S03770-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+192,S03829-14,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+193,S03927-11,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+194,S03964-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+195,S04049-15,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+196,S04088-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+197,S04089-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+198,S04104-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+199,S04150-15,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+200,S04163-14,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+201,S04186-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+202,S04190-14,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+203,S04194-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+204,S04219-16,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+205,S04227-13,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+206,S04368-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+207,S04369-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+208,S04426-14,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+209,S04428-14,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+210,S04470-14,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+211,S04483-12,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+212,S04602-15,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+213,S04686-11,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+214,S04688-15,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+215,S04699-15,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+216,S04700-15,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+217,S04752-14,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+218,S04779-13,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+219,S04851-11,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+220,S04854-11,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+221,S04855-11,3-Derby,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+222,S04868-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+223,S04996-13,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+224,S05010-13,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+225,S05013-13,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+226,S05181-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+227,S05184-11,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+228,S05208-15,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+229,S05222-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+230,S05254-13,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+231,S05259-15,3-Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+232,S05261-13,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+233,S05357-12,3-Agona,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+234,S05525-12,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+235,S05527-13,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+236,S05535-13,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+237,S05536-13,3-Kentucky,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+238,S05559-15,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+239,S05564-15,3-Monophasic Typhimurium,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+240,S05813-15,"1-I 4,[5],12:i:---1-Unnamed--1-I 1,4,[5],12:i:-",,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+241,S05909-12,3-Infantis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+242,S05910-12,3-Newport,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+243,S05925-12,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+244,S05926-12,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+245,S05927-12,3-Virchow,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+246,S06108-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+247,S06164-08,3-Stanley,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+248,S06172-15,3-Enteritidis,,,,,,,,,,,,,,,,,,,,,,,,,,,,fail,missing
+249,S06176-12,3-Kentucky,3-Kentucky,595176.0,52.0,79.63-salmonella--6.01-citrobacter,Off,Kentucky,GREEN,314.0,"115,75,8,115,2,116,110",37.3,Kentucky,,473291.0,C2-C3,Kentucky,Kentucky,Kentucky,,,,31-151,24.0,16.0,13.0,4662407.0,52.12,4.0,success,

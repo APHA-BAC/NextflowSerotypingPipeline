@@ -4,9 +4,9 @@ import os
 import argparse
 
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
-DEFAULT_READS_DIR = '/home/joshuapotter/wgs-reads/validation_test/'
-DEFAULT_RESULTS_DIR = '/home/joshuapotter/wgs-results/validation_test/'
-DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation_test_SummaryTable.csv'
+DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/Validation_panel_1/')
+DEFAULT_RESULTS_DIR = os.path.expanduser('~/wgs-results/validation_test/')
+DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_fastpTrimmed_SummaryTable.csv'
 DEFAULT_OUTCOME_PATH = './outcome.csv'
 
 def load_summary_table(csv_path):
@@ -56,10 +56,10 @@ def validate(
     outcome_csv_path,
     image
 ):
-    #process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
-    results_csv_path = "../validation250/validation250_fastpTrimmed_SummaryTable.csv"
+    # process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
+    actual_csv_path = results_path + "/validation_test_SummaryTable.csv"
 
-    merged = analyse_results(expected_csv_path, results_csv_path)
+    merged = analyse_results(expected_csv_path, actual_csv_path)
 
     merged.to_csv(outcome_csv_path)
 
@@ -78,4 +78,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    validate(args.reads, args.results, args.expected, args.outcome, args.image)
+    validate(os.path.expanduser(args.reads), 
+        os.path.expanduser(args.results), 
+        os.path.expanduser(args.expected), 
+        os.path.expanduser(args.outcome), 
+        args.image
+        )
