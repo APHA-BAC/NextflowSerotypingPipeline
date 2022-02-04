@@ -56,7 +56,12 @@ def validate(
     outcome_csv_path,
     image
 ):
-    # process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
+    if os.path.exists(results_path):
+        raise Exception("Results path already exists; Path must not exist: ", results_path)
+
+    os.makedirs(results_path)
+
+    process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
     actual_csv_path = results_path + "/validation_test_SummaryTable.csv"
 
     merged = analyse_results(expected_csv_path, actual_csv_path)
