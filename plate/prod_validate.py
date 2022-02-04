@@ -38,7 +38,7 @@ def analyse_results(expected_csv_path, actual_csv_path):
     actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus"})
 
     # Join
-    merged = expected_df.merge(actual_df, on='StrainID')
+    merged = expected_df.merge(actual_df, on='StrainID', how='left')
 
     # Evaluate
     merged['Outcome'] = 'unset'
