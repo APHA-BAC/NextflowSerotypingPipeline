@@ -1,6 +1,8 @@
 #!/usr/bin/env nextflow
 
-/* PRE-STEP 0 - define the input path to the sequences that will be analysed */ 
+/*
+ * PRE-STEP i - define the input path to the sequences that will be analysed
+*/ 
 
 params.minReads = 300000
 params.subsampThreshold = 3500000
@@ -15,8 +17,9 @@ publishDirectory = "$HOME/WGS_Results/${params.runID}/"
 
 println readPath
 
+
 /*
- * PRE-STEP i - Initial pre-processing run at the start of the nextflow run
+ * PRE-STEP ii - Initial pre-processing run at the start of the nextflow run
 */
 
 process pre_process {
@@ -29,7 +32,7 @@ process pre_process {
 
 
 /*
- * PRE-STEP ii - count reads
+ * PRE-STEP iii - count reads
 */
 
 reads = Channel.fromFilePairs(readPath)
@@ -73,7 +76,7 @@ names2
 
 
 /*
- * PRE-STEP iii - instantiate summary table
+ * PRE-STEP iv - instantiate summary table
 */
 
 samplecount_ch = Channel.fromFilePairs(readPath)
@@ -94,7 +97,7 @@ process instantiate_summary_table {
 
 
 /*
- * PRE-STEP iv - fastp quality trimming
+ * PRE-STEP v - fastp quality trimming
 */
 
 process fastp_qual_trim {
@@ -115,7 +118,7 @@ process fastp_qual_trim {
 
 
 /* 
- * PRE-STEP v - seqtk subsampling
+ * PRE-STEP vi - seqtk subsampling
 */
 
 process subsampling {
