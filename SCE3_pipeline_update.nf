@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 
-/*
- * PRE-STEP 0 - define the input path to the sequences that will be analysed 
-*/ 
+/* PRE-STEP 0 - define the input path to the sequences that will be analysed */ 
 
 params.minReads = 300000
 params.subsampThreshold = 3500000
@@ -17,7 +15,9 @@ publishDirectory = "$HOME/WGS_Results/${params.runID}/"
 
 println readPath
 
-/* Initial pre-processing run at the start of the nextflow run */
+/*
+ * PRE-STEP i - Initial pre-processing run at the start of the nextflow run
+*/
 
 process pre_process {
     """
@@ -29,9 +29,11 @@ process pre_process {
 
 
 /*
- * PRE-STEP i - count reads
+ * PRE-STEP ii - count reads
 */
+
 reads = Channel.fromFilePairs(readPath)
+
 process count_reads {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/readcount", mode: 'move'
 
@@ -42,7 +44,7 @@ process count_reads {
     env(READCOUNT) into countStr1, countStr2
     val sample_id into names1, names2
     val readPair into files1, files2
-    file("*_readcount.txt")
+    file("*_readcount.txt") into out_ii
 
     shell:
     '''
@@ -69,8 +71,30 @@ names2
     .view()
     .set{skipCh}
 
+
 /*
- * PRE-STEP ii - fastp quality trimming
+ * PRE-STEP iii - instantiate summary table
+*/
+
+samplecount_ch = Channel.fromFilePairs(readPath)
+
+process instantiate_summary_table {
+    input:
+    val sample_count from samplecount_ch.count()
+    val counted_samples from out_ii.count()
+
+    when:
+    counted_samples == sample_count
+
+    shell:
+    """
+    python $HOME/summary/summaryTable_reworked.py ${params.runID} --instantiate
+    """
+}
+
+
+/*
+ * PRE-STEP iv - fastp quality trimming
 */
 
 process fastp_qual_trim {
@@ -89,8 +113,9 @@ process fastp_qual_trim {
     """
 }
 
-/*
- * PRE-STEP iii - seqtk subsampling
+
+/* 
+ * PRE-STEP v - seqtk subsampling
 */
 
 process subsampling {
