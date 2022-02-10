@@ -343,32 +343,32 @@ process most {
     file("${sample_id}_7.txt") into out7_ch_rem   
     set sample_id, file("${sample_id}_serovar.tsv") into most_out_ch
 
-    script:
-    """    
-    python /opt/most/MOST-master/MOST.py -1 ${reads_file[0]} -2 ${reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/${params.runID}/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
-    if grep "predicted_serotype" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
+    shell:
+    '''  
+    python /opt/most/MOST-master/MOST.py -1 !{reads_file[0]} -2 !{reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    if grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml
     then
-        grep "predicted_serotype" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
+        grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
         if grep -q "ST-serotype" serovar1.txt
         then
             awk '{print substr(\$2,1,5); }' serovar1.txt > serovar2.txt
-            mv serovar2.txt  ${sample_id}_serovar.tsv 
+            mv serovar2.txt  !{sample_id}_serovar.tsv 
         else
             awk '{print substr(\$3,10); }' serovar1.txt > serovar2.txt   
-            mv serovar2.txt  ${sample_id}_serovar.tsv 
+            mv serovar2.txt  !{sample_id}_serovar.tsv 
         fi
     else
-        grep "profile" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
+        grep "profile" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
         awk '{print substr(\$3,1,5); }' serovar1.txt > serovar2.txt
-        mv serovar2.txt  ${sample_id}_serovar.tsv 
+        mv serovar2.txt  !{sample_id}_serovar.tsv 
     fi
-    touch ${sample_id}_7.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.pileup
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.fa
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.fa.fai
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.bam
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/tmp/*.bam.bai
-    """
+    touch !{sample_id}_7.txt
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.pileup
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.fa
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.fa.fai
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.bam
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.bam.bai
+    '''
 }
 
 
