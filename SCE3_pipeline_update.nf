@@ -107,7 +107,7 @@ process fastp_qual_trim {
     tuple sample_id, readCount, readFile1, readFile2 from runCh
 
     output:
-    file("*_fastp.log")
+    file("*_fastp.log") into cleanup_ch1
     tuple sample_id, file("*_{R1,R2}.fastq.gz") into cleanedReads
 
     script:
@@ -128,7 +128,8 @@ process subsampling {
     tuple sample_id, readPair from cleanedReads
     
     output:
-    file("*_subsampling.log")
+    val sample_id into cleanup_ch2
+    file("*_subsampling.log") into cleanup_ch3
     tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
 
     shell:
