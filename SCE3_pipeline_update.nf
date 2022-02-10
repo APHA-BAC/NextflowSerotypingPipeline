@@ -47,7 +47,7 @@ process count_reads {
     env(READCOUNT) into countStr1, countStr2
     val sample_id into names1, names2
     val readPair into files1, files2
-    file("*_readcount.txt") into out_ii
+    file("*_readcount.txt") into out_iii
 
     shell:
     '''
@@ -84,7 +84,7 @@ samplecount_ch = Channel.fromFilePairs(readPath)
 process instantiate_summary_table {
     input:
     val sample_count from samplecount_ch.count()
-    val counted_samples from out_ii.count()
+    val counted_samples from out_iii.count()
 
     when:
     counted_samples == sample_count
@@ -151,6 +151,29 @@ process subsampling {
         mv $READFILE1 .
         mv $READFILE2 .
     fi
+    '''
+}
+
+/*
+ * PRE-STEP vii - clean up intermediate readfiles to save disk space
+*/
+
+process intermediate_reads_cleanup {
+    input:
+    val logfile from cleanup_ch1
+    val sample_id from cleanup_ch2
+    val logfile2 from cleanup_ch3
+
+    shell:
+    '''
+    sleep 30
+    DIR=$(dirname !{logfile})
+    ls $DIR/*.fastq.gz > cleanup.log || echo "no files found"
+    rm $DIR/*.fastq.gz || echo "nothing to delete"
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz >> cleanup.log || echo "no files found"
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz >> cleanup.log || echo "no files found"
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
     '''
 }
 
