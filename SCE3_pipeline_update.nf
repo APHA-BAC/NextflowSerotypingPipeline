@@ -472,13 +472,13 @@ process remove {
 
     script: 
     """
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports/${sample_id}_1.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/${sample_id}_2.txt 
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/quast/${sample_id}_3.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid/${sample_id}_4.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2/${sample_id}_5.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/sistr/${sample_id}_6.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_7.txt
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports/${sample_id}_1.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/${sample_id}_2.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/quast/${sample_id}_3.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid/${sample_id}_4.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2/${sample_id}_5.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/sistr/${sample_id}_6.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_7.txt || echo "nothing to delete"
+    rm $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt || echo "nothing to delete"
     """
 }
