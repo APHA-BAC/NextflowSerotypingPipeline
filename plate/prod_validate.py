@@ -10,27 +10,27 @@ DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_fastpTrimmed_Summary
 DEFAULT_OUTCOME_PATH = './outcome.csv'
 
 def load_summary_table(csv_path):
-    """ Returns a DataFrame containing Consensus and unique StrainID columns """
+    """ Returns a DataFrame containing Consensus and unique Isolate_ID columns """
     # Load
     df = pd.read_csv(csv_path)
 
     # Validate
     columns = df.columns.to_list()
-    if not 'StrainID' in columns:
-        raise Exception(f"StrainID column missing: {csv_path}")
+    if not 'Isolate_ID' in columns:
+        raise Exception(f"Isolate_ID column missing: {csv_path}")
 
     if not 'Consensus' in columns:
         raise Exception(f"Consensus column missing: {csv_path}")
 
-    if not df.StrainID.is_unique:
-        raise Exception(f"StrainID column is not unique: {csv_path}")
+    if not df.Isolate_ID.is_unique:
+        raise Exception(f"Isolate_ID column is not unique: {csv_path}")
 
     return df
 
 def analyse_results(expected_csv_path, actual_csv_path):
     """ Returns a merged DataFrame containing an Outcome column that indicates consistency """
     # Load
-    expected_df = load_summary_table(expected_csv_path)[["StrainID", "Consensus"]]
+    expected_df = load_summary_table(expected_csv_path)[["Isolate_ID", "Consensus"]]
     actual_df = load_summary_table(actual_csv_path)
 
     # Rename Columns
@@ -38,7 +38,7 @@ def analyse_results(expected_csv_path, actual_csv_path):
     actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus"})
 
     # Join
-    merged = expected_df.merge(actual_df, on='StrainID', how='left')
+    merged = expected_df.merge(actual_df, on='Isolate_ID', how='left')
 
     # Evaluate
     merged['Outcome'] = 'unset'
