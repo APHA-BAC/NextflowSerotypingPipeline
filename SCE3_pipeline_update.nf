@@ -4,7 +4,7 @@
  * PRE-STEP i - define the input path to the sequences that will be analysed
 */ 
 
-params.minReads = 300000
+params.minReads = 500000
 params.subsampThreshold = 3500000
 subsamp = params.subsampThreshold - 500000
 println subsamp
