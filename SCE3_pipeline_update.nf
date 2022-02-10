@@ -345,7 +345,7 @@ process most {
 
     script:
     """    
-    python /opt/most/MOST-master/MOST.py -1 \$PWD/${sample_id}_R1.fastq.gz  -2 \$PWD/${sample_id}_R2.fastq.gz -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/${params.runID}/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    python /opt/most/MOST-master/MOST.py -1 ${reads_file[0]} -2 ${reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/${params.runID}/${sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
     if grep "predicted_serotype" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml
     then
         grep "predicted_serotype" $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_R1.fastq.results.xml >> serovar1.txt
