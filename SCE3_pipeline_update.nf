@@ -125,6 +125,7 @@ process subsampling {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/subsampling", mode: 'copy'
 
     input:
+    val logfile from cleanup_ch1
     tuple sample_id, readPair from cleanedReads
     
     output:
@@ -134,6 +135,9 @@ process subsampling {
 
     shell:
     '''
+    sleep 15
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz > cleanup.txt || echo "no files found"
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_subsampling.log
@@ -152,32 +156,14 @@ process subsampling {
         mv $READFILE1 .
         mv $READFILE2 .
     fi
-    '''
-}
-
-/*
- * PRE-STEP vii - clean up intermediate readfiles to save disk space
-*/
-
-process intermediate_reads_cleanup {
-    input:
-    val logfile from cleanup_ch1
-    val sample_id from cleanup_ch2
-    val logfile2 from cleanup_ch3
-
-    shell:
-    '''
-    sleep 30
     CLEANUPDIR=$(dirname !{logfile})
-    echo !{sample_id} > cleanup.txt
     ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz >> cleanup.txt || echo "no files found"
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
     ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
     '''
 }
+
 
 /*
  * STEP 1 - fastqc
