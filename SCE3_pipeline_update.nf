@@ -168,12 +168,13 @@ process intermediate_reads_cleanup {
     shell:
     '''
     sleep 30
-    DIR=$(dirname !{logfile})
-    ls $DIR/*.fastq.gz > cleanup.log || echo "no files found"
-    rm $DIR/*.fastq.gz || echo "nothing to delete"
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz >> cleanup.log || echo "no files found"
+    CLEANUPDIR=$(dirname !{logfile})
+    echo !{sample_id} > cleanup.txt
+    ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
+    rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz >> cleanup.log || echo "no files found"
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
     '''
 }
