@@ -22,7 +22,7 @@ println readPath
  * PRE-STEP ii - Initial pre-processing run at the start of the nextflow run
 */
 
-process pre_process {
+process git_sha {
     """
     # Save the git-sha into the results folder
     mkdir -p $publishDirectory
@@ -64,14 +64,12 @@ names1
     .merge(countInt1)
     .merge(files1)
     .filter {it[1] >= params.minReads}
-    .view()
     .set{runCh}
 
 names2
     .merge(countInt2)
     .merge(files2)
     .filter {it[1] < params.minReads}
-    .view()
     .set{skipCh}
 
 
@@ -129,8 +127,8 @@ process subsampling {
     tuple sample_id, readPair from cleanedReads
     
     output:
-    val sample_id into cleanup_ch2
-    file("*_subsampling.log") into cleanup_ch3
+    file("*_subsampling.log")
+    file("cleanup.txt")
     tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
 
     shell:
@@ -430,10 +428,10 @@ process summary {
 
 
 /*
- * STEP 10 - remove text files 
+ * STEP 10 - final cleanup
 */
 
-process remove {
+process final_cleanup {
     input:
     tuple sample_id, file(reads_file) from reads9
     val read_rem from reads_summ2.count()
