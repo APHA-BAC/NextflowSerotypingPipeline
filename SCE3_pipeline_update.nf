@@ -127,8 +127,7 @@ process subsampling {
     tuple sample_id, readPair from cleanedReads
     
     output:
-    file("*_subsampling.log")
-    file("cleanup.txt")
+    file("*_subsampling.log") into cleanup_ch2
     tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
 
     shell:
@@ -157,7 +156,22 @@ process subsampling {
     CLEANUPDIR=$(dirname !{logfile})
     ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz >> cleanup.txt || echo "no files found"
+    '''
+}
+
+
+/*
+ * PRE-STEP vii - clean up intermediate readfiles to save disk space
+*/
+
+process intermediate_reads_cleanup {
+    input:
+    val logfile2 from cleanup_ch2
+
+    shell:
+    '''
+    sleep 15
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz > cleanup.txt || echo "no files found"
     rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
     '''
 }
@@ -294,7 +308,6 @@ sistr_ch
     .join(reads6)
     .set { sistr_in }
 
-
 process sistr {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/sistr", mode: 'move'
 
@@ -304,8 +317,8 @@ process sistr {
     output:
     file 'sistr_prediction.csv' into sistr_out_ch  
     file("${sample_id}_6.txt") into out6_ch   
-    file("${sample_id}_6.txt") into out6_ch_rem   
-      
+    file("${sample_id}_6.txt") into out6_ch_rem
+
     script:
     """     
     /opt/conda/bin/sistr -i "${sample_id}_contigs.fa" ${sample_id} -f csv -o sistr_prediction.csv --qc
