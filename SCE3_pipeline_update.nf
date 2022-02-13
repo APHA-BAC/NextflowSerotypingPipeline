@@ -128,6 +128,7 @@ process subsampling {
     
     output:
     file("*_subsampling.log") into cleanup_ch2
+    val sample_id into cleanup_ch3
     tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
 
     shell:
@@ -167,6 +168,7 @@ process subsampling {
 process intermediate_reads_cleanup {
     input:
     val logfile2 from cleanup_ch2
+    val sample_id from cleanup_ch3
 
     shell:
     '''
