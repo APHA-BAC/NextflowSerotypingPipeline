@@ -483,3 +483,4 @@ process final_cleanup {
     rm $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt || echo "nothing to delete"
     """
 }
+
