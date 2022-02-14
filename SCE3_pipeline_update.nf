@@ -22,7 +22,7 @@ println readPath
  * PRE-STEP ii - Initial pre-processing run at the start of the nextflow run
 */
 
-process pre_process {
+process git_sha {
     """
     # Save the git-sha into the results folder
     mkdir -p $publishDirectory
@@ -64,14 +64,12 @@ names1
     .merge(countInt1)
     .merge(files1)
     .filter {it[1] >= params.minReads}
-    .view()
     .set{runCh}
 
 names2
     .merge(countInt2)
     .merge(files2)
     .filter {it[1] < params.minReads}
-    .view()
     .set{skipCh}
 
 
@@ -125,15 +123,19 @@ process subsampling {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/subsampling", mode: 'copy'
 
     input:
+    val logfile from cleanup_ch1
     tuple sample_id, readPair from cleanedReads
     
     output:
-    val sample_id into cleanup_ch2
-    file("*_subsampling.log") into cleanup_ch3
+    file("*_subsampling.log") into cleanup_ch2
+    val sample_id into cleanup_ch3
     tuple sample_id, file("*_{R1,R2}.fastq.gz") into reads1, reads2, reads3, reads4, reads5, reads6, reads7, reads8, reads9, reads_summ1, reads_summ2
 
     shell:
     '''
+    sleep 15
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz > cleanup.txt || echo "no files found"
+    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_subsampling.log
@@ -152,8 +154,12 @@ process subsampling {
         mv $READFILE1 .
         mv $READFILE2 .
     fi
+    CLEANUPDIR=$(dirname !{logfile})
+    ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
+    rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
     '''
 }
+
 
 /*
  * PRE-STEP vii - clean up intermediate readfiles to save disk space
@@ -161,23 +167,17 @@ process subsampling {
 
 process intermediate_reads_cleanup {
     input:
-    val logfile from cleanup_ch1
-    val sample_id from cleanup_ch2
-    val logfile2 from cleanup_ch3
+    val logfile2 from cleanup_ch2
+    val sample_id from cleanup_ch3
 
     shell:
     '''
-    sleep 30
-    CLEANUPDIR=$(dirname !{logfile})
-    echo !{sample_id} > cleanup.txt
-    ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
-    rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz >> cleanup.txt || echo "no files found"
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz >> cleanup.txt || echo "no files found"
+    sleep 15
+    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz > cleanup.txt || echo "no files found"
     rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
     '''
 }
+
 
 /*
  * STEP 1 - fastqc
@@ -310,7 +310,6 @@ sistr_ch
     .join(reads6)
     .set { sistr_in }
 
-
 process sistr {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/sistr", mode: 'move'
 
@@ -320,8 +319,8 @@ process sistr {
     output:
     file 'sistr_prediction.csv' into sistr_out_ch  
     file("${sample_id}_6.txt") into out6_ch   
-    file("${sample_id}_6.txt") into out6_ch_rem   
-      
+    file("${sample_id}_6.txt") into out6_ch_rem
+
     script:
     """     
     /opt/conda/bin/sistr -i "${sample_id}_contigs.fa" ${sample_id} -f csv -o sistr_prediction.csv --qc
@@ -444,10 +443,10 @@ process summary {
 
 
 /*
- * STEP 10 - remove text files 
+ * STEP 10 - final cleanup
 */
 
-process remove {
+process final_cleanup {
     input:
     tuple sample_id, file(reads_file) from reads9
     val read_rem from reads_summ2.count()
@@ -484,3 +483,4 @@ process remove {
     rm $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt || echo "nothing to delete"
     """
 }
+
