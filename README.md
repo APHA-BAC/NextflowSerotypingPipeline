@@ -53,6 +53,7 @@ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULTS/
 # Pipeline Algorithm 
 
 The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases, adapter sequences are removed from the fastq sample file and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
+This strategy has been demonstrated to provide more accurate serovar detection than any tools running individually.
 Bespoke typing of vaccine strains and particular servoars of interest to APHA is included as part of this analysis. 
 Outputs from each tool are compared in the consensus call step. 
 The final postprocessing stage assigns an `Outcome` to each sample by analysing data gathered during the analysis stage. The following `Outcome`s are used to signify subsequent lab processing steps:
@@ -62,6 +63,34 @@ The final postprocessing stage assigns an `Outcome` to each sample by analysing 
 - **Inconclusive**: The sample contains insufficient data volumes for analysis, is contaminated, or has low assembly quality. 
 
 ![image](https://user-images.githubusercontent.com/6979169/154100120-0199a72f-aec6-482f-9dc0-5ddd38c13c3c.png)
+
+## Validation
+
+This pipeline has been internally validated and approved by the APHA validation team against a large dataset in excess of 3,500 samples as well as non-Salmonella isolates to determine sensitivity and specificity.
+
+
+## Automated Tests
+
+The automated tests provided here ensure the software runs as expected. If you make changes to the algorithm, it is **strongly** reccomended that you run these tests to verify the pipeline is behaving as intended. The tests are also automatically run by [TEAMCITY](https://apha.teamcity.com/viewType.html?buildTypeId=NextflowSerotypingPipeline_Pipeline&guest=1) on each pull-request. 
+
+The automated tests assert the correct serovar is assigned to known samples. These are called `inclusivity` tests. To run an inclusivity test, call:
+```
+$ bash -e test_isolates/jobs/inclusivity.bash 0
+```
+
+# Release Process
+
+Release a new version of the software, the master branch needs only to be merged into `prod` branch. To perform this merge, a pull-request from the `master` branch into the prod branch needs to be made. Approval of pull-requests to `prod` is made by the CODEOWNER (Liljana Petrovska). The CODEOWNER is responsible for ensuring the code conforms to the reliability tests defined in BAC 0429 Section 4. A positive test result is required for approval.
+
+To release a new version of the software:
+1. A developer makes a pull-request from the `master` to `prod` branch. The CODEOWNER is automatically notified by e-mail.
+1. The CODEOWNER runs the reliability tests defined in BAC 0429 Section 4 and reviews the code changes. 
+1. The CODEOWNER approves the pull-request if they satisfied, or requests changes.
+1. The dev tags the current of head of master as the next version. Versions are numbered incrementally with numbers, for example `v1`, `v2`, etc. This can be performed by navigating to github master branch and selecting `Create a release`
+1. The dev merges the `master` branch into `prod`
+
+
+
 
 ## Utilization
 1) Newly sequenced samples in paired FASTQ will be deposited by the APHA Sequencing Unit (SCU) into the SCU Amazon Simple Storage Service (Amazon S3) bucket. All of the sequencing files belonging to a particular sequencing run will be stored in a zipped folder with a unique name corresponding only to that sequencing run (for example 211220_APHA_run_n1041). The user will need to download the zipped folder via AWS Management Console interface onto the VM hosting the pipeline and unzip the folder using the unzip command. The unzipped folder then needs to be copied to the /home/$USER/WGS_Data directory.
@@ -126,22 +155,8 @@ The rows in the summary table relate to the strains in the sequencing run and th
 5) Prior to any subsequent pipeline runs, the “211220_APHA_run_n1041” folder will need to be deleted from /home/$USER/WGS_Data and from /home/$USER/WGS_Results. Moreover, a folder called “work” that collates Nextflow temporary files during a pipeline run will need to be deleted from the /home/$USER/nextflow directory. These operations will not be performed automatically and need to performed by the user.
 
   
-# Automated Tests
-  
-  
-  TODO
-  
-  
-# Release Process
 
-Release a new version of the software, the master branch needs only to be merged into `prod` branch. To perform this merge, a pull-request from the `master` branch into the prod branch needs to be made. Approval of pull-requests to `prod` is made by the CODEOWNER (Liljana Petrovska). The CODEOWNER is responsible for ensuring the code conforms to the reliability tests defined in BAC 0429 Section 4. A positive test result is required for approval.
 
-To release a new version of the software:
-1. A developer makes a pull-request from the `master` to `prod` branch. The CODEOWNER is automatically notified by e-mail.
-1. The CODEOWNER runs the reliability tests defined in BAC 0429 Section 4 and reviews the code changes. 
-1. The CODEOWNER approves the pull-request if they satisfied, or requests changes.
-1. The dev tags the current of head of master as the next version. Versions are numbered incrementally with numbers, for example `v1`, `v2`, etc. This can be performed by navigating to github master branch and selecting `Create a release`
-1. The dev merges the `master` branch into `prod`
 
 
 ![image](https://user-images.githubusercontent.com/6979169/153393500-b2313500-9dc0-4883-bcb9-9d9ef65f734c.png)
