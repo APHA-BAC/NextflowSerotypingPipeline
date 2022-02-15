@@ -4,20 +4,61 @@
 
 Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance.
 
-
 # Installation
-To install the Nextflow Salmonella serotyping pipeline on blank state VM:
-1)	Download the install-salmonella-pipeline-SCEv3.sh script (attached) into /home/$USER
-2)	Open terminal and type cd /home/$USER
-3)	In the terminal type sh install-salmonella-pipeline-SCEv3.sh
-4)	When prompted press the Enter key or type “y” or “yes”
-5)	Installation process takes about 20 minutes
-6)	The VM will reboot after the installation has been completed
-7)	No other action will be required by the user after completion of the installation wrapper script and the pipeline will be ready for utilization   
+To install the nextflow salmonella serotyping pipeline:
+```
+  $ cd install
+  $ bash install.bash
+```
+
+This script installs the following dependancies:
+- `conda`
+- `fastp`
+- `FastQC`
+- `KmerID`
+- `MOST`
+- `Nextflow`
+- `Quast`
+- `SeqSero2`
+- `Seqtk`
+- `Shovill`
+- `sistr`
+- `SRST2`
+- `sratoolkit`
+
+# Running the pipeline
+
+To run the pipeline on a batch a samples, the raw `.fastq.gz` files must be stored in `~/WGS_Data/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/WGS_Data/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`, needs to be defined.
+
+Then, to run the pipeline from the terminal call:
+```
+  $ nextflow run SCE3_pipeline_update.nf --runID <runID> 
+```
+
+Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
+- TODO
+
+## Run from docker
+
+**Note:** While running from the terminal is the easiest method for developers and data analysts, the pipeline can also be run from docker. This method has the benefit of working across platforms while guaranteeing consistency with automated tests (see below). 
+
+A docker image containing all required dependancies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq). 
+
+This pull the latest image (if it's not already fetched) from dockerhub and run the container on data
+```
+sudo docker run jguzinksi/salmonella-seq:prod
+sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULTS/:/results/ jguzinksi/salmonella-seq:prod /root/nextflow/nextflow SCE3_pipeline_update.nf --runID <runID>
+```
 
 # Pipeline Algorithm 
 
 TODO: Add flowchart
+
+![image](https://user-images.githubusercontent.com/6979169/154100120-0199a72f-aec6-482f-9dc0-5ddd38c13c3c.png)
+
+
+
+
 
 ## Utilization
 1) Newly sequenced samples in paired FASTQ will be deposited by the APHA Sequencing Unit (SCU) into the SCU Amazon Simple Storage Service (Amazon S3) bucket. All of the sequencing files belonging to a particular sequencing run will be stored in a zipped folder with a unique name corresponding only to that sequencing run (for example 211220_APHA_run_n1041). The user will need to download the zipped folder via AWS Management Console interface onto the VM hosting the pipeline and unzip the folder using the unzip command. The unzipped folder then needs to be copied to the /home/$USER/WGS_Data directory.
