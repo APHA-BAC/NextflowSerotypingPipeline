@@ -52,13 +52,16 @@ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULTS/
 
 # Pipeline Algorithm 
 
-TODO: Add flowchart
+The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases, adapter sequences are removed from the fastq sample file and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
+Bespoke typing of vaccine strains and particular servoars of interest to APHA is included as part of this analysis. 
+Outputs from each tool are compared in the consensus call step. 
+The final postprocessing stage assigns an `Outcome` to each sample by analysing data gathered during the analysis stage. The following `Outcome`s are used to signify subsequent lab processing steps:
+
+- **Pass**: The sample contains Salmonella and has a serovar assigned
+- **Check Required**: Further scrutiny of the data is required
+- **Inconclusive**: The sample contains insufficient data volumes for analysis, is contaminated, or has low assembly quality. 
 
 ![image](https://user-images.githubusercontent.com/6979169/154100120-0199a72f-aec6-482f-9dc0-5ddd38c13c3c.png)
-
-
-
-
 
 ## Utilization
 1) Newly sequenced samples in paired FASTQ will be deposited by the APHA Sequencing Unit (SCU) into the SCU Amazon Simple Storage Service (Amazon S3) bucket. All of the sequencing files belonging to a particular sequencing run will be stored in a zipped folder with a unique name corresponding only to that sequencing run (for example 211220_APHA_run_n1041). The user will need to download the zipped folder via AWS Management Console interface onto the VM hosting the pipeline and unzip the folder using the unzip command. The unzipped folder then needs to be copied to the /home/$USER/WGS_Data directory.
