@@ -1,30 +1,46 @@
 set -e
 
-# TODO: DRY up the apt-get so it's in one call
-
+# Apt Packages
 apt-get -y update
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q sudo
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q apt-utils
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q make
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q gcc
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
+    sudo \
+    apt-utils \
+    make \
+    gcc \
+    bc \
+    git \
+    wget \
+    curl \
+    libz-dev \
+    libbz2-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libghc-bzlib-prof \
+    zlib1g-dev \
+    libcurl4-openssl-dev \
+    libfile-copy-recursive-perl \
+    libio-socket-ssl-perl \
+    libio-tee-perl \
+    libunicode-string-perl \
+    nano \
+    gzip \
+    python3
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q git
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q wget
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl
+# Bioinformatics Tools
+bash install/install-conda.sh
+bash install/install-fastp.sh
+bash install/install-fastqc.sh
+bash install/install-seqtk.sh
+bash install/install-shovill.sh
+bash install/install-quast.sh
+bash install/install-most.sh
+bash install/install-kmerid.sh
+bash install/install-seqsero2.sh
+bash install/install-sistr.sh
+bash install/install-srst2.sh
+bash install/install-nextflow.sh
+bash install/install-sra-toolkit.sh
+bash install/setup-environment.sh
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libz-dev
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libbz2-dev
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncurses5-dev
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libncursesw5-dev
-
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libghc-bzlib-prof
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q zlib1g-dev
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libcurl4-openssl-dev
-
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libfile-copy-recursive-perl
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-socket-ssl-perl
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libio-tee-perl
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q libunicode-string-perl
-
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q nano
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q python3
+# Output folder for running jobs
+mkdir $HOME/WGS_Data/TestIsolates/ $HOME/WGS_Results/TestIsolates/ 

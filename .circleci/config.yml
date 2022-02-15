@@ -13,12 +13,19 @@ commands:
       - run:
           no_output_timeout: 30m
           command: |
-            cd /root/NextflowSerotypingPipeline/
-            mkdir $HOME/WGS_Data/TestIsolates/ $HOME/WGS_Results/TestIsolates/ /artifacts/
             bash -e test_isolates/jobs/<< parameters.script >>
           
       - store_artifacts:
           path: /artifacts/
+
+      - store_artifacts:
+          path: /root/WGS_Data/
+
+      - store_artifacts:
+          path: /root/WGS_Results/
+
+      - store_artifacts:
+          path: /root/NextflowSerotypingPipeline/
 
   build-and-push:
     parameters:
