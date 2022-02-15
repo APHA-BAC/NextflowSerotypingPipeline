@@ -25,8 +25,9 @@ def run(cmd):
 
 def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE):
     """ Run the Salmonella pipeline using docker """
+    run(["sudo", "docker", "pull", image])
     run([
-        "sudo", "docker", "run", "-it", 
+        "sudo", "docker", "run", "--rm", "-it", 
         "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
         "-v", f"{results}:/root/WGS_Results/{plate_name}/", 
         image,
