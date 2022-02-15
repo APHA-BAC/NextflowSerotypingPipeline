@@ -2,7 +2,8 @@
 
 # Introduction
 
-The Salmonella serotyping pipeline described has been developed to replace the classical serotyping process at the APHA by a method based on extracting the serotyping information from the whole genome sequencing (WGS) data of the Salmonella isolates. The pipeline benefits from several publicly available serotyping tools developed by other institutions which are combined in order to increase the reliability of the results. This document describes a newer version of the serotyping pipeline that was re-coded from the previous version of the pipeline to be compatible with Nextflow programming language and the Amazon Web Services (AWS) Scientific Computing Environment version 3 (SCEv3). Nextflow is a programming language that allows running different software packages in parallel, using all available Central Processing Units (CPUs). This highly efficient large scale parallelization results in improved (shorter) time to result per sample and for all samples combined. Software written in different programming languages (such as Bash, Python, or Perl), as is the case with the Salmonella serotyping pipeline, is adapted to become fully operational within the Nextflow framework; furthermore, Nextflow is highly compatible to efficiently operate within the SCEv3 architecture that the APHA is currently in the process of implementing.
+Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance.
+
 
 # Installation
 To install the Nextflow Salmonella serotyping pipeline on blank state VM:
@@ -14,7 +15,11 @@ To install the Nextflow Salmonella serotyping pipeline on blank state VM:
 6)	The VM will reboot after the installation has been completed
 7)	No other action will be required by the user after completion of the installation wrapper script and the pipeline will be ready for utilization   
 
-# Utilization
+# Pipeline Algorithm 
+
+TODO: Add flowchart
+
+## Utilization
 1) Newly sequenced samples in paired FASTQ will be deposited by the APHA Sequencing Unit (SCU) into the SCU Amazon Simple Storage Service (Amazon S3) bucket. All of the sequencing files belonging to a particular sequencing run will be stored in a zipped folder with a unique name corresponding only to that sequencing run (for example 211220_APHA_run_n1041). The user will need to download the zipped folder via AWS Management Console interface onto the VM hosting the pipeline and unzip the folder using the unzip command. The unzipped folder then needs to be copied to the /home/$USER/WGS_Data directory.
 
 2) Prior to running the pipeline it is absolutely imperative to edit the names of the newly sequenced files. This procedure will remove sections of the file name that were appended by the Illumina sequencing software which are redundant and will impede the pipeline from correctly recognizing that it has to process these sequencing files. Crucially, the file name renaming procedure will leave the unique isolate identifier unchanged in each of the file names. The renaming of the files is done using the changeAPHArunName.sh script: 
@@ -76,6 +81,12 @@ The rows in the summary table relate to the strains in the sequencing run and th
 
 5) Prior to any subsequent pipeline runs, the “211220_APHA_run_n1041” folder will need to be deleted from /home/$USER/WGS_Data and from /home/$USER/WGS_Results. Moreover, a folder called “work” that collates Nextflow temporary files during a pipeline run will need to be deleted from the /home/$USER/nextflow directory. These operations will not be performed automatically and need to performed by the user.
 
+  
+# Automated Tests
+  
+  
+  TODO
+  
   
 # Release Process
 
