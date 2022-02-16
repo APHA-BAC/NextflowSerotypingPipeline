@@ -11,7 +11,7 @@ To install the nextflow salmonella serotyping pipeline:
   $ bash install.bash
 ```
 
-This script installs the following dependancies:
+This script installs the following dependencies:
 - `conda`
 - `fastp`
 - `FastQC`
@@ -28,7 +28,7 @@ This script installs the following dependancies:
 
 # Running the pipeline
 
-To run the pipeline on a batch a samples, the raw `.fastq.gz` files must be stored in `~/WGS_Data/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/WGS_Data/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`, needs to be defined.
+To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be stored in `~/WGS_Data/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/WGS_Data/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`.
 
 Then, to run the pipeline from the terminal call:
 ```
@@ -42,12 +42,12 @@ Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
 
 **Note:** While running from the terminal is the easiest method for developers and data analysts, the pipeline can also be run from docker. This method has the benefit of working across platforms while guaranteeing consistency with automated tests (see below). 
 
-A docker image containing all required dependancies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq). 
+A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq). 
 
-This pull the latest image (if it's not already fetched) from dockerhub and run the container on data
+This pulls the latest image (if it's not already fetched) from dockerhub and runs the container on data
 ```
-sudo docker run jguzinksi/salmonella-seq:prod
-sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULTS/:/results/ jguzinksi/salmonella-seq:prod /root/nextflow/nextflow SCE3_pipeline_update.nf --runID <runID>
+$ sudo docker pull jguzinksi/salmonella-seq:prod
+$ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULTS/:/results/ jguzinksi/salmonella-seq:prod /root/nextflow/nextflow SCE3_pipeline_update.nf --runID <runID>
 ```
 
 # Pipeline Algorithm 
