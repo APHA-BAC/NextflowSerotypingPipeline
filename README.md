@@ -2,7 +2,7 @@
 
 # Introduction
 
-Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance.
+Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance and includes bespoke dedifferentiation of strains important for veterinary surveillance.
 
 # Installation
 To install the nextflow salmonella serotyping pipeline:
