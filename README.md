@@ -52,7 +52,7 @@ $ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULT
 
 # Pipeline Algorithm 
 
-The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases, adapter sequences are removed from the fastq sample file and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
+The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases and adapter sequences are removed from the fastq sample file and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
 This strategy has been demonstrated to provide more accurate serovar detection than any tools running individually.
 Bespoke typing of vaccine strains and particular servoars of interest to APHA is included as part of this analysis. 
 Outputs from each tool are compared in the consensus call step. 
@@ -80,14 +80,14 @@ $ bash -e test_isolates/jobs/inclusivity.bash 0
 
 # Release Process
 
-To release a new version of the software, the `master` branch needs only to be merged into `prod` branch. To perform this merge, a pull-request from the `master` branch into the `prod` branch needs to be made. Approval of pull-requests to `prod` is made by the CODEOWNER (Liljana Petrovska). The CODEOWNER is responsible for ensuring the code conforms to the reliability tests. A positive test result is required for approval.
+To release a new version of the software, the `master` branch needs only to be merged into the `prod` branch. To perform this merge, a pull-request from the `master` branch into the `prod` branch needs to be made. Approval of pull-requests to `prod` is made by the CODEOWNER (Liljana Petrovska). The CODEOWNER is responsible for ensuring the code conforms to the reliability tests. A positive test result is required for approval.
 
 To release a new version of the software:
-1. A developer makes a pull-request from the `master` to `prod` branch. The CODEOWNER is automatically notified by e-mail.
+1. A developer makes a pull-request from the `master` to the `prod` branch. The CODEOWNER is automatically notified by e-mail.
 1. The CODEOWNER ensures the reliability tests pass on the `master` branch and reviews the code changes. 
 1. The CODEOWNER approves the pull-request if they satisfied, or requests changes.
 1. The dev merges the `master` branch into `prod`
-1. Following approval, the developer tags the current of head of master as the next version. Versions are numbered incrementally with integers, for example `v1`, `v2`, etc. This can be performed by navigating to github master branch and selecting `Create a release`
+1. Following approval, the developer tags the current head of `master` as the next version. Versions are numbered incrementally with integers, for example `v1`, `v2`, etc. This can be performed by navigating to github `master` branch and selecting `Create a release`
 
 ![image](https://user-images.githubusercontent.com/6979169/153393500-b2313500-9dc0-4883-bcb9-9d9ef65f734c.png)
 ![image](https://user-images.githubusercontent.com/6979169/153393680-a6f42c9d-ade7-4390-8c52-5b34837a0ebb.png)
