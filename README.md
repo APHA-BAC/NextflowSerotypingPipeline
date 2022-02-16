@@ -62,7 +62,7 @@ The final postprocessing stage assigns an `Outcome` to each sample by analysing 
 - **Check Required**: Further scrutiny of the data is required
 - **Inconclusive**: The sample contains insufficient data volumes for analysis, is contaminated, or has low assembly quality. 
 
-![image](https://user-images.githubusercontent.com/6979169/154100120-0199a72f-aec6-482f-9dc0-5ddd38c13c3c.png)
+![image](https://user-images.githubusercontent.com/6979169/154251677-43d55d28-24bb-4dc2-9def-61322ba58629.png)
 
 # Validation
 
