@@ -87,7 +87,7 @@ To release a new version of the software:
 1. The CODEOWNER ensures the reliability tests pass on the `master` branch and reviews the code changes. 
 1. The CODEOWNER approves the pull-request if they satisfied, or requests changes.
 1. The dev merges the `master` branch into `prod`
-1. Following approval, the developer tags the current head of `master` as the next version. Versions are numbered incrementally with integers, for example `v1`, `v2`, etc. This can be performed by navigating to github `master` branch and selecting `Create a release`
+1. Following approval, the developer tags the current head of `master` as the next version. Versions are numbered incrementally with integers, for example `v1`, `v2`, etc. This can be performed by navigating to the github `master` branch and selecting `Create a release`
 
 ![image](https://user-images.githubusercontent.com/6979169/153393500-b2313500-9dc0-4883-bcb9-9d9ef65f734c.png)
 ![image](https://user-images.githubusercontent.com/6979169/153393680-a6f42c9d-ade7-4390-8c52-5b34837a0ebb.png)
