@@ -2,7 +2,7 @@
 
 # Introduction
 
-Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance.
+Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance and includes bespoke dedifferentiation of strains important for veterinary surveillance.
 
 # Installation
 To install the nextflow salmonella serotyping pipeline:
@@ -46,8 +46,8 @@ A docker image containing all required dependencies is provided [here](https://h
 
 This pulls the latest image (if it's not already fetched) from dockerhub and runs the container on data
 ```
-$ sudo docker pull jguzinksi/salmonella-seq:prod
-$ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/reads/ -v /ABS/PATH/TO/RESULTS/:/results/ jguzinksi/salmonella-seq:prod /root/nextflow/nextflow SCE3_pipeline_update.nf --runID <runID>
+$ sudo docker pull jguzinski/salmonella-seq:prod
+$ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/root/WGS_Data/<run_ID>/  -v /ABS/PATH/TO/RESULTS/:/root/WGS_Results/<run_ID>/  jguzinski/salmonella-seq:prod /root/nextflow/nextflow SCE3_pipeline_update.nf --runID <runID>
 ```
 
 # Pipeline Algorithm 
