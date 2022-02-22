@@ -2,16 +2,16 @@
 
 # Introduction
 
-Salmonella whole genome sequencing (WGS) serotyping pipeline developed by APHA and written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance and includes bespoke dedifferentiation of strains important for veterinary surveillance.
+Salmonella whole genome sequencing (WGS) serotyping pipeline was developed by APHA and is written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance and includes bespoke differentiation of strains important for veterinary surveillance.
 
 # Installation
-To install the nextflow salmonella serotyping pipeline:
+To install the Nextflow salmonella serotyping pipeline:
 ```
   $ cd install
   $ bash install.bash
 ```
 
-This script installs the following dependencies:
+This script installs the following pipeline component software:
 - `conda`
 - `fastp`
 - `FastQC`
@@ -22,7 +22,7 @@ This script installs the following dependencies:
 - `SeqSero2`
 - `Seqtk`
 - `Shovill`
-- `sistr`
+- `SISTR`
 - `SRST2`
 - `sratoolkit`
 
@@ -52,7 +52,7 @@ $ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/root/WGS_Data/<run_ID>/  -v /
 
 # Pipeline Algorithm 
 
-The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases and adapter sequences are removed from the fastq sample file and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
+The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases and adapter sequences are removed from the fastq sample files and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
 This strategy has been demonstrated to provide more accurate serovar detection than any tools running individually.
 Bespoke typing of vaccine strains and particular servoars of interest to APHA is included as part of this analysis. 
 Outputs from each tool are compared in the consensus call step. 
@@ -85,7 +85,7 @@ To release a new version of the software, the `master` branch needs only to be m
 To release a new version of the software:
 1. A developer makes a pull-request from the `master` to the `prod` branch. The CODEOWNER is automatically notified by e-mail.
 1. The CODEOWNER ensures the reliability tests pass on the `master` branch and reviews the code changes. 
-1. The CODEOWNER approves the pull-request if they satisfied, or requests changes.
+1. The CODEOWNER approves the pull-request if they are satisfied, or requests changes.
 1. The dev merges the `master` branch into `prod`
 1. Following approval, the developer tags the current head of `master` as the next version. Versions are numbered incrementally with integers, for example `v1`, `v2`, etc. This can be performed by navigating to the github `master` branch and selecting `Create a release`
 
