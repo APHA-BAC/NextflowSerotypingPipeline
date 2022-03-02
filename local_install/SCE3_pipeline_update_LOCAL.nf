@@ -19,7 +19,6 @@ println readPath
 
 /*
  * PRE-STEP ii - Initial pre-processing run at the start of the nextflow run
-*/
 
 process git_sha {
     """
@@ -28,7 +27,7 @@ process git_sha {
     git rev-parse HEAD > $publishDirectory/sha
     """
 }
-
+*/
 
 /*
  * PRE-STEP iii - count reads
@@ -144,9 +143,9 @@ process subsampling {
     if [ $READCOUNT -gt !{params.subsampThreshold} ]
     then
         echo "Greater than !{params.subsampThreshold} reads, subsampling to !{subsamp}" >> !{sample_id}_subsampling.log
-        /opt/conda/bin/seqtk sample -s100 $READFILE1 !{subsamp} > $OUTNAME1
+        seqtk sample -s100 $READFILE1 !{subsamp} > $OUTNAME1
         gzip --fast $OUTNAME1
-        /opt/conda/bin/seqtk sample -s100 $READFILE2 !{subsamp} > $OUTNAME2
+        seqtk sample -s100 $READFILE2 !{subsamp} > $OUTNAME2
         gzip --fast $OUTNAME2
     else
         echo "Fewer than !{params.subsampThreshold} reads, skipping" >> !{sample_id}_subsampling.log
@@ -222,7 +221,7 @@ process shovill {
   
     script:
     """    
-    /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
     """
@@ -295,7 +294,7 @@ process seqsero2 {
    
     script:
     """
-    /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]}
+    SeqSero2_package.py -m a -b mem -t 2 -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]}
     touch ${sample_id}_5.txt
     """
 }
@@ -322,7 +321,7 @@ process sistr {
 
     script:
     """     
-    /opt/conda/bin/sistr -i "${sample_id}_contigs.fa" ${sample_id} -f csv -o sistr_prediction.csv --qc
+    sistr -i "${sample_id}_contigs.fa" ${sample_id} -f csv -o sistr_prediction.csv --qc
     touch ${sample_id}_6.txt
     """
 }
