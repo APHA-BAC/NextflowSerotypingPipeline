@@ -37,8 +37,8 @@ sudo apt-get update
 cd $HOME
 
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-sudo chmod +x Miniconda3-latest-Linux-x86_64.sh
-sudo ./Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
 rm Miniconda3-latest-Linux-x86_64.sh
 
 source ~/.bashrc
@@ -209,4 +209,4 @@ cd $HOME/summary
 
 wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/NextflowSerotypingPipeline/master/summaryTable_reworked.py
 
-fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/SCE3_pipeline_update_LOCAL.nf" --out=$HOME/nextflow
+fetcher --url="https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/local_install/SCE3_pipeline_update_LOCAL.nf" --out=$HOME/nextflow
