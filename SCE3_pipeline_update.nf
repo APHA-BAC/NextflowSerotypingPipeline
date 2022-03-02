@@ -7,7 +7,6 @@
 params.minReads = 500000
 params.subsampThreshold = 3500000
 subsamp = params.subsampThreshold - 500000
-println subsamp
 
 params.runID = "TestIsolates"
 println params.runID

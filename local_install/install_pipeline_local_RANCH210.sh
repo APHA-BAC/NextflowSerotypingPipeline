@@ -57,31 +57,31 @@ pip install matplotlib
 
 ######################################################################################
 # fastp
-cd $HOME
+# cd $HOME
 
-wget --no-check-certificate --content-disposition http://opengene.org/fastp/fastp.0.23.1
-mv fastp.0.23.1 fastp
-sudo cp fastp /opt
-sudo chmod +x /opt/fastp
-sudo ln -s /opt/fastp /usr/local/bin
-rm fastp
+# wget --no-check-certificate --content-disposition http://opengene.org/fastp/fastp.0.23.1
+# mv fastp.0.23.1 fastp
+# sudo cp fastp /opt
+# sudo chmod +x /opt/fastp
+# sudo ln -s /opt/fastp /usr/local/bin
+# rm fastp
 
 
 ######################################################################################
 # FastQC
-cd $HOME
+# cd $HOME
 
-# sudo apt-get -y install unzip
-# sudo apt-get -y install openjdk-11-jdk
-# sudo apt-get -y install default-jre
+# # sudo apt-get -y install unzip
+# # sudo apt-get -y install openjdk-11-jdk
+# # sudo apt-get -y install default-jre
 
-wget --no-check-certificate https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
-unzip fastqc_v0.11.9.zip
-sudo cp -r FastQC /opt
-sudo chmod +x /opt/FastQC/fastqc
-sudo ln -s /opt/FastQC/fastqc /usr/local/bin
-rm -r FastQC
-rm fastqc_v0.11.9.zip
+# wget --no-check-certificate https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+# unzip fastqc_v0.11.9.zip
+# sudo cp -r FastQC /opt
+# sudo chmod +x /opt/FastQC/fastqc
+# sudo ln -s /opt/FastQC/fastqc /usr/local/bin
+# rm -r FastQC
+# rm fastqc_v0.11.9.zip
 
 
 ######################################################################################
@@ -101,19 +101,18 @@ shovill --check
 
 ###########################################################################################
 # Quast
-cd $HOME
+# cd $HOME
 
-# I have changed this to follow the style of other installations into /opt
-wget --no-check-certificate --content-disposition https://github.com/ablab/quast/releases/download/quast_5.1.0rc1/quast-5.1.0rc1.tar.gz
-tar -xzvf quast-5.1.0rc1.tar.gz
+# wget --no-check-certificate --content-disposition https://github.com/ablab/quast/releases/download/quast_5.1.0rc1/quast-5.1.0rc1.tar.gz
+# tar -xzvf quast-5.1.0rc1.tar.gz
 
-sudo cp -r quast-5.1.0rc1 /opt
-sudo /opt/quast-5.1.0rc1/install.sh
+# sudo cp -r quast-5.1.0rc1 /opt
+# sudo /opt/quast-5.1.0rc1/install.sh
 
-sudo ln -s /opt/quast-5.1.0rc1/quast.py /usr/local/bin
-rm -r quast-5.1.0rc1
-sudo rm -rf quast_test_output
-rm quast-5.1.0rc1.tar.gz
+# sudo ln -s /opt/quast-5.1.0rc1/quast.py /usr/local/bin
+# rm -r quast-5.1.0rc1
+# sudo rm -rf quast_test_output
+# rm quast-5.1.0rc1.tar.gz
 
 
 ###########################################################################################
@@ -127,35 +126,34 @@ conda install -c kantorlab blastn
 pip install lxml==4.5.2
 pip install biopython==1.73
 
-# TODO: download directly from authour
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/MOST-PHE/main/pipeline_component_software/most/most.zip
-unzip most.zip
-sudo cp -r most /opt
-sudo chmod +x /opt/most/MOST-master/MOST.py
+# wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/MOST-PHE/main/pipeline_component_software/most/most.zip
+# unzip most.zip
+# sudo cp -r most /opt
+# sudo chmod +x /opt/most/MOST-master/MOST.py
 
-rm -r most
-rm most.zip
+# rm -r most
+# rm most.zip
 
 
 #############################################################################
 # KmerID
-cd $HOME
+# cd $HOME
 
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
-unzip kmerid.zip
-sudo cp -r kmerid /opt
+# wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/pipeline_component_software/KmerID/kmerid.zip
+# unzip kmerid.zip
+# sudo cp -r kmerid /opt
 
-aws s3 cp s3://s3-staging-area/kmerid_ref/kmerid_ref.zip kmerid_ref.zip
-jar xvf kmerid_ref.zip # Unzip can fail for unknown reasons; this is a workaround
-sudo mv ref /opt/kmerid
+# aws s3 cp s3://s3-staging-area/kmerid_ref/kmerid_ref.zip kmerid_ref.zip
+# jar xvf kmerid_ref.zip # Unzip can fail for unknown reasons; this is a workaround
+# sudo mv ref /opt/kmerid
 
-sudo make -C /opt/kmerid all # No need to change directory when the -C option is given
-sudo chmod +x /opt/kmerid/setup_refs.py
-sudo chmod +x /opt/kmerid/kmerid_python3.py
+# sudo make -C /opt/kmerid all # No need to change directory when the -C option is given
+# sudo chmod +x /opt/kmerid/setup_refs.py
+# sudo chmod +x /opt/kmerid/kmerid_python3.py
 
-rm -r kmerid
-rm kmerid.zip
-rm kmerid_ref.zip
+# rm -r kmerid
+# rm kmerid.zip
+# rm kmerid_ref.zip
 
 # sudo apt-get -y install nodejs
 # sudo apt-get -y install npm
@@ -180,15 +178,15 @@ pip install pandas==1.0.5
 
 #############################################################################################
 # Srst2
-cd $HOME
+# cd $HOME
 
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/SRST2/master/pipeline_component_software/srst2/srst2.zip
-unzip srst2.zip
-sudo cp -r srst2 /opt
-sudo chmod +x /opt/srst2/scripts/srst2.py
-sudo ln -s /opt/srst2/scripts/srst2.py /usr/local/bin
-rm -rf srst2
-rm srst2.zip
+# wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/APHA-BAC/SRST2/master/pipeline_component_software/srst2/srst2.zip
+# unzip srst2.zip
+# sudo cp -r srst2 /opt
+# sudo chmod +x /opt/srst2/scripts/srst2.py
+# sudo ln -s /opt/srst2/scripts/srst2.py /usr/local/bin
+# rm -rf srst2
+# rm srst2.zip
 
 
 #################################################################################################
