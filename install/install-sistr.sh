@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-pip install numpy pandas==1.1.5
+pip install numpy pandas==1.0.5
 
 conda config --add channels conda-forge
 conda config --add channels r
