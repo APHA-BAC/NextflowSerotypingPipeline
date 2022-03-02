@@ -132,7 +132,7 @@ wget --no-check-certificate --content-disposition https://raw.githubusercontent.
 unzip most.zip
 sudo cp -r most /opt
 sudo chmod +x /opt/most/MOST-master/MOST.py
-sudo ln /opt/most/MOST-master/MOST.py /usr/local/bin
+
 rm -r most
 rm most.zip
 
@@ -152,8 +152,6 @@ sudo mv ref /opt/kmerid
 sudo make -C /opt/kmerid all # No need to change directory when the -C option is given
 sudo chmod +x /opt/kmerid/setup_refs.py
 sudo chmod +x /opt/kmerid/kmerid_python3.py
-sudo ln /opt/kmerid/kmerid_python3.py /usr/local/bin
-sudo ln /opt/kmerid/setup_refs.py /usr/local/bin
 
 rm -r kmerid
 rm kmerid.zip

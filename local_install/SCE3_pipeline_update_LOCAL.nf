@@ -7,7 +7,6 @@
 params.minReads = 500000
 params.subsampThreshold = 3500000
 subsamp = params.subsampThreshold - 500000
-println subsamp
 
 params.runID = "TestIsolates"
 println params.runID
@@ -273,7 +272,7 @@ process kmerid {
  
     script:
     """     
-    python /usr/local/bin/kmerid_python3.py -f ${reads_file[0]} -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
+    python /opt/kmerid/kmerid_python3.py -f ${reads_file[0]} -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
     touch ${sample_id}_4.txt 
     """
 }
@@ -345,7 +344,7 @@ process most {
 
     shell:
     '''  
-    python /usr/loca/bin/MOST.py -1 !{reads_file[0]} -2 !{reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    python /opt/most/MOST-master/MOST.py -1 !{reads_file[0]} -2 !{reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
     if grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml
     then
         grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
