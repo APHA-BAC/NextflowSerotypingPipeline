@@ -188,6 +188,7 @@ pip install pandas==1.0.5
 # rm -rf srst2
 # rm srst2.zip
 
+pip install samtools==1.12
 
 #################################################################################################
 # Nextflow
