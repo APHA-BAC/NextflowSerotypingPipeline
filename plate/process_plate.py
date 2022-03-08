@@ -7,10 +7,12 @@ import argparse
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
+DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
+DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
-        
+
         Parameters:
             cmd (list): List of strings defining the command, see (subprocess.run in python docs)
     """
@@ -23,13 +25,15 @@ def run(cmd):
             cmd failed with exit code %i
         *****""" % (cmd, returncode))
 
-def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE):
+def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEFAULT_KMERID_REF, kmerid_config=DEFAULT_KMERID_CONFIG):
     """ Run the Salmonella pipeline using docker """
     run(["sudo", "docker", "pull", image])
     run([
-        "sudo", "docker", "run", "--rm", "-it", 
+        "sudo", "docker", "run", "--rm", "-it",
         "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
-        "-v", f"{results}:/root/WGS_Results/{plate_name}/", 
+        "-v", f"{results}:/root/WGS_Results/{plate_name}/",
+        "-v", f"{kmerid_ref}:/opt/kmerid/ref/",
+        "-v", f"{kmerid_config}:/opt/kmerid/config",
         image,
         "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
         "--runID", plate_name
@@ -48,13 +52,13 @@ def s3_object_release_date(s3_key):
     # Retrieve metadata from S3
     ls_cmd = f"aws s3 ls {s3_key}/"
     contents = [x.decode("utf-8") for x in subprocess.check_output(ls_cmd, shell=True).splitlines()]
-    
+
     # Extract date
     return contents[0].split()[0].split("-")
 
 def s3_uri_to_plate_name(s3_key):
     """ Convert a S3 URI from CSU to a plate name with consistent naming convention """
-    
+
     # Remove trailing slash
     s3_key = s3_key.strip('/')
 
