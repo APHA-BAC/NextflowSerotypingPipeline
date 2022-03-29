@@ -459,6 +459,7 @@ def instantiate_summary(resultsDir, runID):
         rawCount = raw_count(sampleDir, sampleID)
         if rawCount:
             df.loc[sampleID, "#Reads_raw"] = rawCount
+            df.loc[sampleID, "SeqSero_comment"] = ""
     summaryFileName = os.path.join(resultsDir, runID + "_SummaryTable.csv")
     print(df)
     df.to_csv(summaryFileName)
@@ -497,6 +498,8 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "SeqSero"] = seqseroType
         if seqseroComment:
             df.loc[sampleID, "SeqSero_comment"] = seqseroComment
+        else:
+            df.loc[sampleID, "SeqSero_comment"] = ""
         contigs25k, contigs50k, contigs, assemLen, assemGC, N50, L50 = quast_summary(sampleDir)
         if contigs25k:
             df.loc[sampleID, "#Contigs>25Kbp"] = contigs25k
@@ -521,6 +524,12 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "serovar_antigen"] = serovar_antigen
         if serovar_cgmlst:
             df.loc[sampleID, "serovar_cgmlst"] = serovar_cgmlst
+        if not seqseroType:
+            seqseroType = "no_result"
+        if not mostType:
+            mostType = "no_result"
+        if not serovar:
+            serovar = "no_result"
         consensus = calc_consensus(seqseroType, mostType, serovar)
         if consensus:
             df.loc[sampleID, "Consensus"] = consensus
