@@ -71,8 +71,35 @@ names2
     .filter {it[1] < params.minReads}
     .set{skipCh}
 
+
+/*
+ * PRE-STEP iv - instantiate summary table
+*/
+
+samplecount_ch = Channel.fromFilePairs(readPath)
+
+process instantiate_summary_table {
+    input:
+    val sample_count from samplecount_ch.count()
+    val counted_samples from out_iii.count()
+
+    output:
+    file("safe_to_delete.txt") into checkCh
+
+    when:
+    counted_samples == sample_count
+
+    shell:
+    """
+    python $HOME/summary/summaryTable_reworked.py ${params.runID} --instantiate
+    touch safe_to_delete.txt
+    """
+}
+
+
 process fastq_size_check {
     input:
+    val check from checkCh
     val runCount from countCh.count()
 
     output:
@@ -89,28 +116,6 @@ process fastq_size_check {
 
 
 /*
- * PRE-STEP iv - instantiate summary table
-*/
-
-samplecount_ch = Channel.fromFilePairs(readPath)
-
-process instantiate_summary_table {
-    input:
-    val go from goCh1
-    val sample_count from samplecount_ch.count()
-    val counted_samples from out_iii.count()
-
-    when:
-    counted_samples == sample_count
-
-    shell:
-    """
-    python $HOME/summary/summaryTable_reworked.py ${params.runID} --instantiate
-    """
-}
-
-
-/*
  * PRE-STEP v - fastp quality trimming
 */
 
@@ -118,7 +123,7 @@ process fastp_qual_trim {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
-    val go from goCh2
+    val go from goCh1
     tuple sample_id, readCount, readFile1, readFile2 from runCh
 
     output:
@@ -450,6 +455,7 @@ process summary {
         .view()
     val c8 from out8_ch.count()
         .view()
+    val go from goCh2
 
     when:
     c1 + c2 + c3 + c4+ c5+ c6 + c7 + c8 == read*8
