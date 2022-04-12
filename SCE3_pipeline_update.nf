@@ -63,7 +63,7 @@ names1
     .merge(countInt1)
     .merge(files1)
     .filter {it[1] >= params.minReads}
-    .set{runCh}
+    .into{runCh; countCh}
 
 names2
     .merge(countInt2)
@@ -83,13 +83,35 @@ process instantiate_summary_table {
     val sample_count from samplecount_ch.count()
     val counted_samples from out_iii.count()
 
+    output:
+    file("safe_to_delete.txt") into checkCh
+
     when:
     counted_samples == sample_count
 
     shell:
     """
     python $HOME/summary/summaryTable_reworked.py ${params.runID} --instantiate
+    touch safe_to_delete.txt
     """
+}
+
+
+process fastq_size_check {
+    input:
+    val check from checkCh
+    val runCount from countCh.count()
+
+    output:
+    val go into goCh1, goCh2
+
+    exec:
+    if (runCount > 0) {
+        go = 1
+    }
+    else {
+        error "ERROR: No input .fastq.gz files found or all input .fastq.gz files < 500K reads"
+    }
 }
 
 
@@ -101,6 +123,7 @@ process fastp_qual_trim {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
+    val go from goCh1
     tuple sample_id, readCount, readFile1, readFile2 from runCh
 
     output:
@@ -156,6 +179,8 @@ process subsampling {
     CLEANUPDIR=$(dirname !{logfile})
     ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
+    cp $(basename $READFILE1) $HOME/WGS_Data/!{params.runID}
+    cp $(basename $READFILE2) $HOME/WGS_Data/!{params.runID}
     '''
 }
 
@@ -430,6 +455,7 @@ process summary {
         .view()
     val c8 from out8_ch.count()
         .view()
+    val go from goCh2
 
     when:
     c1 + c2 + c3 + c4+ c5+ c6 + c7 + c8 == read*8
