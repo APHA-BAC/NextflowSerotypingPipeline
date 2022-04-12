@@ -247,7 +247,8 @@ process shovill {
   
     script:
     """    
-    /opt/conda/bin/shovill --outdir $HOME/WGS_Results/${params.runID}/${sample_id}/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    #/opt/conda/bin/shovill --outdir $HOME/WGS_Results/${params.runID}/${sample_id}/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    #/opt/conda/bin/shovill --outdir --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
     """
