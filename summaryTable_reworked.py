@@ -172,7 +172,7 @@ def most_summary(sampleDir):
             light = "RED"
     if len(mostFile) == 0 or os.path.getsize(mostFile[0]) == 0:
         mostType = None
-
+        st = None
         meanMLSTCov = None
         mlst = None
     else:
@@ -207,29 +207,35 @@ def most_summary(sampleDir):
 
 ####################################################################################################
 
-
+# Using the most sequence type data, we can indentify the eBurst group for each sample
 def ebgs(sampleDir):
-    print("IS THIS FUNCTION RUNNING?")
-    ebgFile = os.path.join("", "./ebgs.csv")
-    ebgData = readTable(ebgFile)
-
     mostDir = os.path.join(sampleDir, "MOST")
     mostFile = [x for x in glob.glob(os.path.join(mostDir, "*MLST_result.csv"))]
 
-    # if len(mostFile) == 0 or os.path.getsize(mostFile[0]) == 0:
-    #     st = None
-    # else:
-    mostFileName = mostFile[0]
-    mostResults = readTable(mostFileName)
-    st = [x for x in mostResults if "st value:" in x][0][1]
-    st_str = str(st)
-    st_str = st_str[1:]
-    # print(st_str)
-    ebg = None
-    for item in ebgData:
-        if st_str in item:
-            ebg = item[0]
-            print(item[0])
+    if len(mostFile) == 0 or os.path.getsize(mostFile[0]) == 0:
+        ebg = None
+    else:
+
+
+        mostFileName = mostFile[0]
+        mostResults = readTable(mostFileName)
+
+        ebgFile = os.path.join("", "./ebgs.csv")
+        ebgData = readTable(ebgFile)
+
+
+
+
+
+
+        st = [x for x in mostResults if "st value:" in x][0][1]
+        st_str = str(st)
+        st_str = st_str[1:]
+
+        ebg = None
+        for item in ebgData:
+            if st_str in item:
+                ebg = item[0]
 
     return ebg
 
@@ -574,10 +580,15 @@ def fill_summary(resultsDir, runID):
         sseJ = paratyphiB_java_diff(sampleDir, mostType)
         if sseJ:
             df.loc[sampleID, "sseJ"] = sseJ
-
-
         ebg = ebgs(sampleDir)
-        df.loc[sampleID, "EBG"] = ebg
+        if ebg:
+
+            df.loc[sampleID, "EBG"] = ebg
+
+
+
+
+
 
     print(df)
     df.to_csv(summaryFileName)
