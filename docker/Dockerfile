@@ -23,7 +23,6 @@ COPY ./ ./
 ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # Install dependencies
-RUN ls
 RUN bash install/install.bash
 
 RUN mkdir /artifacts/
