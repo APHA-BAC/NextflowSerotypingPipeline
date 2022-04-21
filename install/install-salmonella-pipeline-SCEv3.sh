@@ -1,39 +1,48 @@
 #!/bin/bash
 
 #fastqc
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-fastqc.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-fastqc.sh ./
 bash install-fastqc.sh
 
-#shovill 
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-shovill.sh
+#shovill
+
+cp ~/NextflowSerotypingPipeline/install/install-shovill.sh ./
 bash install-shovill.sh
 
 #quast
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-quast.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-quast.sh ./
 bash install-quast.sh
 
 #most
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-most.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-most.sh ./
 bash install-most.sh
 
 #kmerid
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-kmerid.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-kmerid.sh ./
 bash install-kmerid.sh
 
 #seqsero2
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-seqsero2.sh
+
+cp ~/NextflowSerotypingPipeline/install/install=seqsero2.sh ./
 bash install-seqsero2.sh
 
 #sistr
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-sistr.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-sistr.sh ./
 bash install-sistr.sh
 
 #srst2
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-srst2.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-srst2.sh ./
 bash install-srst2.sh
 
 #Nextflow_SummaryTable_FolderPrep
-wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/JaromirGuzinski/NextflowSerotypingPipeline/master/install-Nextflow_SummaryTable_FolderPrep.sh
+
+cp ~/NextflowSerotypingPipeline/install/install-Nextflow_SummaryTable_FolderPrep.sh ./
 bash install-Nextflow_SummaryTable_FolderPrep.sh
 
 sudo reboot
