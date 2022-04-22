@@ -96,7 +96,7 @@ process instantiate_summary_table {
 }
 
 
-process fastq_size_check {
+process check_data {
     input:
     val check from checkCh
     val runCount from countCh.count()
@@ -434,7 +434,9 @@ process srst2 {
  * STEP 9 - summary 
 */ 
 
-process summary {
+process summary_and_lims {
+    publishDir "$HOME/WGS_Results/${params.runID}", mode: 'copy'
+
     input:
     val read from reads_summ1.count()
         .view()
@@ -456,12 +458,16 @@ process summary {
         .view()
     val go from goCh2
 
+    output:
+    file("*.csv")
+
     when:
     c1 + c2 + c3 + c4+ c5+ c6 + c7 + c8 == read*8
 
     script:
     """
     python $HOME/summary/summaryTable_reworked.py ${params.runID}
+    python3 $HOME/summary/lims_rules.py $HOME/WGS_Results/${params.runID}/${params.runID}_SummaryTable.csv
     """
 }
 
