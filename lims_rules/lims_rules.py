@@ -205,8 +205,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsVariant = ""
     limsVaccine = ""
     limsStatus = "CheckRequired"
+    # RULE 0 NO PIPELINE OUTPUT
+    if consensus == "no_result":
+        limsStatus = "Inconclusive"
+        print("No pipeline results; most likely not Salmonella")
+        limsReason = "noResults_checkIfSalmonella"
     # RULE 1 READCOUNT
-    if numReads < 500000 or numReads == "no_result":
+    elif numReads < 500000 or numReads == "no_result":
         limsReason = "InsufficientData: readCount<50K"
         print("Low read count:", numReads)
         limsStatus = "Inconclusive"
