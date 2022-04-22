@@ -102,7 +102,7 @@ def build_sero_dict():
             seroDesc = anySpaceRegex.sub("_", seroDesc)
             serotype = serotype.upper()
             if not seroDesc.upper() == serotype:
-                print("\t".join([serotype, seroDesc]))
+                # print("\t".join([serotype, seroDesc]))
                 seroDict[seroDesc.upper()] = [seroDesc, serogroup, "undetermined"]
             seroDict[serotype] = [seroDesc, serogroup, "undetermined"]
     print("\n\n")
