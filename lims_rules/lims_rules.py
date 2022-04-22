@@ -102,7 +102,7 @@ def build_sero_dict():
             seroDesc = anySpaceRegex.sub("_", seroDesc)
             serotype = serotype.upper()
             if not seroDesc.upper() == serotype:
-                print("\t".join([serotype, seroDesc]))
+                # print("\t".join([serotype, seroDesc]))
                 seroDict[seroDesc.upper()] = [seroDesc, serogroup, "undetermined"]
             seroDict[serotype] = [seroDesc, serogroup, "undetermined"]
     print("\n\n")
@@ -124,10 +124,13 @@ def build_sero_dict():
     return seroDict
 
 def parse_consensus(consensus):
-    if not consensusRegex.match(consensus):
-        print(consensus)
-        sys.exit("Error, consensus not in recognisable format!")
-    serotypes = [x for x in [consensusRegex.match(consensus).groups()[i] for i in (1, 3, 5)] if x is not None]
+    if consensus == "no_result":
+        serotypes = ["no_result"]
+    else:
+        if not consensusRegex.match(consensus):
+            print(consensus)
+            sys.exit("Error, consensus not in recognisable format!")
+        serotypes = [x for x in [consensusRegex.match(consensus).groups()[i] for i in (1, 3, 5)] if x is not None]
     return serotypes
 
 def parse_seros(serotypes):
