@@ -6,69 +6,7 @@ import csv
 import re
 import os
 import argparse
-
-headerRow = ["Isolate_ID",
-"Consensus", 
-"#Reads_raw", 
-"#Reads_filtered", 
-"GC%", 
-"KmerID", 
-"Contam_Flag", 
-"MOST", 
-"MOST_Light", 
-"MOST_ST", 
-"MLST", 
-"MLST_meanCov", 
-"SeqSero", 
-"SeqSero_comment",
-"N50",
-"sistr_Serogroup",
-"sistr_Serovar",
-"serovar_antigen", 
-"serovar_cgmlst", 
-"vaccine", 
-"mono", 
-"sseJ", 
-"ReadLenRange", 
-"#Contigs", 
-"#Contigs>25Kbp", 
-"#Contigs>50Kbp", 
-"AssemblySize", 
-"AssemblyGC", 
-"L50"
-]
-
-outTableHeader = ["Isolate_ID",
-"Consensus", 
-"LIMS_Status", "LIMS_Reason", "LIMS_SerotypeID", "LIMS_Subgenus", "LIMS_Serogroup", "LIMS_Variant", "LIMS_Vaccine",
-"#Reads_raw", 
-"#Reads_filtered", 
-"GC%", 
-"KmerID", 
-"Contam_Flag", 
-"MOST", 
-"MOST_Light", 
-"MOST_ST", 
-"MLST", 
-"MLST_meanCov", 
-"SeqSero", 
-"SeqSero_comment",
-"N50",
-"sistr_Serogroup",
-"sistr_Serovar",
-"serovar_antigen", 
-"serovar_cgmlst", 
-"vaccine", 
-"mono", 
-"sseJ", 
-"ReadLenRange", 
-"#Contigs", 
-"#Contigs>25Kbp", 
-"#Contigs>50Kbp", 
-"AssemblySize", 
-"AssemblyGC", 
-"L50"
-]
+import pandas as pd
 
 consensusRegex = re.compile("^([123]-(.+?))(--1-(.+?)){0,1}(--1-(.+)){0,1}$")
 subgenusRegex = re.compile("^[IVab]+ (.+)$")
@@ -105,7 +43,6 @@ def build_sero_dict():
                 # print("\t".join([serotype, seroDesc]))
                 seroDict[seroDesc.upper()] = [seroDesc, serogroup, "undetermined"]
             seroDict[serotype] = [seroDesc, serogroup, "undetermined"]
-    print("\n\n")
     with open(os.path.expanduser('~/summary/subgenus_lookup_table.tsv'), 'r') as subgLookup:
         reader = csv.reader(subgLookup, delimiter='\t')
         for idx, row in enumerate(reader):
@@ -181,8 +118,42 @@ def parse_seros(serotypes):
         limsSubgenus = subgenera[0]
     return limsSerotypes, limsSerogroup, limsSubgenus
 
+
+def parse_row(row):
+    sampleID = row['Isolate_ID']
+    consensus = row['Consensus']
+    rawCount = row['#Reads_raw']
+    readCount = row['#Reads_filtered']
+    gc = row['GC%']
+    kmerid = row['KmerID']
+    contamFlag = row['Contam_Flag']
+    most = row['MOST']
+    mostLight = row['MOST_Light']
+    st = row['MOST_ST']
+    mlst = row['MLST']
+    mlstMeanCov = row['MLST_meanCov']
+    seqsero = row['SeqSero']
+    seqseroComment = row['SeqSero_comment']
+    n50 = row['N50']
+    serogr = row['sistr_Serogroup']
+    serovar = row['sistr_Serovar']
+    seroAnt = row['serovar_antigen']
+    seroCGMLST = row['serovar_cgmlst']
+    vaccine = row['vaccine']
+    mono = row['mono']
+    sseJ = row['sseJ']
+    readRange = row['ReadLenRange']
+    numContigs = row['#Contigs']
+    numContigs25Kb = row['#Contigs>25Kbp']
+    numContigs50Kb = row['#Contigs>50Kbp']
+    assemblySize = row['AssemblySize']
+    assemblyGC = row['AssemblyGC']
+    L50 = row['L50']
+    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
+
+
 def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
-    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = row
+    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
     numReads = safe_int(rawCount)
     assemblySize = safe_int(assemblySize)
     n50 = safe_int(n50)
@@ -205,32 +176,32 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsVariant = ""
     limsVaccine = ""
     limsStatus = "CheckRequired"
-    # RULE 0 NO PIPELINE OUTPUT
+    # RULE 1 NO PIPELINE OUTPUT
     if consensus == "no_result":
         limsStatus = "Inconclusive"
         print("No pipeline results; most likely not Salmonella")
         limsReason = "noResults_checkIfSalmonella"
-    # RULE 1 READCOUNT
+    # RULE 2 READCOUNT
     elif numReads < 500000 or numReads == "no_result":
         limsReason = "InsufficientData: readCount<50K"
         print("Low read count:", numReads)
         limsStatus = "Inconclusive"
-    # RULE 2 LOW KMERID ENTERICA
+    # RULE 3 LOW KMERID ENTERICA
     elif limsSubgenus == "I" and salmPercent < 75:
         limsReason = "Contaminated: EntericaKmerID<75%"
         print("Low KmerID score for Enterica (< 75%):", salmPercent)
         limsStatus = "Inconclusive"
-    # RULE 3 LOW KMERID NON-ENTERICA
+    # RULE 4 LOW KMERID NON-ENTERICA
     elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
         limsReason = "Contaminated: non-EntericaKmerID<38%"
         print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
         limsStatus = "Inconclusive"
-    # RULE 4 RED LIGHT
+    # RULE 5 RED LIGHT
     elif mostLight == "RED":
         limsReason = "Contaminated: MOSTlightRED"
         print("Most light:", mostLight)
         limsStatus = "Inconclusive"
-    # RULE 5 SEQSERO2 COMMENT
+    # RULE 6 SEQSERO2 COMMENT
     elif "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
             limsStatus = "CheckRequired"
@@ -239,94 +210,94 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: multiSerotypes(SeqSero2)"
         print("SeqSero2 comment:", seqseroComment)
-    # RULE 6 ASSEMBLY SIZE UPPER
+    # RULE 7 ASSEMBLY SIZE UPPER
     elif assemblySize > 5800000:
         limsReason = "Contaminated: assembly>5.8Mbp"
         print("Assembly too large:", assemblySize)
         limsStatus = "Inconclusive"
-    # RULE 7 N50
+    # RULE 8 N50
     elif n50 < 20000:
         limsReason = "PoorAssembly: N50<20Kbp"
         print("N50 too small:", n50)
         limsStatus = "Inconclusive"
-    # RULE 8 CONTIG COUNT
+    # RULE 9 CONTIG COUNT
     elif numContigs > 600:
         limsReason = "PoorAssembly: contigCount>600"
         print("Too many contigs:", numContigs)
         limsStatus = "Inconclusive"
-    # RULE 9 LOW MLST COVERAGE TYPH
+    # RULE 10 LOW MLST COVERAGE TYPH
     elif limsSerotypes == ["Typhimurium"] and mlstMeanCov < 20:
         limsReason = "PoorAssembly: MLSTcov<20xTyphimurium"
         print("MLST coverage:", mlstMeanCov)
         limsStatus = "Inconclusive"
-    # RULE 10 LOW MLST COVERAGE
+    # RULE 11 LOW MLST COVERAGE
     elif limsSerotypes != ["Typhimurium"] and mlstMeanCov < 30:
         limsReason = "PoorAssembly: MLSTcov<30x"
         print("MLST coverage:", mlstMeanCov)
         limsStatus = "Inconclusive"
-    # RULE 11 ASSEMBLY SIZE LOWER
+    # RULE 12 ASSEMBLY SIZE LOWER
     elif assemblySize < 4000000:
         limsReason = "PoorAssembly: assembly<4Mbp"
         print("Assembly too small:", assemblySize)
         limsStatus = "Inconclusive"
-    # RULE 12 NO RESULTS
+    # RULE 13 NO RESULTS
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
         print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
-    # RULE 13 LOW MLST COVERAGE
+    # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
         limsReason = "PoorAssembly: incomplSTcov(MOST)"
         print("Incomplete ST locus coverage")
         limsStatus = "Inconclusive"
-    # RULE 14 ARIZONAE IIIA 18:Z4:Z32
+    # RULE 15 ARIZONAE IIIA 18:Z4:Z32
     elif consensus in ("2-IIIa--1-IIIa 18:z4,z23:-", "2-IIIa 18:z4,z23:---1-Arizonae"):
         limsReason = "check Serovar"
         limsSerotype = "Arizonae IIIa 18:z4,z32:-"
         limsStatus = "CheckRequired"
-    # RULE 15 ARIZONAE IIIA 44:Z4:Z23
+    # RULE 16 ARIZONAE IIIA 44:Z4:Z23
     elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
         limsReason = "check Serovar"
         limsSerotype = "Arizonae IIIa 44:z4,z23:-"
         limsStatus = "CheckRequired"
-    # RULE 16 HOUTENAE
+    # RULE 17 HOUTENAE
     elif consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsReason = "check Serovar"
         limsSerotype = "Houtenae IV 44:z4,z23:-"
         limsStatus = "CheckRequired"
-    # RULE 17 PARATYPHI B JAVA
+    # RULE 18 PARATYPHI B JAVA
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B var. Java")]) == len(limsSerotypes) and sseJ == 'Java':
         limsSerotype = "Paratyphi B var. Java"
         limsVariant = "Paratyphi B var. Java"
         limsStatus = "Pass"
-    # RULE 18 PARATYPHI B
+    # RULE 19 PARATYPHI B
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B")]) == len(limsSerotypes) and sseJ == 'Paratyphi':
         limsSerotype = "Paratyphi B"
         limsStatus = "Pass"
-    # RULE 19 MONO IDIKAN
+    # RULE 20 MONO IDIKAN
     elif mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
-    # RULE 20 MONO KEDOUGOU
+    # RULE 21 MONO KEDOUGOU
     elif mono == "MonophasicKedougou":
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
-    # RULE 21 4,12:D:-
+    # RULE 22 4,12:D:-
     elif consensus == "1-No Type--1-Unnamed--1-I 4,[5],12:d:-":
         limsSerotype = "I 4,[5],12:d:-"
         limsStatus = "Pass"
-    # RULE 22 DIARIZONAE
+    # RULE 23 DIARIZONAE
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7"):
         limsSerotype = "Diarizonae IIIb O:61:k:1,5,7"
         limsStatus = "Pass"
-    # RULE 23 BOVISMORBIFICANS
+    # RULE 24 BOVISMORBIFICANS
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
-    # RULE 24 ALL GOOD
+    # RULE 25 ALL GOOD
     elif len(limsSerotypes) == 1:
         limsStatus = "Pass"
-    # RULE 25 EVERYTHING ELSE
+    # RULE 26 EVERYTHING ELSE
     else:
         limsReason = "unknown"
         limsStatus = "CheckRequired"
@@ -359,25 +330,22 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
 
 def parse_table(summaryTable):
+    firstColNames = ['Isolate_ID', 'Consensus', 'LIMS_Status', 'LIMS_Reason', 'LIMS_SerotypeID', 'LIMS_Subgenus', 'LIMS_Serogroup', 'LIMS_Variant', 'LIMS_Vaccine']
     outTable = []
-    outTable.append(outTableHeader)
     outFileName = os.path.basename(summaryTable).replace(".csv", "_plusLIMS.csv")
-    with open(summaryTable, 'r') as inFile:
-        reader = csv.reader(inFile, delimiter=',')
-        for idx, row in enumerate(reader):
-            if idx == 0:
-                if row != headerRow:
-                    print(headerRow)
-                    print(row)
-                    sys.exit("Error, table header not in expected format")
-                continue
-            sampleID, consensus = row[0:2]
-            serotypes = parse_consensus(consensus)
-            # print("Consensus serotypes:", serotypes)
-            limsSerotypes, limsSerogroup, limsSubgenus = parse_seros(serotypes)
-            limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
-            outTable.append(str(x) for x in [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine] + 
-                row[2:])
+    df = pd.read_csv(summaryTable, keep_default_na=False)
+    for idx, row in df.iterrows():
+        if idx == 0:
+            otherColNames = [x for x in list(df.columns) if x not in ('Isolate_ID', 'Consensus')]
+            outTable.append(firstColNames + otherColNames)
+        sampleID = row['Isolate_ID']
+        consensus = row['Consensus']
+        serotypes = parse_consensus(consensus)
+        print(sampleID, serotypes)
+        limsSerotypes, limsSerogroup, limsSubgenus = parse_seros(serotypes)
+        limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
+        outRow = [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine] + list(row[otherColNames])
+        outTable.append([str(x) for x in outRow])
     with open(outFileName, 'w') as outFile:
         writer = csv.writer(outFile, delimiter=',')
         writer.writerows(outTable)
