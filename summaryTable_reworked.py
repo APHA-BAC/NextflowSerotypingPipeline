@@ -214,19 +214,13 @@ def ebgs(sampleDir):
 
     if len(mostFile) == 0 or os.path.getsize(mostFile[0]) == 0:
         ebg = None
+
     else:
-
-
         mostFileName = mostFile[0]
         mostResults = readTable(mostFileName)
 
         ebgFile = os.path.join("", "./ebgs.csv")
         ebgData = readTable(ebgFile)
-
-
-
-
-
 
         st = [x for x in mostResults if "st value:" in x][0][1]
         st_str = str(st)
