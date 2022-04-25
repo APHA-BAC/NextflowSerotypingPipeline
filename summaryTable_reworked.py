@@ -206,8 +206,8 @@ def most_summary(sampleDir):
     return light, mostType, st, meanMLSTCov, mlst
 
 ####################################################################################################
-
 # Using the most sequence type data, we can indentify the eBurst group for each sample
+
 def ebgs(sampleDir):
     mostDir = os.path.join(sampleDir, "MOST")
     mostFile = [x for x in glob.glob(os.path.join(mostDir, "*MLST_result.csv"))]
@@ -234,7 +234,6 @@ def ebgs(sampleDir):
         return ebg
     else:
         return "No ebg"
-
 
 ####################################################################################################
 # SeqSero2 analysis
@@ -478,10 +477,6 @@ def paratyphiB_java_diff(sampleDir, mostType):
 
 ####################################################################################################
 
-
-
-
-
 def instantiate_summary(resultsDir, runID):
     sampleDirs = get_subdirs(resultsDir)
     sampleNames = [os.path.basename(x) for x in sampleDirs]
@@ -581,11 +576,6 @@ def fill_summary(resultsDir, runID):
 
             df.loc[sampleID, "EBG"] = ebg
 
-
-
-
-
-
     print(df)
     df.to_csv(summaryFileName)
 
@@ -611,10 +601,6 @@ if __name__ == '__main__':
         fill_summary(resultsDir, runID)
 
 quit()
-
-
-
-
 
 # del sys.argv[0]
 
