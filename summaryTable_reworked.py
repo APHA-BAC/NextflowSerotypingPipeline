@@ -228,7 +228,7 @@ def ebgs(sampleDir):
 
         ebg = None
         for item in ebgData:
-            if st_str in item:
+            if item[1] == st_str:
                 ebg = item[0]
     if ebg:
         return ebg
