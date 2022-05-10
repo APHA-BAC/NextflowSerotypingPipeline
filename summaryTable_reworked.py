@@ -31,6 +31,7 @@ tableHeader = [
 "MOST",
 "MOST_Light",
 "MOST_ST",
+"EBG",
 "MLST",
 "MLST_meanCov",
 "SeqSero",
@@ -50,7 +51,6 @@ tableHeader = [
 "AssemblySize",
 "AssemblyGC",
 "L50"
-"EBG"
 ]
 
 # tableHeader = ["StrainID", "Consensus", "#ReadsR1", "GC%R1", "R1Kmerid", "ContaminationFlag", "MOST", "Most_light", "st", "MLST", "MLST mean cov", "SeqSero", "SS comment", "N50", "serogroup", "serovar", "serovar_antigen", "serovar_cgmlst", "vaccine", "mono", "sseJ", "ReadLenRange", "#Contigs", "#Contigs>25Kbp", "#Contigs>50Kbp", "AssemblySize", "AssemblyGC", "L50"]
@@ -224,11 +224,12 @@ def ebgs(sampleDir):
 
         st = [x for x in mostResults if "st value:" in x][0][1]
         st_str = str(st)
-        st_str = st_str[1:]
+        # st_str = st_str[1:]
+        print(st_str)
 
         ebg = None
         for item in ebgData:
-            if st_str in item:
+            if item[1] == st_str:
                 ebg = item[0]
     if ebg:
         return ebg
@@ -518,6 +519,9 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "MOST"] = mostType
         if st:
             df.loc[sampleID, "MOST_ST"] = st
+        ebg = ebgs(sampleDir)
+        if ebg:
+            df.loc[sampleID, "EBG"] = ebg
         if meanMLSTCov:
             df.loc[sampleID, "MLST_meanCov"] = meanMLSTCov
         if mlst:
@@ -571,10 +575,7 @@ def fill_summary(resultsDir, runID):
         sseJ = paratyphiB_java_diff(sampleDir, mostType)
         if sseJ:
             df.loc[sampleID, "sseJ"] = sseJ
-        ebg = ebgs(sampleDir)
-        if ebg:
 
-            df.loc[sampleID, "EBG"] = ebg
 
     print(df)
     df.to_csv(summaryFileName)
