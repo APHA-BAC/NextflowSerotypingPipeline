@@ -224,8 +224,8 @@ def ebgs(sampleDir):
 
         st = [x for x in mostResults if "st value:" in x][0][1]
         st_str = str(st)
+        st_str = st_str.replace("*","")
         # st_str = st_str[1:]
-        print(st_str)
 
         ebg = None
         for item in ebgData:
