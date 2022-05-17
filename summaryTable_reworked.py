@@ -31,7 +31,7 @@ tableHeader = [
 "MOST",
 "MOST_Light",
 "MOST_ST",
-"EBG",
+"eBG",
 "MLST",
 "MLST_meanCov",
 "SeqSero",

@@ -130,6 +130,7 @@ def parse_row(row):
     most = row['MOST']
     mostLight = row['MOST_Light']
     st = row['MOST_ST']
+    ebg = row["eBG"]
     mlst = row['MLST']
     mlstMeanCov = row['MLST_meanCov']
     seqsero = row['SeqSero']
@@ -149,11 +150,11 @@ def parse_row(row):
     assemblySize = row['AssemblySize']
     assemblyGC = row['AssemblyGC']
     L50 = row['L50']
-    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
+    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
 
 
 def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
-    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
+    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
     numReads = safe_int(rawCount)
     assemblySize = safe_int(assemblySize)
     n50 = safe_int(n50)
@@ -240,6 +241,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "PoorAssembly: assembly<4Mbp"
         print("Assembly too small:", assemblySize)
         limsStatus = "Inconclusive"
+    # NEW RULE 12
+    elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
+        LIMS_SerotypeID = 'Paratyphi B var. Java'
     # RULE 13 NO RESULTS
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
