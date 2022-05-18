@@ -197,6 +197,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Contaminated: non-EntericaKmerID<38%"
         print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
         limsStatus = "Inconclusive"
+    # NEW RULE 14
+
     # RULE 5 RED LIGHT
     elif mostLight == "RED":
         limsReason = "Contaminated: MOSTlightRED"
@@ -244,11 +246,29 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
         LIMS_SerotypeID = 'Paratyphi B var. Java'
+        limsSerotype = 'Paratyphi B var. Java'
     # RULE 13 NO RESULTS
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
         print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
+    # NEW RULE 14, 15 and 16
+    elif limsSubgenus == 'IIIb' and salmPercent > 38:
+        if consensus == "2-IIIa--1-IIIa 18:z4,z23:-" or consensus == "2-IIIa 18:z4,z23:---1-Arizonae":
+            limsSerotype = "Arizonae IIIa 18:z4,z23:-"
+            limsStatus = "pass"
+        elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
+            limsSerotype = "Arizonae IIIa 44:z4,z23:-"
+            limsStatus == "pass"
+    # NEW RULE 17
+    elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
+        limsSerotype = "Houtenae IV 44:z4,z23:-"
+        limsStatus = "pass"
+    # NEW RULE 18
+    # elif limsSubgenus == "II" and salmPercent > 38 and consensus == "2-II 48:d:z6--1-Unnamed":
+    #     limsSerotype =
+
+
     # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
         limsReason = "PoorAssembly: incomplSTcov(MOST)"
@@ -293,6 +313,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # RULE 23 DIARIZONAE
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7"):
         limsSerotype = "Diarizonae IIIb O:61:k:1,5,7"
+        LIMS_SerotypeID = "O:61:k:1,5,7"
         limsStatus = "Pass"
     # RULE 24 BOVISMORBIFICANS
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
