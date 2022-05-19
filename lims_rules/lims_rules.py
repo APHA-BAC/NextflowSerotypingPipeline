@@ -322,21 +322,31 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # RULE 25 ALL GOOD
     elif len(limsSerotypes) == 1:
         limsStatus = "Pass"
+    # Further rules_LP
+    elif consensus == "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi":
+        limsSerotype = "Monophasic Paratyphi B var. Java"
+    elif consensus == "2-Paratyphi--1-Paratyphi B var. Java":
+        limsSerotype = "Paratyphi B vr. Java"
+    elif consensus == "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+":
+        limsSerotype = "Paratyphi B vr. Java"
+    elif consensus == "2-Typhimurium--1-I 1,4,[5],12:i:-":
+        limsSerotype = "Monophasic S. Typhimurium"
+
     # RULE 26 EVERYTHING ELSE
     else:
         limsReason = "unknown"
         limsStatus = "CheckRequired"
     if vaccine not in ("NA", "srst2 result file not found"):
         if "2-AviproE" in vaccine:
-            limsVaccine = "AVIPRO VAC E Vaccine strain"
+            limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
         elif "2-Salmovac440" in vaccine:
-            limsVaccine = "Salmovac 440 Vaccine strain"
+            limsVaccine = "Salmonella Enteritidis Salmovac 440 Vaccine Strain"
         elif "2-AviproT" in vaccine:
-            limsVaccine = "AVIPRO VAC T Vaccine strain"
+            limsVaccine = "Salmonella Typhimurium AVIPRO VAC T Vaccine Strain"
         elif "2-SalmoporcSTM" in vaccine:
-            limsVaccine = "Salmoporc STM Vaccine strain"
+            limsVaccine = "Salmonella Typhimurium Salmoporc STM Vaccine Strain"
         elif "2-Nobilis" in vaccine:
-            limsVaccine = "Nobilis SG 9R Vaccine strain"
+            limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
         elif "2-Wild_Type" in vaccine:
             limsVaccine = "Field strain"
         elif vaccine == "527E_AviproT*":
