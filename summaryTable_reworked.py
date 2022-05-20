@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Originally by:    Javier Nunez, CSU, APHA
-#                   Dolapo Ajayi, Bacterial Genomic Epidemiology, APHA  
+#                   Dolapo Ajayi, Bacterial Genomic Epidemiology, APHA
 # Edits by:         Jaromir Guzinski, Bacterial Genomic Epidemiology, APHA
 #                   Aaron Fishman, CSU, APHA
 # Reworked by:      Joshua Potter, Core Bioinformatics, APHA, October 2021
@@ -22,33 +22,34 @@ import pandas as pd
 ####################################################################################################
 
 tableHeader = [
-"Consensus", 
-"#Reads_raw", 
-"#Reads_filtered", 
-"GC%", 
-"KmerID", 
-"Contam_Flag", 
-"MOST", 
-"MOST_Light", 
-"MOST_ST", 
-"MLST", 
-"MLST_meanCov", 
-"SeqSero", 
+"Consensus",
+"#Reads_raw",
+"#Reads_filtered",
+"GC%",
+"KmerID",
+"Contam_Flag",
+"MOST",
+"MOST_Light",
+"MOST_ST",
+"EBG",
+"MLST",
+"MLST_meanCov",
+"SeqSero",
 "SeqSero_comment",
 "N50",
 "sistr_Serogroup",
 "sistr_Serovar",
-"serovar_antigen", 
-"serovar_cgmlst", 
-"vaccine", 
-"mono", 
-"sseJ", 
-"ReadLenRange", 
-"#Contigs", 
-"#Contigs>25Kbp", 
-"#Contigs>50Kbp", 
-"AssemblySize", 
-"AssemblyGC", 
+"serovar_antigen",
+"serovar_cgmlst",
+"vaccine",
+"mono",
+"sseJ",
+"ReadLenRange",
+"#Contigs",
+"#Contigs>25Kbp",
+"#Contigs>50Kbp",
+"AssemblySize",
+"AssemblyGC",
 "L50"
 ]
 
@@ -203,6 +204,37 @@ def most_summary(sampleDir):
         else:
             mostType = "no type"
     return light, mostType, st, meanMLSTCov, mlst
+
+####################################################################################################
+# Using the most sequence type data, we can indentify the eBurst group for each sample
+
+def ebgs(sampleDir):
+    mostDir = os.path.join(sampleDir, "MOST")
+    mostFile = [x for x in glob.glob(os.path.join(mostDir, "*MLST_result.csv"))]
+
+    if len(mostFile) == 0 or os.path.getsize(mostFile[0]) == 0:
+        ebg = None
+
+    else:
+        mostFileName = mostFile[0]
+        mostResults = readTable(mostFileName)
+
+        ebgFile = os.path.expanduser("~/summary/ebgs.csv")
+        ebgData = readTable(ebgFile)
+
+        st = [x for x in mostResults if "st value:" in x][0][1]
+        st_str = str(st)
+        st_str = st_str.replace("*","")
+        # st_str = st_str[1:]
+
+        ebg = None
+        for item in ebgData:
+            if item[1] == st_str:
+                ebg = item[0]
+    if ebg:
+        return ebg
+    else:
+        return "No ebg"
 
 ####################################################################################################
 # SeqSero2 analysis
@@ -412,7 +444,7 @@ def thirteen23i_diff(sampleDir, mostType):
                 elif mono.count('monoIdikanA') == 0 and mono.count('monoIdikanB') == 0:
                     mono = 'NA'
                 elif mono.count('monoKedougouA') == 0 and mono.count('monoKedougouB') == 0:
-                    mono = 'NA' 
+                    mono = 'NA'
             else:
                 mono = "NA"
     else:
@@ -445,8 +477,6 @@ def paratyphiB_java_diff(sampleDir, mostType):
     return sseJ
 
 ####################################################################################################
-####################################################################################################
-
 
 def instantiate_summary(resultsDir, runID):
     sampleDirs = get_subdirs(resultsDir)
@@ -459,6 +489,7 @@ def instantiate_summary(resultsDir, runID):
         rawCount = raw_count(sampleDir, sampleID)
         if rawCount:
             df.loc[sampleID, "#Reads_raw"] = rawCount
+            df.loc[sampleID, "SeqSero_comment"] = ""
     summaryFileName = os.path.join(resultsDir, runID + "_SummaryTable.csv")
     print(df)
     df.to_csv(summaryFileName)
@@ -488,6 +519,9 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "MOST"] = mostType
         if st:
             df.loc[sampleID, "MOST_ST"] = st
+        ebg = ebgs(sampleDir)
+        if ebg:
+            df.loc[sampleID, "EBG"] = ebg
         if meanMLSTCov:
             df.loc[sampleID, "MLST_meanCov"] = meanMLSTCov
         if mlst:
@@ -497,6 +531,8 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "SeqSero"] = seqseroType
         if seqseroComment:
             df.loc[sampleID, "SeqSero_comment"] = seqseroComment
+        else:
+            df.loc[sampleID, "SeqSero_comment"] = ""
         contigs25k, contigs50k, contigs, assemLen, assemGC, N50, L50 = quast_summary(sampleDir)
         if contigs25k:
             df.loc[sampleID, "#Contigs>25Kbp"] = contigs25k
@@ -521,6 +557,12 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "serovar_antigen"] = serovar_antigen
         if serovar_cgmlst:
             df.loc[sampleID, "serovar_cgmlst"] = serovar_cgmlst
+        if not seqseroType:
+            seqseroType = "no_result"
+        if not mostType:
+            mostType = "no_result"
+        if not serovar:
+            serovar = "no_result"
         consensus = calc_consensus(seqseroType, mostType, serovar)
         if consensus:
             df.loc[sampleID, "Consensus"] = consensus
@@ -533,8 +575,11 @@ def fill_summary(resultsDir, runID):
         sseJ = paratyphiB_java_diff(sampleDir, mostType)
         if sseJ:
             df.loc[sampleID, "sseJ"] = sseJ
+
+
     print(df)
     df.to_csv(summaryFileName)
+
 
 # Command line args
 def main():
@@ -557,10 +602,6 @@ if __name__ == '__main__':
         fill_summary(resultsDir, runID)
 
 quit()
-
-
-
-
 
 # del sys.argv[0]
 
@@ -588,8 +629,8 @@ quit()
 #     vaccine = vaccine_diff(sampleDir, serovar)
 #     mono = thirteen23i_diff(sampleDir, mostType)
 #     sseJ = paratyphiB_java_diff(sampleDir, mostType)
-#     outTable.append([sampleID, consensus, readCount, gcR1, R1Kmerid, kmeridFlag, mostType, light, st, mlst, meanMLSTCov, 
-#         seqseroType, seqseroComment, N50, serogroup, serovar, serovar_antigen, serovar_cgmlst, 
+#     outTable.append([sampleID, consensus, readCount, gcR1, R1Kmerid, kmeridFlag, mostType, light, st, mlst, meanMLSTCov,
+#         seqseroType, seqseroComment, N50, serogroup, serovar, serovar_antigen, serovar_cgmlst,
 #         vaccine, mono, sseJ, readLen, contigs, contigs25k, contigs50k, assemLen, assemGC, L50])
 
 # writeCSV(os.path.join(resultsDir, runID+"_SummaryTable.csv"), outTable)
@@ -651,4 +692,3 @@ quit()
 #             if fnmatch.fnmatch(name, pattern):
 #                 result.append(os.path.join(root, name))
 #     return result
-
