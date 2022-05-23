@@ -130,7 +130,7 @@ def parse_row(row):
     most = row['MOST']
     mostLight = row['MOST_Light']
     st = row['MOST_ST']
-    ebg = row["eBG"]
+    # ebg = row["eBG"]
     mlst = row['MLST']
     mlstMeanCov = row['MLST_meanCov']
     seqsero = row['SeqSero']
@@ -150,11 +150,11 @@ def parse_row(row):
     assemblySize = row['AssemblySize']
     assemblyGC = row['AssemblyGC']
     L50 = row['L50']
-    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
+    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
 
 
 def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
-    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
+    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
     numReads = safe_int(rawCount)
     assemblySize = safe_int(assemblySize)
     n50 = safe_int(n50)
@@ -268,6 +268,12 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # elif limsSubgenus == "II" and salmPercent > 38 and consensus == "2-II 48:d:z6--1-Unnamed":
     #     limsSerotype =
 
+    elif "1-I 1,4,[5],12:i:-" in consensus:
+        LIMS_Variant = "Monophasic Typhimurium"
+    elif "1,13,23:i:l,w" in consensus:
+        LIMS_variant = "Monophasic Kedougou"
+    elif "1,13,23:i:1,5" in consensus:
+        LIMS_variant = "Monophasic Idikan"
 
     # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
