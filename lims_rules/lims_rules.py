@@ -162,6 +162,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     mlstMeanCov = safe_float(mlstMeanCov)
     kmerids = kmerid.split("--")
     salmPercent = [x.split("-")[0] for x in kmerids if "salmonella" in x]
+
     if len(salmPercent) == 1:
         salmPercent = safe_float(salmPercent[0])
     else:
@@ -268,6 +269,28 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # elif limsSubgenus == "II" and salmPercent > 38 and consensus == "2-II 48:d:z6--1-Unnamed":
     #     limsSerotype =
 
+    elif "2-Paratyphi--1-Paratyphi B var. Java" == consensus:
+        limsSerotype = "Paratyphi B vr. Java"
+        limsVariant = "Paratyphi B vr. Java"
+        limsStatus = "Pass"
+        print("second one ran")
+    elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
+        limsSerotype = "Monophasic Paratyphi B var. Java"
+        limsVariant = "Monophasic Paratyphi B var. Java"
+        limsStatus = "Pass"
+        print("first one ran")
+    elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
+        limsSerotype = "Paratyphi B vr. Java"
+        limsVariant = "Paratyphi B vr. Java"
+        limsStatus = "Pass"
+        print("Third one ran")
+    elif "2-Typhimurium--1-I 1,4,[5],12:i:-" == consensus:
+        limsSerotype = "Monophasic S. Typhimurium"
+        limsVariant = "Monophasic S. Typhimurium"
+        limsStatus = "Pass"
+        print("4th one ran")
+
+
     elif "1-I 1,4,[5],12:i:-" in consensus:
         LIMS_Variant = "Monophasic Typhimurium"
     elif "1,13,23:i:l,w" in consensus:
@@ -295,6 +318,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "check Serovar"
         limsSerotype = "Houtenae IV 44:z4,z23:-"
         limsStatus = "CheckRequired"
+
+
+
     # RULE 18 PARATYPHI B JAVA
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B var. Java")]) == len(limsSerotypes) and sseJ == 'Java':
         limsSerotype = "Paratyphi B var. Java"
@@ -329,14 +355,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif len(limsSerotypes) == 1:
         limsStatus = "Pass"
     # Further rules_LP
-    elif consensus == "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi":
-        limsSerotype = "Monophasic Paratyphi B var. Java"
-    elif consensus == "2-Paratyphi--1-Paratyphi B var. Java":
-        limsSerotype = "Paratyphi B vr. Java"
-    elif consensus == "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+":
-        limsSerotype = "Paratyphi B vr. Java"
-    elif consensus == "2-Typhimurium--1-I 1,4,[5],12:i:-":
-        limsSerotype = "Monophasic S. Typhimurium"
 
     # RULE 26 EVERYTHING ELSE
     else:
@@ -366,6 +384,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # print("LIMS serotype:", limsSerotype)
     # print("LIMS status:", limsStatus.upper())
     # print("LIMS reason:", limsReason, "\n")
+
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
 
