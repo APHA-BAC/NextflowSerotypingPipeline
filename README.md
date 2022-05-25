@@ -50,6 +50,16 @@ and will then run the pipeline in a docker container on your locally stored fast
 $ python process_plate.py --local 1 --runID <runID>
 
 ```
+# Run options
+
+These are the run options for process_plate.py:
+
+- --s3_uri allows you to run the plate on data stored on an AWS s3 bucket
+- --reads-dir Sets the directory for where the directory containing the reads are stored. Default is: "~/wgs-reads"
+- --results-dir Sets the directory for where the directory containing the results are stored. Default is: "~/wgs-results"
+- --image Select a specific docker image to use. Default is: "jguzinski/salmonella-seq:prod"
+- --local Set to 1 if your reads are in a local directory. Default is 0
+- --runID The name of the run which will also be the name of the directory for the results. Only needed if running --local is set to 1
 
 # Pipeline Algorithm
 
