@@ -130,7 +130,7 @@ def parse_row(row):
     most = row['MOST']
     mostLight = row['MOST_Light']
     st = row['MOST_ST']
-    # ebg = row["eBG"]
+    eBG = row["eBG"]
     mlst = row['MLST']
     mlstMeanCov = row['MLST_meanCov']
     seqsero = row['SeqSero']
@@ -150,11 +150,11 @@ def parse_row(row):
     assemblySize = row['AssemblySize']
     assemblyGC = row['AssemblyGC']
     L50 = row['L50']
-    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
+    return sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50
 
 
 def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
-    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
+    sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
     numReads = safe_int(rawCount)
     assemblySize = safe_int(assemblySize)
     n50 = safe_int(n50)
@@ -193,6 +193,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Contaminated: EntericaKmerID<75%"
         print("Low KmerID score for Enterica (< 75%):", salmPercent)
         limsStatus = "Inconclusive"
+
     # RULE 4 LOW KMERID NON-ENTERICA
     elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
         limsReason = "Contaminated: non-EntericaKmerID<38%"
@@ -248,19 +249,24 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
         LIMS_SerotypeID = 'Paratyphi B var. Java'
         limsSerotype = 'Paratyphi B var. Java'
+        limsVariant = "Variant Java"
     # RULE 13 NO RESULTS
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
         print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
     # NEW RULE 14, 15 and 16
+    elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
+        limsStatus = "pass"
+    elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
+        limsStatus = "pass"
     elif limsSubgenus == 'IIIb' and salmPercent > 38:
         if consensus == "2-IIIa--1-IIIa 18:z4,z23:-" or consensus == "2-IIIa 18:z4,z23:---1-Arizonae":
             limsSerotype = "Arizonae IIIa 18:z4,z23:-"
-            limsStatus = "pass"
+            limsStatus = "CheckRequired"
         elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
             limsSerotype = "Arizonae IIIa 44:z4,z23:-"
-            limsStatus == "pass"
+            limsStatus == "CheckRequired"
     # NEW RULE 17
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsSerotype = "Houtenae IV 44:z4,z23:-"
@@ -285,18 +291,30 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
         print("Third one ran")
     elif "2-Typhimurium--1-I 1,4,[5],12:i:-" == consensus:
-        limsSerotype = "Monophasic S. Typhimurium"
-        limsVariant = "Monophasic S. Typhimurium"
+        limsSerotype = "Monophasic Typhimurium"
+        limsVariant = "Monophasic Typhimurium"
         limsStatus = "Pass"
         print("4th one ran")
 
+    elif consensus == "3-No Type":
+        limsReason = "Contaminated"
+    elif consensus == "2-No Type--1-NoResults":
+        limsReason = "Contaminated"
 
+    # Uncommon enteritidis
+    elif "1-No Type--1-Gallinarum or Enteritidis--1-Berta|Pensacola|Sangalkam" == consensus or "2-No Type--1-Pensacola|Sangalkam" == consensus:
+        limsSerotype = "Enteritidis"
     elif "1-I 1,4,[5],12:i:-" in consensus:
-        LIMS_Variant = "Monophasic Typhimurium"
+        # LIMS_Variant = "Monophasic Typhimurium"
+        limsVariant = "Monophasic Typhimurium"
+
+    # Monophasic Kedogou/Idikan
     elif "1,13,23:i:l,w" in consensus:
-        LIMS_variant = "Monophasic Kedougou"
+        # LIMS_variant = "Monophasic S. Kedougou"
+        limsVariant = "Monophasic S. Kedougou"
     elif "1,13,23:i:1,5" in consensus:
-        LIMS_variant = "Monophasic Idikan"
+        # LIMS_variant = "Monophasic S. Idikan"
+        limsVariant = "Monophasic S. Idikan"
 
     # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
@@ -318,9 +336,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "check Serovar"
         limsSerotype = "Houtenae IV 44:z4,z23:-"
         limsStatus = "CheckRequired"
-
-
-
     # RULE 18 PARATYPHI B JAVA
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B var. Java")]) == len(limsSerotypes) and sseJ == 'Java':
         limsSerotype = "Paratyphi B var. Java"
@@ -372,7 +387,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         elif "2-Nobilis" in vaccine:
             limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
         elif "2-Wild_Type" in vaccine:
-            limsVaccine = "Field strain"
+            limsVaccine = "NOT VACCINE STRAIN"
         elif vaccine == "527E_AviproT*":
             limsVaccine = "AVIPRO VAC T Vaccine strain"
         elif "526_21b_AviproT*_527E_AviproT" in vaccine:
@@ -401,6 +416,11 @@ def parse_table(summaryTable):
         sampleID = row['Isolate_ID']
         consensus = row['Consensus']
         serotypes = parse_consensus(consensus)
+        # for index,item in enumerate(serotypes):
+        #     if "Gallinarum" in item:
+        #         serotypes[index] = "Gallinarum"
+        #     elif "Berta" in item:
+        #         serotypes[index] = "Berta"
         print(sampleID, serotypes)
         limsSerotypes, limsSerogroup, limsSubgenus = parse_seros(serotypes)
         limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
