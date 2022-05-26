@@ -257,9 +257,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
     # NEW RULE 14, 15 and 16
     elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
-        limsStatus = "pass"
+        limsStatus = "Pass"
     elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
-        limsStatus = "pass"
+        limsStatus = "Pass"
     elif limsSubgenus == 'IIIb' and salmPercent > 38:
         if consensus == "2-IIIa--1-IIIa 18:z4,z23:-" or consensus == "2-IIIa 18:z4,z23:---1-Arizonae":
             limsSerotype = "Arizonae IIIa 18:z4,z23:-"
@@ -270,7 +270,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # NEW RULE 17
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsSerotype = "Houtenae IV 44:z4,z23:-"
-        limsStatus = "pass"
+        limsStatus = "Pass"
     # NEW RULE 18
     # elif limsSubgenus == "II" and salmPercent > 38 and consensus == "2-II 48:d:z6--1-Unnamed":
     #     limsSerotype =
@@ -282,7 +282,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         print("second one ran")
     elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
         limsSerotype = "Monophasic Paratyphi B var. Java"
-        limsVariant = "Monophasic Paratyphi B var. Java"
+        limsVariant = "Monophasic Java"
         limsStatus = "Pass"
         print("first one ran")
     elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
@@ -310,10 +310,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # Monophasic Kedogou/Idikan
     elif "1,13,23:i:l,w" in consensus:
-        # LIMS_variant = "Monophasic S. Kedougou"
         limsVariant = "Monophasic S. Kedougou"
     elif "1,13,23:i:1,5" in consensus:
-        # LIMS_variant = "Monophasic S. Idikan"
         limsVariant = "Monophasic S. Idikan"
 
     # RULE 14 LOW MLST COVERAGE
@@ -339,7 +337,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # RULE 18 PARATYPHI B JAVA
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B var. Java")]) == len(limsSerotypes) and sseJ == 'Java':
         limsSerotype = "Paratyphi B var. Java"
-        limsVariant = "Paratyphi B var. Java"
+        limsVariant = "Variant Java"
         limsStatus = "Pass"
     # RULE 19 PARATYPHI B
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B")]) == len(limsSerotypes) and sseJ == 'Paratyphi':
@@ -351,7 +349,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
     # RULE 21 MONO KEDOUGOU
     elif mono == "MonophasicKedougou":
-        limsVariant = "Monophasic Kedougou"
+        limsVariant = "Monophasic S. Kedougou"
         limsStatus = "Pass"
     # RULE 22 4,12:D:-
     elif consensus == "1-No Type--1-Unnamed--1-I 4,[5],12:d:-":
