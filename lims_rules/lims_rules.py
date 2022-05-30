@@ -276,8 +276,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     #     limsSerotype =
 
     elif "2-Paratyphi--1-Paratyphi B var. Java" == consensus:
-        limsSerotype = "Paratyphi B vr. Java"
-        limsVariant = "Paratyphi B vr. Java"
+        limsSerotype = "Paratyphi B var. Java"
+        limsVariant = "Variant Java"
         limsStatus = "Pass"
         print("second one ran")
     elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
@@ -286,8 +286,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
         print("first one ran")
     elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
-        limsSerotype = "Paratyphi B vr. Java"
-        limsVariant = "Paratyphi B vr. Java"
+        limsSerotype = "Paratyphi B var. Java"
+        limsVariant = "Variant Java"
         limsStatus = "Pass"
         print("Third one ran")
     elif "2-Typhimurium--1-I 1,4,[5],12:i:-" == consensus:
@@ -295,6 +295,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVariant = "Monophasic Typhimurium"
         limsStatus = "Pass"
         print("4th one ran")
+    elif "1-Paratyphi B var. L(+) tartrate+--1-Paratyphi B var. Java--1-Java" == consensus:
+        limsSerotype = "Paratyphi B var. Java"
+        limsVariant = "Variant Java"
+        limsStatus = "Pass"
+
 
     elif consensus == "3-No Type":
         limsReason = "Contaminated"
@@ -392,6 +397,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsVaccine = "AVIPRO VAC T Vaccine strain"
         elif "8321_AviproE*_8322_AviproE*" in vaccine:
             limsVaccine = "AVIPRO VAC E Vaccine strain"
+        elif "Wild_Type" in vaccine:
+            limsVaccine = "NOT VACCINE STRAIN"
         else:
             limsVaccine = vaccine
     # print("LIMS serotype:", limsSerotype)

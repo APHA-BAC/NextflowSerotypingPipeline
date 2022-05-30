@@ -521,7 +521,7 @@ def fill_summary(resultsDir, runID):
             df.loc[sampleID, "MOST_ST"] = st
         ebg = ebgs(sampleDir)
         if ebg:
-            df.loc[sampleID, "EBG"] = ebg
+            df.loc[sampleID, "eBG"] = ebg
         if meanMLSTCov:
             df.loc[sampleID, "MLST_meanCov"] = meanMLSTCov
         if mlst:
