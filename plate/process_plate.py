@@ -131,12 +131,12 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
 if __name__ == '__main__':
     # Parse
     parser = argparse.ArgumentParser(description="run pipeline on a routine Salmonella Plate")
-    parser.add_argument("--s3_uri", help="s3 uri that corresponds to the fastq plate to run")
+    parser.add_argument("-s","--s3_uri", help="s3 uri that corresponds to the fastq plate to run")
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
-    parser.add_argument("--local", default=0, help="Set to 1 if your reads are in a local directory. Default is 0")
-    parser.add_argument("--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
+    parser.add_argument("-l","--local", default=0, help="Set to 1 if your reads are in a local directory. Default is 0")
+    parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
 
     args = parser.parse_args()
     args.local = int(args.local)
