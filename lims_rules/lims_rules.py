@@ -184,6 +184,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         print("No pipeline results; most likely not Salmonella")
         limsReason = "noResults_checkIfSalmonella"
 
+    # Gallinarum rule
+    elif consensus == "2-Gallinarum--1-Pullorum":
+        limsStatus = "pass"
+
     # Idekan rule
     elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
@@ -209,7 +213,19 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
         limsStatus = "Inconclusive"
     # NEW RULE 14
+    # NEW RULE 14, 15 and 16
+    elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
+        limsStatus = "Pass"
+    elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
+        limsStatus = "Pass"
 
+    elif "IIIa 18:z4,z23:-" in consensus or "2-IIIa 18:z4,z23:---1-Arizonae" in consensus and salmPercent > 38:
+        limsSerotype = "Arizonae IIIa 18:z4,z23:-"
+        limsStatus = "CheckRequired"
+
+    elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
+        limsSerotype = "Arizonae IIIa 44:z4,z23:-"
+        limsStatus == "CheckRequired"
     # RULE 5 RED LIGHT
     elif mostLight == "RED":
         limsReason = "Contaminated: MOSTlightRED"
@@ -264,18 +280,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Contaminated: noIDedSerotypes"
         print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
-    # NEW RULE 14, 15 and 16
-    elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
-        limsStatus = "Pass"
-    elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
-        limsStatus = "Pass"
-    elif limsSubgenus == 'IIIb' and salmPercent > 38:
-        if consensus == "2-IIIa--1-IIIa 18:z4,z23:-" or consensus == "2-IIIa 18:z4,z23:---1-Arizonae":
-            limsSerotype = "Arizonae IIIa 18:z4,z23:-"
-            limsStatus = "CheckRequired"
-        elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
-            limsSerotype = "Arizonae IIIa 44:z4,z23:-"
-            limsStatus == "CheckRequired"
+
     # NEW RULE 17
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsSerotype = "Houtenae IV 44:z4,z23:-"
@@ -290,23 +295,23 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Paratyphi B var. Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
-        print("second one ran")
+
     elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
         limsSerotype = "Monophasic Paratyphi B var. Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
-        print("first one ran")
+
     elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
         limsSerotype = "Paratyphi B var. Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
-        print("Third one ran")
+
     elif "1-I 1,4,[5],12:i:-" in consensus:
         limsSerotype = "Monophasic Typhimurium"
 
 
         limsStatus = "Pass"
-        print("4th one ran")
+
     elif "1-Paratyphi B var. L(+) tartrate+--1-Paratyphi B var. Java--1-Java" == consensus:
         limsSerotype = "Paratyphi B var. Java"
         limsVariant = "Variant Java"
@@ -363,7 +368,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
     # RULE 20 MONO IDIKAN
     elif mono == "MonophasicIdikan":
-        print("**********************")
+
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
     # RULE 21 MONO KEDOUGOU
@@ -376,9 +381,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
     # RULE 23 DIARIZONAE
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)"):
+        # limsSerotype = "S. enterica subsp. diarizonae  O61:k:1,5,7"
         limsSerotype = "Diarizonae IIIb O:61:k:1,5,7"
         LIMS_SerotypeID = "O:61:k:1,5,7"
-        consensus = "S. enterica subsp. diarizonae  O61:k:1,5,7"
+        # consensus = "S. enterica subsp. diarizonae  O61:k:1,5,7"
         limsStatus = "Pass"
     # RULE 24 BOVISMORBIFICANS
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
@@ -414,10 +420,18 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsVaccine = "Salmonella Typhimurium AVIPRO VAC T Vaccine Strain"
         elif "8321_AviproE*_8322_AviproE*" in vaccine:
             limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
+        elif "2-Nobillis" in vaccine:
+            limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
         elif "Wild_Type" in vaccine:
+            limsVaccine = "NOT VACCINE STRAIN"
+        elif "Pullorum" in vaccine:
             limsVaccine = "NOT VACCINE STRAIN"
         else:
             limsVaccine = vaccine
+    elif "srst2 result file not found" in vaccine:
+        limsVaccine = "NOT VACCINE STRAIN"
+        print("***************************")
+
     # print("LIMS serotype:", limsSerotype)
     # print("LIMS status:", limsStatus.upper())
     # print("LIMS reason:", limsReason, "\n")
