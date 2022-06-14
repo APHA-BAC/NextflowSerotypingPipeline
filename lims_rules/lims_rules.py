@@ -188,6 +188,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif consensus == "2-Gallinarum--1-Pullorum":
         limsStatus = "pass"
 
+    # 2-Pullorum vaccine RULE
+
+    if vaccine == "2-Pullorum":
+        limsVariant = "Variant Pullorum"
+
     # Idekan rule
     elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
