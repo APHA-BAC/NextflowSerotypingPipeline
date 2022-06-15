@@ -6,7 +6,17 @@ Salmonella whole genome sequencing (WGS) serotyping pipeline was developed by AP
 
 # Installation
 To install the Nextflow salmonella serotyping pipeline:
+
+First clone the rpository into a local directory:
+
 ```
+git clone https://github.com/APHA-BAC/NextflowSerotypingPipeline.git
+
+```
+And then run the following commands while in the repository:
+
+```
+
   $ cd install
   $ bash install.bash
 ```
@@ -44,7 +54,7 @@ Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
 
 A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq).
 
-When running the pipeline on data stored locally, you can run the following command which will download the docker image if it is not downloaded
+When running the pipeline on data stored locally, you can run the following command from the root directory of the repository which will download the docker image if it is not downloaded
 and will then run the pipeline in a docker container on your locally stored fastq files:
 ```
 $ python process_plate.py --local 1 --runID <runID>

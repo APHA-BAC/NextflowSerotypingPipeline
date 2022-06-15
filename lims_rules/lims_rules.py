@@ -381,7 +381,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "I 4,[5],12:d:-"
         limsStatus = "Pass"
     # RULE 23 DIARIZONAE
-    elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)"):
+elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)","1-IIIb 61:k:1,5,(7)--1-Arizonae--1-IIIb O:61:k:1,5,7"):
         # limsSerotype = "S. enterica subsp. diarizonae  O61:k:1,5,7"
         limsSerotype = "IIIb 61:k:1,5,7"
         limsStatus = "Pass"
