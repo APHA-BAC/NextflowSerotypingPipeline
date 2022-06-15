@@ -6,7 +6,17 @@ Salmonella whole genome sequencing (WGS) serotyping pipeline was developed by AP
 
 # Installation
 To install the Nextflow salmonella serotyping pipeline:
+
+First clone the rpository into a local directory:
+
 ```
+git clone https://github.com/APHA-BAC/NextflowSerotypingPipeline.git
+
+```
+And then run the following commands while in the repository:
+
+```
+
   $ cd install
   $ bash install.bash
 ```
@@ -32,7 +42,7 @@ To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be sto
 
 Then, to run the pipeline from the terminal call:
 ```
-  $ nextflow run SCE3_pipeline_update.nf --runID <runID> 
+  $ nextflow run SCE3_pipeline_update.nf --runID <runID>
 ```
 
 Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
@@ -40,27 +50,38 @@ Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
 
 ## Run from docker
 
-**Note:** While running from the terminal is the easiest method for developers and data analysts, the pipeline can also be run from docker. This method has the benefit of working across platforms while guaranteeing consistency with automated tests (see below). 
+**Note:** While running from the terminal is the easiest method for developers and data analysts, the pipeline can also be run from docker. This method has the benefit of working across platforms while guaranteeing consistency with automated tests (see below).
 
-A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq). 
+A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq).
 
-This pulls the latest image (if it's not already fetched) from dockerhub and runs the container on data
+When running the pipeline on data stored locally, you can run the following command from the root directory of the repository which will download the docker image if it is not downloaded
+and will then run the pipeline in a docker container on your locally stored fastq files:
 ```
-$ sudo docker pull jguzinski/salmonella-seq:prod
-$ sudo docker run --rm -it -v /ABS/PATH/TO/READS/:/root/WGS_Data/<run_ID>/  -v /ABS/PATH/TO/RESULTS/:/root/WGS_Results/<run_ID>/  jguzinski/salmonella-seq:prod /root/nextflow/nextflow SCE3_pipeline_update.nf --runID <runID>
-```
+$ python process_plate.py --local 1 --runID <runID>
 
-# Pipeline Algorithm 
+```
+# Run options
+
+These are the run options for process_plate.py:
+
+- --s3_uri allows you to run the plate on data stored on an AWS s3 bucket
+- --reads-dir Sets the directory for where the directory containing the reads are stored. Default is: "~/wgs-reads"
+- --results-dir Sets the directory for where the directory containing the results are stored. Default is: "~/wgs-results"
+- --image Select a specific docker image to use. Default is: "jguzinski/salmonella-seq:prod"
+- --local Set to 1 if your reads are in a local directory. Default is: 0
+- --runID The name of the run which will also be the name of the directory for the results. Only needed if --local is set to 1
+
+# Pipeline Algorithm
 
 The pipelines processes data in three stages, as shown below. During the preprocessing stage; low quality bases and adapter sequences are removed from the fastq sample files and then subsampled to a maximum of 3M reads. Following this, the analysis stage runs multiple serotyping tools in parallel.
 This strategy has been demonstrated to provide more accurate serovar detection than any tools running individually.
-Bespoke typing of vaccine strains and particular servoars of interest to APHA is included as part of this analysis. 
-Outputs from each tool are compared in the consensus call step. 
+Bespoke typing of vaccine strains and particular servoars of interest to APHA is included as part of this analysis.
+Outputs from each tool are compared in the consensus call step.
 The final postprocessing stage assigns an `Outcome` to each sample by analysing data gathered during the analysis stage. The following `Outcome`s are used to signify subsequent lab processing steps:
 
 - **Pass**: The sample contains Salmonella and has a serovar assigned
 - **Check Required**: Further scrutiny of the data is required
-- **Inconclusive**: The sample contains insufficient data volumes for analysis, is contaminated, or has low assembly quality. 
+- **Inconclusive**: The sample contains insufficient data volumes for analysis, is contaminated, or has low assembly quality.
 
 ![image](https://user-images.githubusercontent.com/6979169/154251677-43d55d28-24bb-4dc2-9def-61322ba58629.png)
 
@@ -71,7 +92,7 @@ This pipeline has been internally validated and approved by the APHA validation 
 
 # Automated Tests
 
-The automated tests provided here ensure the software runs as expected. If you make changes to the algorithm, it is **strongly** reccomended that you run these tests to verify the pipeline is behaving as intended. The tests are also automatically run by [TEAMCITY](https://apha.teamcity.com/viewType.html?buildTypeId=NextflowSerotypingPipeline_Pipeline&guest=1) on each pull-request. 
+The automated tests provided here ensure the software runs as expected. If you make changes to the algorithm, it is **strongly** reccomended that you run these tests to verify the pipeline is behaving as intended. The tests are also automatically run by [TEAMCITY](https://apha.teamcity.com/viewType.html?buildTypeId=NextflowSerotypingPipeline_Pipeline&guest=1) on each pull-request.
 
 The automated tests assert the correct serovar is assigned to known samples. These are called `inclusivity` tests. To run an inclusivity test, call:
 ```
@@ -84,11 +105,10 @@ To release a new version of the software, the `master` branch needs only to be m
 
 To release a new version of the software:
 1. A developer makes a pull-request from the `master` to the `prod` branch. The CODEOWNER is automatically notified by e-mail.
-1. The CODEOWNER ensures the reliability tests pass on the `master` branch and reviews the code changes. 
+1. The CODEOWNER ensures the reliability tests pass on the `master` branch and reviews the code changes.
 1. The CODEOWNER approves the pull-request if they are satisfied, or requests changes.
 1. The dev merges the `master` branch into `prod`
 1. Following approval, the developer tags the current head of `master` as the next version. Versions are numbered incrementally with integers, for example `v1`, `v2`, etc. This can be performed by navigating to the github `master` branch and selecting `Create a release`
 
 ![image](https://user-images.githubusercontent.com/6979169/153393500-b2313500-9dc0-4883-bcb9-9d9ef65f734c.png)
 ![image](https://user-images.githubusercontent.com/6979169/153393680-a6f42c9d-ade7-4390-8c52-5b34837a0ebb.png)
- 
