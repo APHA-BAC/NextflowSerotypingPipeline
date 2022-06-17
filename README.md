@@ -16,9 +16,9 @@ git clone https://github.com/APHA-BAC/NextflowSerotypingPipeline.git
 And then run the following commands while in the repository:
 
 ```
+$ cd install
+$ bash install.bash
 
-  $ cd install
-  $ bash install.bash
 ```
 
 This script installs the following pipeline component software:
@@ -42,7 +42,8 @@ To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be sto
 
 Then, to run the pipeline from the terminal call:
 ```
-  $ nextflow run SCE3_pipeline_update.nf --runID <runID>
+$ nextflow run SCE3_pipeline_update.nf --runID <runID>
+
 ```
 
 Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
@@ -54,9 +55,10 @@ Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
 
 A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq).
 
-When running the pipeline on data stored locally, you can run the following command from the root directory of the repository which will download the docker image if it is not downloaded
+When running the pipeline on data stored locally, you can run the following command from the plate directory of the repository which will download the docker image if it is not downloaded
 and will then run the pipeline in a docker container on your locally stored fastq files:
 ```
+$ cd plate
 $ python process_plate.py --local 1 --runID <runID>
 
 ```
@@ -97,6 +99,7 @@ The automated tests provided here ensure the software runs as expected. If you m
 The automated tests assert the correct serovar is assigned to known samples. These are called `inclusivity` tests. To run an inclusivity test, call:
 ```
 $ bash -e test_isolates/jobs/inclusivity.bash 0
+
 ```
 
 # Release Process
