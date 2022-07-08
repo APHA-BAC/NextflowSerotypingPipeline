@@ -78,7 +78,7 @@ def parse_seros(serotypes):
         if serotype == "Monophasic Typhimurium":
             lookupSero = "Typhimurium"
         elif serotype in ["Java", "Paratyphi B var. L(+) tartrate+"]:
-            lookupSero = "Paratyphi B var. Java"
+            lookupSero = "Paratyphi B Variant Java"
         elif subgenusRegex.match(serotype):
             lookupSero = subgenusRegex.match(serotype).group(1)
         else:
@@ -186,16 +186,21 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # Gallinarum rule
     elif consensus == "2-Gallinarum--1-Pullorum":
-        limsStatus = "pass"
+        limsStatus = "Pass"
 
     # 2-Pullorum vaccine RULE
 
     if vaccine == "2-Pullorum":
+        limsSerotype = "Pullorum"
         limsVariant = "Variant Pullorum"
 
     # Idekan rule
     elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
+
+    # Monophasic Typhi rule
+    elif consensus in ["4,12:-:-", "4,12:-:1,2", "4,12:I:-", "4,5,12:-:-", "4,5,12:-:1,2", "4,5,12:I:-"]:
+        limsVariant = "Monophasic Typhimurium"
 
     elif "1-I 1,4,[5],12:d:" in consensus:
         consensus = "S. enterica 4,12:d:-"
@@ -225,11 +230,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
 
     elif "IIIa 18:z4,z23:-" in consensus or "2-IIIa 18:z4,z23:---1-Arizonae" in consensus and salmPercent > 38:
-        limsSerotype = "IIIa 18:z4,z23:-"
+        limsSerotype = "18:z4,z23:-"
         limsStatus = "CheckRequired"
 
     elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
-        limsSerotype = "IIIa 44:z4,z23:-"
+        limsSerotype = "4:z4,z23:-"
         limsStatus == "CheckRequired"
 
     # RULE 5 RED LIGHT
@@ -297,17 +302,17 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "S. enterica 4,12:d:-"
 
     elif "2-Paratyphi--1-Paratyphi B var. Java" == consensus:
-        limsSerotype = "Paratyphi B var. Java"
+        limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
 
     elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
-        limsSerotype = "Monophasic Paratyphi B var. Java"
+        limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
 
     elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
-        limsSerotype = "Paratyphi B var. Java"
+        limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
 
@@ -316,7 +321,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
 
     elif "1-Paratyphi B var. L(+) tartrate+--1-Paratyphi B var. Java--1-Java" == consensus:
-        limsSerotype = "Paratyphi B var. Java"
+        limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
 
@@ -360,7 +365,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "CheckRequired"
     # RULE 18 PARATYPHI B JAVA
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B var. Java")]) == len(limsSerotypes) and sseJ == 'Java':
-        limsSerotype = "Paratyphi B var. Java"
+        limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
     # RULE 19 PARATYPHI B
@@ -383,7 +388,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # RULE 23 DIARIZONAE
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)","1-IIIb 61:k:1,5,(7)--1-Arizonae--1-IIIb O:61:k:1,5,7"):
         # limsSerotype = "S. enterica subsp. diarizonae  O61:k:1,5,7"
-        limsSerotype = "IIIb 61:k:1,5,7"
+        limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
     # RULE 24 BOVISMORBIFICANS
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
@@ -419,8 +424,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         elif "2-Nobillis" in vaccine:
             limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
         elif "Wild_Type" in vaccine:
-            limsVaccine = "NOT VACCINE STRAIN"
-        elif "Pullorum" in vaccine:
             limsVaccine = "NOT VACCINE STRAIN"
         else:
             limsVaccine = vaccine
