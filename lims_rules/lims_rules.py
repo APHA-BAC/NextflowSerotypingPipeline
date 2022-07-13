@@ -34,14 +34,30 @@ def build_sero_dict():
             if idx == 0:
                 continue
             serotype, seroDesc, serogroup = row[0], row[1], row[6]
+
+
             serotype = serotype.strip()
             seroDesc = seroDesc.strip()
             serotype = anySpaceRegex.sub("_", serotype)
             seroDesc = anySpaceRegex.sub("_", seroDesc)
             serotype = serotype.upper()
+
+
             if not seroDesc.upper() == serotype:
                 # print("\t".join([serotype, seroDesc]))
                 seroDict[seroDesc.upper()] = [seroDesc, serogroup, "undetermined"]
+            if "JAVA" in serotype:
+                serotype = serotype.strip()
+                seroDesc = seroDesc.strip()
+                serotype = anySpaceRegex.sub("_", serotype)
+                seroDesc = anySpaceRegex.sub("_", seroDesc)
+                serotype = serotype.upper()
+
+                seroDesc = seroDesc.replace("_", " ")
+
+                seroDict[seroDesc.upper()] = [seroDesc, "B", "undetermined"]
+
+
             seroDict[serotype] = [seroDesc, serogroup, "undetermined"]
     with open(os.path.expanduser('~/summary/subgenus_lookup_table.tsv'), 'r') as subgLookup:
         reader = csv.reader(subgLookup, delimiter='\t')
@@ -52,11 +68,18 @@ def build_sero_dict():
             serotype = serotype.strip()
             serotype = anySpaceRegex.sub("_", serotype)
             serotype = serotype.upper()
-            if serotype == "PARATYPHI_B_JAVA":
-                serotype = "PARATYPHI_B_VAR._JAVA"
+
+            if serotype == "PARATYPHI_B_JAVA" or serotype == "PARATYPHI_B_VAR._JAVA" or serotype == "PARATYPHI_B_VARIANT_JAVA":
+                serotype = "PARATYPHI B VAR. JAVA"
+
+
+
             if serotype in seroDict:
+
                 seroDict[serotype][2] = subgenus
             else:
+
+
                 seroDict[serotype] = [serotype, "undetermined", subgenus]
     return seroDict
 
@@ -75,17 +98,25 @@ def parse_seros(serotypes):
     subgenera = []
     limsSerotypes = []
     for serotype in serotypes:
+
+
         if serotype == "Monophasic Typhimurium":
             lookupSero = "Typhimurium"
-        elif serotype in ["Java", "Paratyphi B var. L(+) tartrate+"]:
-            lookupSero = "Paratyphi B Variant Java"
+
+        elif serotype in ["Java", "Paratyphi B var. L(+) tartrate+", "Paratyphi", "1-I 1,4,[5],12:b:", "1,4,[5],12:B:-"] or serotype in "1-Paratyphi--1-I 1,4,[5],12:b:---1-I 4:b:-":
+
+            lookupSero = "PARATYPHI B VAR. JAVA"
         elif subgenusRegex.match(serotype):
             lookupSero = subgenusRegex.match(serotype).group(1)
         else:
             lookupSero = serotype
         lookupSero = lookupSero.strip()
-        lookupSero = anySpaceRegex.sub("_", lookupSero)
+        # lookupSero = anySpaceRegex.sub("_", lookupSero)
+        lookupSero = lookupSero.replace("_", " ")
         lookupSero = lookupSero.upper()
+        if "JAVA" in lookupSero:
+
+            lookupSero = "PARATYPHI B VAR. JAVA"
         if lookupSero not in seroDict:
             print("Warning, serotype not in lookup dict:", lookupSero)
             serogroup = "undetermined"
@@ -100,6 +131,7 @@ def parse_seros(serotypes):
         if serotype == "Monophasic Typhimurium":
             limsSerotype = serotype
         limsSerotypes.append(limsSerotype)
+
     if len(serogroups) == 3:
         limsSerogroup = [x for x in serogroups if serogroups.count(x) > 1]
         if len(limsSerogroup) > 0:
@@ -116,6 +148,11 @@ def parse_seros(serotypes):
             limsSubgenus = "undetermined"
     else:
         limsSubgenus = subgenera[0]
+
+    if serotype in ["JAVA", "Java"]:
+        print("***JAVA PASS***")
+        limsSubgenus = "I"
+        limsSerogroup = "B"
     return limsSerotypes, limsSerogroup, limsSubgenus
 
 
@@ -176,7 +213,25 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsReason = ""
     limsVariant = ""
     limsVaccine = ""
-    limsStatus = "CheckRequired"
+    # limsStatus = "CheckRequired"
+    limsStatus = ""
+
+
+    if consensus == "2-Paratyphi--1-Paratyphi B var. Java":
+        limsVariant = "Variant Java"
+        limsSerotype = "Paratyphi B Variant Java"
+
+
+    if "Co-existence of multiple serotypes detected" in seqseroComment:
+        if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
+
+            limsStatus = "Inconclusive"
+            limsReason = "multipleSerotypesDetected(SeqSero2)"
+        else:
+
+            limsStatus = "Inconclusive"
+            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
+        print("SeqSero2 comment:", seqseroComment)
 
     # RULE 1 NO PIPELINE OUTPUT
     if consensus == "no_result":
@@ -225,9 +280,17 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # NEW RULE 14, 15 and 16
     elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
-        limsStatus = "Pass"
+        limsStatus = limsStatus.replace(" ", "")
+
+        if len(limsStatus) <= 0:
+            limsStatus = "Pass"
+
     elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
-        limsStatus = "Pass"
+        if len(limsStatus) <= 0:
+            limsStatus = "Pass"
+
+
+
 
     elif "IIIa 18:z4,z23:-" in consensus or "2-IIIa 18:z4,z23:---1-Arizonae" in consensus and salmPercent > 38:
         limsSerotype = "18:z4,z23:-"
@@ -245,7 +308,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # RULE 6 SEQSERO2 COMMENT
     elif "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
-            limsStatus = "CheckRequired"
+            limsStatus = "Inconclusive"
             limsReason = "multipleSerotypesDetected(SeqSero2)"
         else:
             limsStatus = "Inconclusive"
@@ -395,8 +458,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
     # RULE 25 ALL GOOD
-    elif len(limsSerotypes) == 1:
-        limsStatus = "Pass"
+    # elif len(limsSerotypes) == 1:
+    #     limsStatus = "Pass"
 
     # RULE 26 EVERYTHING ELSE
     else:
@@ -405,24 +468,42 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     if vaccine not in ("NA", "srst2 result file not found"):
         if "2-AviproE" in vaccine:
             limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "2-Salmovac440" in vaccine:
             limsVaccine = "Salmonella Enteritidis Salmovac 440 Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "2-AviproT" in vaccine:
             limsVaccine = "Salmonella Typhimurium AVIPRO VAC T Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "2-SalmoporcSTM" in vaccine:
             limsVaccine = "Salmonella Typhimurium Salmoporc STM Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "2-Nobilis" in vaccine:
             limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "2-Wild_Type" in vaccine:
             limsVaccine = "NOT VACCINE STRAIN"
         elif vaccine == "527E_AviproT*":
             limsVaccine = "Salmonella Typhimurium AVIPRO VAC T Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "526_21b_AviproT*_527E_AviproT" in vaccine:
             limsVaccine = "Salmonella Typhimurium AVIPRO VAC T Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "8321_AviproE*_8322_AviproE*" in vaccine:
             limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "2-Nobillis" in vaccine:
             limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
+            limsStatus = "Pass"
+            limsReason = ""
         elif "Wild_Type" in vaccine:
             limsVaccine = "NOT VACCINE STRAIN"
         else:
@@ -435,8 +516,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # print("LIMS reason:", limsReason, "\n")
 
     limsSerotype = limsSerotype.replace("(2/3consensus)", "")
-    if limsStatus == "CheckRequired":
-        limsReason = "Check Serovar"
+    # if limsStatus == "CheckRequired":
+    #     limsReason = "Check Serovar"
+
+    if "Java" in limsVariant:
+
+        limsSubgenus = "I"
+        limsSerogroup = "B"
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
