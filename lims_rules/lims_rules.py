@@ -346,9 +346,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
+
         LIMS_SerotypeID = "Monophasic Java"
         limsSerotype = "Monophasic Java"
-        limsVariant = "Monophasic Java"
+        limsVariant = "Variant Java"
     # RULE 13 NO RESULTS
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
@@ -523,6 +524,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
         limsSubgenus = "I"
         limsSerogroup = "B"
+
+    if limsStatus == "" or limsStatus == "CheckRequired":
+        limsStatus = "CheckRequired"
+        limsReason = "Check Serovar"
+
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
