@@ -602,7 +602,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Pass"
             limsReason = ""
 
-    if consensus == "3-" in consensus:
+    if "3-" in consensus:
         if limsReason == "Check Serovar":
             limsStatus = "Pass"
             limsReason = ""
