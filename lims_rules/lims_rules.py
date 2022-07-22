@@ -94,7 +94,8 @@ def parse_seros(serotypes):
     limsSerotypes = []
     for serotype in serotypes:
 
-
+        # if "I 1,4,[5],12:d:-" in serotypes::
+        #     lookupSero = "4,12:D:-"
         if serotype == "Monophasic Typhimurium":
             lookupSero = "Typhimurium"
 
@@ -130,6 +131,7 @@ def parse_seros(serotypes):
         subgenera.append(subgenus)
         if serotype == "Monophasic Typhimurium":
             limsSerotype = serotype
+
         limsSerotypes.append(limsSerotype)
 
     if len(serogroups) == 3:
@@ -162,8 +164,10 @@ def parse_seros(serotypes):
 
 
     if "I 1,4,[5],12:d:-" in serotypes:
-        limsSubgenus = subgenera[0]
-        limsSerogroup = serogroups[0]
+        print("****PASS****")
+        print(lookupSero)
+        limsSubgenus = "I"
+        limsSerogroup = "B"
 
     if "IIIb 61:k:1,5,(7)" in serotypes:
         limsSubgenus = "IIIb"
@@ -583,8 +587,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
 
     if limsSerotype == "4,12:d:-":
-        print("*********** DOES THIS PASS ************")
-
         limsStatus = "Pass"
         limsReason = ""
 
@@ -606,6 +608,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         if limsReason == "Check Serovar":
             limsStatus = "Pass"
             limsReason = ""
+    if limsSerotype == "no_consensus":
+        limsStatus = "CheckRequired"
+        limsReason = "Check Serovar"
 
 
 
