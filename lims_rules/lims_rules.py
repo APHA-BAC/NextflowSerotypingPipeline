@@ -260,8 +260,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsReason = "Contaminated: multiSerotypes(SeqSero2)"
         print("SeqSero2 comment:", seqseroComment)
 
-    if "Detected a deletion that causes O5- variant of Typhimurium"in seqseroComment:
-        limsVariant = "O5 variant"
+    if "Detected a deletion that causes O5- variant of Typhimurium" in seqseroComment:
+        limsVariant = "O5 negative"
         print("SeqSero2 comment:", seqseroComment)
 
     # RULE 1 NO PIPELINE OUTPUT
@@ -615,6 +615,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
 
 
+
+
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
 
@@ -643,6 +645,10 @@ def parse_table(summaryTable):
             limsSubgenus = "IIIa"
         if "IIIb" in consensus:
             limsSubgenus = "IIIb"
+        if "2-IV" in consensus:
+            limsSubgenus = "IV"
+        if limsSerogroup = "":
+
         outRow = [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine] + list(row[otherColNames])
         outTable.append([str(x) for x in outRow])
     with open(outFileName, 'w') as outFile:
