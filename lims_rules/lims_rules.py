@@ -647,7 +647,7 @@ def parse_table(summaryTable):
             limsSubgenus = "IIIb"
         if "2-IV" in consensus:
             limsSubgenus = "IV"
-        if limsSerogroup = "":
+        
 
         outRow = [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine] + list(row[otherColNames])
         outTable.append([str(x) for x in outRow])
