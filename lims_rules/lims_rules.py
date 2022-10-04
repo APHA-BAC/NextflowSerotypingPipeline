@@ -604,15 +604,29 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Pass"
             limsReason = ""
 
-    if "3-" in consensus:
+    if "3-" in consensus and "no_result" not in consensus:
         if limsReason == "Check Serovar":
             limsStatus = "Pass"
             limsReason = ""
+    if "3-No Type" in consensus:
+
+        limsStatus = "CheckRequired"
+        limsReason = ""
     if limsSerotype == "no_consensus":
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
 
 
+
+    if "Co-existence of multiple serotypes detected" in seqseroComment:
+        if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
+
+            limsStatus = "Inconclusive"
+            limsReason = "multipleSerotypesDetected(SeqSero2)"
+        else:
+
+            limsStatus = "Inconclusive"
+            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
 
 
 
@@ -647,7 +661,7 @@ def parse_table(summaryTable):
             limsSubgenus = "IIIb"
         if "2-IV" in consensus:
             limsSubgenus = "IV"
-        
+
 
         outRow = [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine] + list(row[otherColNames])
         outTable.append([str(x) for x in outRow])
