@@ -128,8 +128,11 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
 
     for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
-        shutil.copy(file, '/home/arslanhussaini/mnt/my_share/CR2009')
-        print("Summary table copied")
+        try:
+            shutil.copy(file, '/home/arslanhussaini/mnt/my_share/CR2009')
+            print("Summary table copied")
+        except:
+            print("Copy of summary table failed. Is the drive mounted?")
 
     # TODO: Backup in fsx
 
