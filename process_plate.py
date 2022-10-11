@@ -2,6 +2,7 @@ import subprocess
 import os
 import glob
 import argparse
+import shutil
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
@@ -125,6 +126,10 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
             rename_fastq_file(filepath)
     # Process
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+
+    for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
+        shutil.copy(file, '/home/arslanhussaini/mnt/my_share/CR2009')
+        print("Summary table copied")
 
     # TODO: Backup in fsx
 
