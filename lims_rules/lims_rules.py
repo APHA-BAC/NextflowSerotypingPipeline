@@ -311,6 +311,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # RULE 2 READCOUNT
     elif numReads < 500000 or numReads == "no_result":
+        print("does this pass")
         limsReason = "InsufficientData: readCount<500K"
         print("Low read count:", numReads)
         limsStatus = "Inconclusive"
@@ -395,7 +396,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
-
+        print("Does this pass")
         LIMS_SerotypeID = "Paratyphi B Variant Java"
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
@@ -441,6 +442,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
+    elif "1-I 1,4,[5],12:b:---1-Paratyphi--1-I 4:b:-" == consensus:
+        limsSerotype = "Paratyphi B Variant Java"
+        limsVariant = "Monophasic Java"
+        limsStatus = "Pass"
+
 
     elif consensus == "3-No Type":
         limsReason = "Contaminated"
@@ -527,9 +533,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         if limsStatus != "Inconclusive":
             limsStatus = "Pass"
     # RULE 26 EVERYTHING ELSE
-    else:
-        limsReason = "unknown"
-        limsStatus = "CheckRequired"
+    # else:
+    #     limsReason = "unknown"
+    #     limsStatus = "CheckRequired"
     if vaccine not in ("NA", "srst2 result file not found"):
         if "2-AviproE" in vaccine:
             limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
@@ -582,8 +588,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
 
     limsSerotype = limsSerotype.replace("(2/3consensus)", "")
-    # if limsStatus == "CheckRequired":
-    #     limsReason = "Check Serovar"
+
 
 
     if limsSerotype == "4,12:d:-":
@@ -594,12 +599,12 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
         limsSubgenus = "I"
         limsSerogroup = "B"
-
-    if limsStatus == "" or limsStatus == "CheckRequired":
+    print(limsReason)
+    if limsStatus == "" or limsStatus == "CheckRequired" and "InsufficientData" not in limsReason:
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
 
-    if limsSerotype == "Paratyphi B Variant Java" or limsSerotype == "Monophasic Typhimurium":
+    if limsSerotype == "Paratyphi B Variant Java" or limsSerotype == "Monophasic Typhimurium" or limsSerotype == "Paratyphi B var. Java":
         if limsReason == "Check Serovar":
             limsStatus = "Pass"
             limsReason = ""
