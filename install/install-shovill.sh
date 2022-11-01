@@ -2,5 +2,5 @@
 # Shovill
 set -e
 
-conda install -c conda-forge -c bioconda -c defaults shovill=0.9.0
+conda install -c conda-forge -c bioconda -c defaults shovill
 shovill --check

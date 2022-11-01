@@ -2,7 +2,7 @@
 
 /*
  * PRE-STEP i - define the input path to the sequences that will be analysed
-*/ 
+*/
 
 params.minReads = 500000
 params.subsampThreshold = 3500000
@@ -137,7 +137,7 @@ process fastp_qual_trim {
 }
 
 
-/* 
+/*
  * PRE-STEP vi - seqtk subsampling
 */
 
@@ -147,7 +147,7 @@ process subsampling {
     input:
     val logfile from cleanup_ch1
     tuple sample_id, readPair from cleanedReads
-    
+
     output:
     file("*_subsampling.log") into cleanup_ch2
     val sample_id into cleanup_ch3
@@ -205,7 +205,7 @@ process intermediate_reads_cleanup {
 
 /*
  * STEP 1 - fastqc
-*/ 
+*/
 
 process fastqc {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports", mode: 'move'
@@ -213,50 +213,51 @@ process fastqc {
     input:
     tuple sample_id, file(reads_file) from reads1
 
-    output:  
+    output:
     file("${sample_id}_{R1,R2}_fastqc.{html,zip}")
     file("${sample_id}_1.txt") into out1_ch
     file("${sample_id}_1.txt") into out1_ch_rem
 
-    
+
     script:
     """
     fastqc  -f fastq -q ${reads_file}
-    touch ${sample_id}_1.txt 
+    touch ${sample_id}_1.txt
     """
 }
 
 
 /*
  * STEP 2 - shovill
-*/ 
+*/
 
 process shovill {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/shovill", mode: 'copy'
-    
+
     input:
     tuple sample_id, file(reads_file) from reads2
-  
+
     output:
     file "*" into shovill_all_ch
-    set sample_id, file("${sample_id}_contigs.fa") into quast_ch  
-    set sample_id, file("${sample_id}_contigs.fa") into sistr_ch  
+    set sample_id, file("${sample_id}_contigs.fa") into quast_ch
+    set sample_id, file("${sample_id}_contigs.fa") into sistr_ch
     file("${sample_id}_2.txt") into out2_ch
     file("${sample_id}_2.txt") into out2_ch_rem
 
-  
+
     script:
-    """    
-    /opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
-    mv contigs.fa ${sample_id}_contigs.fa
+    """
+    #/opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    /opt/conda/bin/shovill --outdir $HOME/WGS_Results/${params.runID}/${sample_id}/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    mv $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
     """
 }
 
 
 /*
- * STEP 3 - quast 
-*/ 
+ * STEP 3 - quast
+*/
 
 quast_ch
     .join(reads3)
@@ -264,7 +265,7 @@ quast_ch
 
 process quast {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/quast",  mode: 'copy'
-    
+
     input:
     set sample_id, file("${sample_id}_contigs.fa"), file (reads_file) from quast_in
 
@@ -272,7 +273,7 @@ process quast {
     file("${sample_id}_3.txt") into out3_ch
     file("${sample_id}_3.txt") into out3_ch_rem
 
-   
+
     script:
     """
     python /usr/local/bin/quast.py -o $HOME/WGS_Results/${params.runID}/${sample_id}/quast "${sample_id}_contigs.fa"
@@ -282,8 +283,8 @@ process quast {
 
 
 /*
- * STEP 4 - kmerid 
-*/ 
+ * STEP 4 - kmerid
+*/
 
 process kmerid {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid",  mode: 'copy'
@@ -291,22 +292,22 @@ process kmerid {
     input:
     tuple sample_id, file(reads_file) from reads4
 
-    output:  
+    output:
     file("${sample_id}_R1.tsv")
     file("${sample_id}_4.txt") into out4_ch
     file("${sample_id}_4.txt") into out4_ch_rem
- 
+
     script:
-    """     
+    """
     python /opt/kmerid/kmerid_python3.py -f ${reads_file[0]} -c /opt/kmerid/config/config.cnf -n > ${sample_id}_R1.tsv
-    touch ${sample_id}_4.txt 
+    touch ${sample_id}_4.txt
     """
 }
 
 
 /*
- * STEP 5 - seqsero2 
-*/ 
+ * STEP 5 - seqsero2
+*/
 
 process seqsero2 {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2", mode: 'copy'
@@ -315,9 +316,9 @@ process seqsero2 {
     tuple sample_id, file(reads_file) from reads5
 
     output:
-    file("${sample_id}_5.txt") into out5_ch   
-    file("${sample_id}_5.txt") into out5_ch_rem   
-   
+    file("${sample_id}_5.txt") into out5_ch
+    file("${sample_id}_5.txt") into out5_ch_rem
+
     script:
     """
     /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]}
@@ -327,7 +328,7 @@ process seqsero2 {
 
 
 /*
- * STEP 6 - sistr 
+ * STEP 6 - sistr
 */
 
 sistr_ch
@@ -339,14 +340,14 @@ process sistr {
 
     input:
     set sample_id, file("${sample_id}_contigs.fa"), file (reads_file) from sistr_in
-    
+
     output:
-    file 'sistr_prediction.csv' into sistr_out_ch  
-    file("${sample_id}_6.txt") into out6_ch   
+    file 'sistr_prediction.csv' into sistr_out_ch
+    file("${sample_id}_6.txt") into out6_ch
     file("${sample_id}_6.txt") into out6_ch_rem
 
     script:
-    """     
+    """
     /opt/conda/bin/sistr -i "${sample_id}_contigs.fa" ${sample_id} -f csv -o sistr_prediction.csv --qc
     touch ${sample_id}_6.txt
     """
@@ -354,8 +355,8 @@ process sistr {
 
 
 /*
- * STEP 7 - MOST 
-*/ 
+ * STEP 7 - MOST
+*/
 
 process most {
     publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/MOST", mode: 'copy'
@@ -364,12 +365,12 @@ process most {
     tuple sample_id, file(reads_file) from reads7
 
     output:
-    file("${sample_id}_7.txt") into out7_ch   
-    file("${sample_id}_7.txt") into out7_ch_rem   
+    file("${sample_id}_7.txt") into out7_ch
+    file("${sample_id}_7.txt") into out7_ch_rem
     set sample_id, file("${sample_id}_serovar.tsv") into most_out_ch
 
     shell:
-    '''  
+    '''
     python /opt/most/MOST-master/MOST.py -1 !{reads_file[0]} -2 !{reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
     if grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml
     then
@@ -377,15 +378,15 @@ process most {
         if grep -q "ST-serotype" serovar1.txt
         then
             awk '{print substr(\$2,1,5); }' serovar1.txt > serovar2.txt
-            mv serovar2.txt  !{sample_id}_serovar.tsv 
+            mv serovar2.txt  !{sample_id}_serovar.tsv
         else
-            awk '{print substr(\$3,10); }' serovar1.txt > serovar2.txt   
-            mv serovar2.txt  !{sample_id}_serovar.tsv 
+            awk '{print substr(\$3,10); }' serovar1.txt > serovar2.txt
+            mv serovar2.txt  !{sample_id}_serovar.tsv
         fi
     else
         grep "profile" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
         awk '{print substr(\$3,1,5); }' serovar1.txt > serovar2.txt
-        mv serovar2.txt  !{sample_id}_serovar.tsv 
+        mv serovar2.txt  !{sample_id}_serovar.tsv
     fi
     touch !{sample_id}_7.txt
     rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.pileup
@@ -399,7 +400,7 @@ process most {
 
 /*
  * STEP 8 - srst2
-*/ 
+*/
 
 most_out_ch
     .join(reads8)
@@ -413,27 +414,27 @@ process srst2 {
     set sample_id, file("${sample_id}_serovar.tsv"), file (reads_file) from sero_in
 
     output:
-    file("${sample_id}_8.txt") into out8_ch   
-    file("${sample_id}_8.txt") into out8_ch_rem   
+    file("${sample_id}_8.txt") into out8_ch
+    file("${sample_id}_8.txt") into out8_ch_rem
 
     script:
     """
-    if grep -E "(Typhimurium|Enteritidis|Gallinarum|Pullorum|Idikan|Kedougou|Java|Paratyphi)" ${sample_id}_serovar.tsv 
+    if grep -E "(Typhimurium|Enteritidis|Gallinarum|Pullorum|Idikan|Kedougou|Java|Paratyphi)" ${sample_id}_serovar.tsv
     then
     export SRST2_BOWTIE2=/opt/srst2/bowtie2-2.2.3/bowtie2
     export SRST2_BOWTIE2_BUILD=/opt/srst2/bowtie2-2.2.3/bowtie2-build
     srst2.py  --input_pe ${sample_id}_R1.fastq.gz ${sample_id}_R2.fastq.gz --forward _R1 --reverse _R2 --output $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/ --log --gene_db /opt/srst2/VaccineDifferentiation/allVacDB9h1_clustered.fasta
-    touch ${sample_id}_8.txt    
-    else 
+    touch ${sample_id}_8.txt
+    else
     touch ${sample_id}_8.txt
     fi
-    """    
+    """
 }
 
 
 /*
- * STEP 9 - summary 
-*/ 
+ * STEP 9 - summary
+*/
 
 process summary_and_lims {
     publishDir "$HOME/WGS_Results/${params.runID}", mode: 'copy'
@@ -502,7 +503,7 @@ process final_cleanup {
     when:
     c1_rem + c2_rem + c3_rem + c4_rem + c5_rem+ c6_rem + c7_rem + c8_rem == read_rem*8
 
-    script: 
+    script:
     """
     rm $HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports/${sample_id}_1.txt || echo "nothing to delete"
     rm $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/${sample_id}_2.txt || echo "nothing to delete"
