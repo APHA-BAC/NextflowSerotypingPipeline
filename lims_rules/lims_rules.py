@@ -157,15 +157,22 @@ def parse_seros(serotypes):
 
         limsSubgenus = subgenera[0]
 
-    if serotype in ["JAVA", "Java"]:
+    if serotype in ["JAVA", "Java", "Paratyphi B Variant Java"]:
+        print("******* pass? *******")
+        limsSubgenus = "I"
+        limsSerogroup = "B"
+
+    
+    if "I 1,4,[5],12:d:-" in serotypes:
+
+        limsSubgenus = "I"
+        limsSerogroup = "B"
+    if "I 1,4,[5],12:b:-" in serotypes:
 
         limsSubgenus = "I"
         limsSerogroup = "B"
 
-
-    if "I 1,4,[5],12:d:-" in serotypes:
-        print("****PASS****")
-        print(lookupSero)
+    if "Paratyphi B var. Java" in serotypes:
         limsSubgenus = "I"
         limsSerogroup = "B"
 
@@ -176,6 +183,7 @@ def parse_seros(serotypes):
         limsSubgenus = "I"
         limsSerogroup = "G"
 
+    print("******************* ",serotypes," ***************")
 
 
     return limsSerotypes, limsSerogroup, limsSubgenus
@@ -396,11 +404,12 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
-        print("Does this pass")
+
         LIMS_SerotypeID = "Paratyphi B Variant Java"
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
+        limsSerogroup = "B"
     # RULE 13 NO RESULTS
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
@@ -590,16 +599,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsSerotype = limsSerotype.replace("(2/3consensus)", "")
 
 
-
+    #Stop gap rules
     if limsSerotype == "4,12:d:-":
         limsStatus = "Pass"
         limsReason = ""
 
-    if "Java" in limsVariant:
-
-        limsSubgenus = "I"
-        limsSerogroup = "B"
-    print(limsReason)
     if limsStatus == "" or limsStatus == "CheckRequired" and "InsufficientData" not in limsReason:
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
@@ -614,12 +618,12 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Pass"
             limsReason = ""
     if "3-No Type" in consensus:
-
         limsStatus = "CheckRequired"
         limsReason = ""
     if limsSerotype == "no_consensus":
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
+
 
 
 
