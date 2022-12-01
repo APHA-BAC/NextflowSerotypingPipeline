@@ -6,7 +6,7 @@ import argparse
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
-DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:latest"
+DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
 DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
 
