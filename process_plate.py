@@ -2,6 +2,8 @@ import subprocess
 import os
 import glob
 import argparse
+import boto3
+from archiver import *
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
@@ -9,6 +11,7 @@ DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
 DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
+s3_destiation = "s3://s3-staging-area/arslanhussaini/"
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
@@ -127,6 +130,18 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
 
     # TODO: Backup in fsx
+    ar.check_mount()
+    outDir, readFiles, readSizes = ar.check_WGS(s3_uri)
+    homeWGSDir = ar.retrieve_from_bucket(s3_uri, outDir, readFiles, readSizes)
+    ar.archive_WGS(outDir, readFiles, homeWGSDir)
+    shutil.rmtree(homeWGSDir)
+
+
+def upload_results(summary_path, s3_destination):
+    run(["aws", "s3", "cp",
+        summary_path,
+        s3_destination 
+        ])
 
 if __name__ == '__main__':
     # Parse
