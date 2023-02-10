@@ -619,7 +619,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsReason = ""
     if "3-No Type" in consensus:
         limsStatus = "CheckRequired"
-        limsReason = ""
+        limsReason = "Contaminated: noIDedSerotypes"
     if limsSerotype == "no_consensus":
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
