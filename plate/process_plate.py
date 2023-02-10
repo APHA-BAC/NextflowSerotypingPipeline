@@ -2,6 +2,8 @@ import subprocess
 import os
 import glob
 import argparse
+import boto3
+from archiver import *
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
@@ -126,7 +128,21 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     # Process
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
 
-    # TODO: Backup in fsx
+    # If running plate from s3_uri, backup
+    if local == 0:
+        new_s3_uri = s3_uri[16:-1]
+        check_mount()
+        outDir, readFiles, readSizes = check_WGS(new_s3_uri)
+        homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
+        archive_WGS(outDir, readFiles, homeWGSDir)
+        shutil.rmtree(homeWGSDir)
+
+def download_s3(s3_uri, destination):
+    """ Recursively download a S3 Object """
+    run(["aws", "s3", "cp", "--recursive",
+        s3_uri,
+        destination
+    ])
 
 if __name__ == '__main__':
     # Parse
