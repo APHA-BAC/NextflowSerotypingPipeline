@@ -137,11 +137,13 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
         archive_WGS(outDir, readFiles, homeWGSDir)
         shutil.rmtree(homeWGSDir)
 
-def download_s3(s3_uri, destination):
+    summaryTable = "~/wgs-results/" + plate_name + "/" + plate_name + "_SummaryTable_plusLIMS.csv"
+
+def download_s3(summaryTable, s3_destination):
     """ Recursively download a S3 Object """
     run(["aws", "s3", "cp", "--recursive",
-        s3_uri,
-        destination
+        summaryTable,
+        s3_destination
     ])
 
 if __name__ == '__main__':
