@@ -70,6 +70,7 @@ def build_sero_dict():
             serotype = serotype.upper()
 
             if serotype == "PARATYPHI_B_JAVA" or serotype == "PARATYPHI_B_VAR._JAVA" or serotype == "PARATYPHI_B_VARIANT_JAVA":
+                print("IS THIS RUNNING")
                 serotype = "PARATYPHI B VAR. JAVA"
 
             if serotype in seroDict:
@@ -162,7 +163,7 @@ def parse_seros(serotypes):
         limsSubgenus = "I"
         limsSerogroup = "B"
 
-    
+
     if "I 1,4,[5],12:d:-" in serotypes:
 
         limsSubgenus = "I"
@@ -404,6 +405,14 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
+
+        LIMS_SerotypeID = "Paratyphi B Variant Java"
+        limsSerotype = "Paratyphi B Variant Java"
+        limsVariant = "Monophasic Java"
+        limsStatus = "Pass"
+        limsSerogroup = "B"
+    # Same as rule above, but different order
+    elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-Paratyphi--1-I 1,4,[5],12:b:---1-I 4:b:-' and sseJ == 'Java':
 
         LIMS_SerotypeID = "Paratyphi B Variant Java"
         limsSerotype = "Paratyphi B Variant Java"
