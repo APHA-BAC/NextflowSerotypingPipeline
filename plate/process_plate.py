@@ -11,6 +11,7 @@ DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
 DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
+s3_destination = "s3://s3-staging-area/arslanhussaini/"
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
@@ -95,6 +96,10 @@ def rename_fastq_file(filepath):
     renamed = f"{directory}/{sample_name}_R{read_number}.fastq.gz"
     os.rename(filepath, renamed)
 
+def download_s3(summaryTable_path, s3_destination):
+    """ Recursively download a S3 Object """
+    run(["aws", "s3", "cp", "--recursive",summaryTable_path,s3_destination])
+
 def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     """ Download, process and store a plate of raw Salmonella data """
 
@@ -137,14 +142,11 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
         archive_WGS(outDir, readFiles, homeWGSDir)
         shutil.rmtree(homeWGSDir)
 
-    summaryTable = "~/wgs-results/" + plate_name + "/" + plate_name + "_SummaryTable_plusLIMS.csv"
+    summaryTable_path = "~/wgs-results/" + plate_name + "/" + plate_name + "_SummaryTable_plusLIMS.csv"
+    summaryTable_path = os.path.expanduser(summaryTable_path)
+    download_s3(summaryTable_path,s3_destination)
 
-def download_s3(summaryTable, s3_destination):
-    """ Recursively download a S3 Object """
-    run(["aws", "s3", "cp", "--recursive",
-        summaryTable,
-        s3_destination
-    ])
+
 
 if __name__ == '__main__':
     # Parse
