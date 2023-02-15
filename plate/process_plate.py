@@ -131,13 +131,16 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
 
     # If running plate from s3_uri, backup
-    if local == 0:
-        new_s3_uri = s3_uri[16:-1]
-        check_mount()
-        outDir, readFiles, readSizes = check_WGS(new_s3_uri)
-        homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
-        archive_WGS(outDir, readFiles, homeWGSDir)
-        shutil.rmtree(homeWGSDir)
+    try:
+        if local == 0:
+            new_s3_uri = s3_uri[16:-1]
+            check_mount()
+            outDir, readFiles, readSizes = check_WGS(new_s3_uri)
+            homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
+            archive_WGS(outDir, readFiles, homeWGSDir)
+            shutil.rmtree(homeWGSDir)
+    except:
+        print("Archive failed")
 
     # Sets up the string that is the path to the summary table
     TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
