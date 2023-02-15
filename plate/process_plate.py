@@ -88,11 +88,14 @@ def rename_fastq_file(filepath):
     renamed = f"{directory}/{sample_name}_R{read_number}.fastq.gz"
     os.rename(filepath, renamed)
 
-def download_s3(summaryTable_path, s3_destination):
+def upload_s3(summaryTable_path, s3_destination):
     """ Upload summary table to S3 bucket """
     print("****** " + summaryTable_path + " ******")
     print("****** " + s3_destination + " ******")
-    run(["aws", "s3", "cp",summaryTable_path,s3_destination])
+    try:
+        run(["aws", "s3", "cp",summaryTable_path,s3_destination])
+    except:
+        print("Does the destination path exist?")
 
 def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     """ Download, process and store a plate of raw Salmonella data """
@@ -136,10 +139,11 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
         archive_WGS(outDir, readFiles, homeWGSDir)
         shutil.rmtree(homeWGSDir)
 
+    # Sets up the string that is the path to the summary table
     TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
     summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
     summaryTable_path = os.path.expanduser(summaryTable_path)
-    download_s3(summaryTable_path,s3_destination)
+    upload_s3(summaryTable_path,s3_destination)
 
 
 
