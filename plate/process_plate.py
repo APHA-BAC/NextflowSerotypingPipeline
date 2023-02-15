@@ -44,14 +44,6 @@ def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEF
 
 
 
-
-def download_s3(s3_uri, destination):
-    """ Recursively download a S3 Object """
-    run(["aws", "s3", "cp", "--recursive",
-        s3_uri,
-        destination
-    ])
-
 def s3_object_release_date(s3_key):
     """ Date s3 object was published. Returns a 3 element list with format [year, month, day] """
 
@@ -97,8 +89,10 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 def download_s3(summaryTable_path, s3_destination):
-    """ Recursively download a S3 Object """
-    run(["aws", "s3", "cp", "--recursive",summaryTable_path,s3_destination])
+    """ Upload summary table to S3 bucket """
+    print("****** " + summaryTable_path + " ******")
+    print("****** " + s3_destination + " ******")
+    run(["aws", "s3", "cp",summaryTable_path,s3_destination])
 
 def run_plate(s3_uri, reads_dir, results_dir, local, runID):
     """ Download, process and store a plate of raw Salmonella data """
@@ -142,7 +136,8 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
         archive_WGS(outDir, readFiles, homeWGSDir)
         shutil.rmtree(homeWGSDir)
 
-    summaryTable_path = "~/wgs-results/" + plate_name + "/" + plate_name + "_SummaryTable_plusLIMS.csv"
+    TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
+    summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
     summaryTable_path = os.path.expanduser(summaryTable_path)
     download_s3(summaryTable_path,s3_destination)
 
