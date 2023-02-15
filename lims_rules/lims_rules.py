@@ -159,10 +159,8 @@ def parse_seros(serotypes):
         limsSubgenus = subgenera[0]
 
     if serotype in ["JAVA", "Java", "Paratyphi B Variant Java"]:
-        print("******* pass? *******")
         limsSubgenus = "I"
         limsSerogroup = "B"
-
 
     if "I 1,4,[5],12:d:-" in serotypes:
 
@@ -183,9 +181,6 @@ def parse_seros(serotypes):
     if "I G:i:-" in serotypes:
         limsSubgenus = "I"
         limsSerogroup = "G"
-
-    print("******************* ",serotypes," ***************")
-
 
     return limsSerotypes, limsSerogroup, limsSubgenus
 
@@ -247,10 +242,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsReason = ""
     limsVariant = ""
     limsVaccine = ""
-    # limsStatus = "CheckRequired"
     limsStatus = ""
 
 
+    # Paratyphi B. Java rules
     if consensus == "2-Paratyphi--1-Paratyphi B var. Java":
         limsVariant = "Variant Java"
         limsSerotype = "Paratyphi B Variant Java"
@@ -320,7 +315,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # RULE 2 READCOUNT
     elif numReads < 500000 or numReads == "no_result":
-        print("does this pass")
         limsReason = "InsufficientData: readCount<500K"
         print("Low read count:", numReads)
         limsStatus = "Inconclusive"
@@ -404,23 +398,42 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         print("Assembly too small:", assemblySize)
         limsStatus = "Inconclusive"
     # NEW RULE 12
-    elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
+    elif limsSubgenus == 'I' and salmPercent > 75 and sseJ == 'Java':
+        if consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' or consensus == '1-Paratyphi--1-I 1,4,[5],12:b:---1-I 4:b:-':
 
-        LIMS_SerotypeID = "Paratyphi B Variant Java"
+            limsSerotype = "Paratyphi B Variant Java"
+            limsVariant = "Monophasic Java"
+            limsStatus = "Pass"
+            limsSerogroup = "B"
+
+    elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
-        limsSerogroup = "B"
-    # Same as rule above, but different order
-    elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-Paratyphi--1-I 1,4,[5],12:b:---1-I 4:b:-' and sseJ == 'Java':
 
-        LIMS_SerotypeID = "Paratyphi B Variant Java"
+    elif "1-I 1,4,[5],12:b:---1-Paratyphi--1-I 4:b:-" == consensus:
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
-        limsSerogroup = "B"
+
+    elif "2-Paratyphi--1-Paratyphi B var. Java" == consensus:
+        limsSerotype = "Paratyphi B Variant Java"
+        limsVariant = "Variant Java"
+        limsStatus = "Pass"
+
+    elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
+        limsSerotype = "Paratyphi B Variant Java"
+        limsVariant = "Variant Java"
+        limsStatus = "Pass"
+
+    elif "1-Paratyphi B var. L(+) tartrate+--1-Paratyphi B var. Java--1-Java" == consensus:
+        limsSerotype = "Paratyphi B Variant Java"
+        limsVariant = "Variant Java"
+        limsStatus = "Pass"
+    
+
     # RULE 13 NO RESULTS
-    elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
+    if len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
         print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
@@ -435,36 +448,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "S. enterica 4,12:d:-"
         limsStatus = "Pass"
 
-
-
-    elif "2-Paratyphi--1-Paratyphi B var. Java" == consensus:
-        limsSerotype = "Paratyphi B Variant Java"
-        limsVariant = "Variant Java"
-        limsStatus = "Pass"
-
-    elif "1-I 4:b:---1-I 1,4,[5],12:b:---1-Paratyphi" == consensus:
-        limsSerotype = "Paratyphi B Variant Java"
-        limsVariant = "Monophasic Java"
-        limsStatus = "Pass"
-
-    elif "1-Paratyphi B var. Java--1-Java--1-Paratyphi B var. L(+) tartrate+" == consensus:
-        limsSerotype = "Paratyphi B Variant Java"
-        limsVariant = "Variant Java"
-        limsStatus = "Pass"
-
     elif "1-I 1,4,[5],12:i:-" in consensus:
         limsSerotype = "Monophasic Typhimurium"
         limsStatus = "Pass"
-
-    elif "1-Paratyphi B var. L(+) tartrate+--1-Paratyphi B var. Java--1-Java" == consensus:
-        limsSerotype = "Paratyphi B Variant Java"
-        limsVariant = "Variant Java"
-        limsStatus = "Pass"
-    elif "1-I 1,4,[5],12:b:---1-Paratyphi--1-I 4:b:-" == consensus:
-        limsSerotype = "Paratyphi B Variant Java"
-        limsVariant = "Monophasic Java"
-        limsStatus = "Pass"
-
 
     elif consensus == "3-No Type":
         limsReason = "Contaminated"
@@ -475,7 +461,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif "1-No Type--1-Gallinarum or Enteritidis--1-Berta|Pensacola|Sangalkam" == consensus or "2-No Type--1-Pensacola|Sangalkam" == consensus:
         limsSerotype = "Enteritidis"
     elif "1-I 1,4,[5],12:i:-" in consensus:
-        # LIMS_Variant = "Monophasic Typhimurium"
         limsVariant = "Monophasic Typhimurium"
         limsStatus = "Pass"
 
@@ -520,40 +505,36 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
 
-
-
     # RULE 21 MONO KEDOUGOU
     if mono == "MonophasicKedougou":
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
+    
     # RULE 22 4,12:D:-
     elif consensus == "1-No Type--1-Unnamed--1-I 4,[5],12:d:-":
         limsSerotype = "I 4,[5],12:d:-"
         limsStatus = "Pass"
+    
     # RULE 23 DIARIZONAE
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)","1-IIIb 61:k:1,5,(7)--1-Arizonae--1-IIIb O:61:k:1,5,7"):
-        # limsSerotype = "S. enterica subsp. diarizonae  O61:k:1,5,7"
         limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
     elif "O:61:k:1,5,7" in consensus:
         limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
+    
     # RULE 24 BOVISMORBIFICANS
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
-    # RULE 25 ALL GOOD
-    # elif len(limsSerotypes) == 1:
-    #     limsStatus = "Pass"
+    
 
     # Gallinarum rule
     elif consensus == "2-Gallinarum--1-Pullorum" or consensus == "2-Gallinarum--1-No Type":
         if limsStatus != "Inconclusive":
             limsStatus = "Pass"
-    # RULE 26 EVERYTHING ELSE
-    # else:
-    #     limsReason = "unknown"
-    #     limsStatus = "CheckRequired"
+    
+    # Vaccine rules
     if vaccine not in ("NA", "srst2 result file not found"):
         if "2-AviproE" in vaccine:
             limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
@@ -669,12 +650,6 @@ def parse_table(summaryTable):
         sampleID = row['Isolate_ID']
         consensus = row['Consensus']
         serotypes = parse_consensus(consensus)
-        # for index,item in enumerate(serotypes):
-        #     if "Gallinarum" in item:
-        #         serotypes[index] = "Gallinarum"
-        #     elif "Berta" in item:
-        #         serotypes[index] = "Berta"
-        # print("************", sampleID, serotypes, "*************")
         limsSerotypes, limsSerogroup, limsSubgenus = parse_seros(serotypes)
         limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
         if "Iiia" in consensus or "IIIa" in consensus:
