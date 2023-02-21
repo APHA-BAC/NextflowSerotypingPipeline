@@ -619,8 +619,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Check Serovar"
 
 
-
-
     if "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
 
@@ -630,8 +628,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: multiSerotypes(SeqSero2)"
-
-
 
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
