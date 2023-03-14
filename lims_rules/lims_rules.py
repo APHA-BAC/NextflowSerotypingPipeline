@@ -62,9 +62,9 @@ def build_sero_dict():
             serotype = serotype.strip()
             serotype = anySpaceRegex.sub("_", serotype)
             serotype = serotype.upper()
-
+            
             if serotype == "PARATYPHI_B_JAVA" or serotype == "PARATYPHI_B_VAR._JAVA" or serotype == "PARATYPHI_B_VARIANT_JAVA":
-                print("IS THIS RUNNING")
+                
                 serotype = "PARATYPHI B VAR. JAVA"
 
             if serotype in seroDict:
@@ -99,7 +99,13 @@ def parse_seros(serotypes):
             lookupSero = subgenusRegex.match(serotype).group(1)
         else:
             lookupSero = serotype
-
+        print(serotype)
+        if serotype == "Bovis-morbificans":
+            serotype = "Bovismorbificans"
+            lookupSero = "Bovismorbificans"
+        if serotype == "Gold-coast":
+            serotype = "Goldcoast"
+            lookupSero = "Goldcoast"
         lookupSero = lookupSero.strip()
         lookupSero = lookupSero.replace("_", " ")
         lookupSero = lookupSero.upper()
