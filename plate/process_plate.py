@@ -2,13 +2,16 @@ import subprocess
 import os
 import glob
 import argparse
+import boto3
+from archiver import *
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
-DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
+DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
 DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
+s3_destination = "s3://s3-staging-area/arslanhussaini/"
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
@@ -40,14 +43,6 @@ def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEF
     ])
 
 
-
-
-def download_s3(s3_uri, destination):
-    """ Recursively download a S3 Object """
-    run(["aws", "s3", "cp", "--recursive",
-        s3_uri,
-        destination
-    ])
 
 def s3_object_release_date(s3_key):
     """ Date s3 object was published. Returns a 3 element list with format [year, month, day] """
@@ -93,7 +88,18 @@ def rename_fastq_file(filepath):
     renamed = f"{directory}/{sample_name}_R{read_number}.fastq.gz"
     os.rename(filepath, renamed)
 
-def run_plate(s3_uri, reads_dir, results_dir, local, runID):
+
+def upload_s3(summaryTable_path, s3_destination):
+    """ Upload summary table to S3 bucket """
+    print("****** " + summaryTable_path + " ******")
+    print("****** " + s3_destination + " ******")
+    try:
+        run(["aws", "s3", "cp",summaryTable_path,s3_destination])
+    except:
+        print("Does the destination path exist?")
+
+def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
+
     """ Download, process and store a plate of raw Salmonella data """
 
     # Add trailing slash to directory names
@@ -125,8 +131,34 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID):
             rename_fastq_file(filepath)
     # Process
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+    if upload == 1:
+        for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
+            try:
+                shutil.copy(file, '~/mnt/my_share/CR2009')
+                print("Summary table copied")
+            except:
+                print("Copy of summary table failed. Is the drive mounted?")
 
-    # TODO: Backup in fsx
+    # If running plate from s3_uri, backup
+    try:
+        if local == 0:
+            new_s3_uri = s3_uri[16:-1]
+            check_mount()
+            outDir, readFiles, readSizes = check_WGS(new_s3_uri)
+            homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
+            archive_WGS(outDir, readFiles, homeWGSDir)
+            shutil.rmtree(homeWGSDir)
+    except:
+        print("Archive failed")
+
+    if transfer == 1:
+        # Sets up the string that is the path to the summary table
+        TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
+        summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
+        summaryTable_path = os.path.expanduser(summaryTable_path)
+        upload_s3(summaryTable_path,s3_destination)
+
+
 
 if __name__ == '__main__':
     # Parse
@@ -137,6 +169,9 @@ if __name__ == '__main__':
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
     parser.add_argument("-l","--local", default=0, help="Set to 1 if your reads are in a local directory. Default is 0")
     parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
+    parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
+    parser.add_argument("-t", "--transfer", default=0, help="Seto to 1 to transfer to S3 bucket")
+
 
     args = parser.parse_args()
     args.local = int(args.local)
@@ -144,4 +179,6 @@ if __name__ == '__main__':
          parser.error("--local requires --runID")
 
     # Run
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.local, args.runID)
+
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.local, args.runID, args.upload, args.transfer)
+
