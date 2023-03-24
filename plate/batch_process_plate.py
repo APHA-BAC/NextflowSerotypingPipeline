@@ -28,16 +28,10 @@ def run(cmd):
             cmd failed with exit code %i
         *****""" % (cmd, returncode))
 
-def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEFAULT_KMERID_REF, kmerid_config=DEFAULT_KMERID_CONFIG):
+def run_pipeline(plate_name):
     """ Run the Salmonella pipeline using docker """
-    run(["sudo", "docker", "pull", image])
+    
     run([
-        "sudo", "docker", "run", "--rm", "-it",
-        "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
-        "-v", f"{results}:/root/WGS_Results/{plate_name}/",
-        "-v", f"{kmerid_ref}:/opt/kmerid/ref/",
-        "-v", f"{kmerid_config}:/opt/kmerid/config",
-        image,
         "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
         "--runID", plate_name
     ])
@@ -135,7 +129,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
     # Process
-    run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+    run_pipeline(plate_name)
     if upload == 1:
         for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
             try:
