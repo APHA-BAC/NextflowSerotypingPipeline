@@ -42,7 +42,12 @@ def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEF
         "--runID", plate_name
     ])
 
-
+def download_s3(s3_uri, destination):
+    """ Recursively download a S3 Object """
+    run(["aws", "s3", "cp", "--recursive",
+        s3_uri,
+        destination
+    ])
 
 def s3_object_release_date(s3_key):
     """ Date s3 object was published. Returns a 3 element list with format [year, month, day] """
