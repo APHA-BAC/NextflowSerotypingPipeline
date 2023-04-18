@@ -62,9 +62,9 @@ def build_sero_dict():
             serotype = serotype.strip()
             serotype = anySpaceRegex.sub("_", serotype)
             serotype = serotype.upper()
-            
+
             if serotype == "PARATYPHI_B_JAVA" or serotype == "PARATYPHI_B_VAR._JAVA" or serotype == "PARATYPHI_B_VARIANT_JAVA":
-                
+
                 serotype = "PARATYPHI B VAR. JAVA"
 
             if serotype in seroDict:
@@ -238,7 +238,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     if "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
             limsStatus = "Inconclusive"
-            limsReason = "multipleSerotypesDetected(SeqSero2)"
+            limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
         else:
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: multiSerotypes(SeqSero2)"
@@ -260,6 +260,32 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
         limsReason = ""
 
+    # Idekan rule
+    elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
+        limsVariant = "Monophasic Idikan"
+        limsStatus = "Pass"
+        limsReason = ""
+
+    # Kedogou rule
+    elif "1-I G:i:---1-I 13:i:---1-Kedougou" in consensus:
+        limsSerotype = "Kedougou"
+
+    # Monophasic Kedogou/Idikan
+    elif "1,13,23:i:l,w" in consensus:
+        limsVariant = "Monophasic Kedougou"
+    elif "1,13,23:i:1,5" in consensus:
+        limsVariant = "Monophasic Idikan"
+
+    # RULE 20 MONO IDIKAN
+    elif mono == "MonophasicIdikan":
+        limsVariant = "Monophasic Idikan"
+        limsStatus = "Pass"
+
+    # RULE 21 MONO KEDOUGOU
+    if mono == "MonophasicKedougou":
+        limsVariant = "Monophasic Kedougou"
+        limsStatus = "Pass"
+
     # 2-Pullorum vaccine RULE
     if vaccine == "2-Pullorum":
         limsSerotype = "Pullorum"
@@ -271,15 +297,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Arizonae IIIa 18:z4,z32:-"
         limsStatus = "CheckRequired"
 
-    # Idekan rule
-    elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
-        limsVariant = "Monophasic Idikan"
-        limsStatus = "Pass"
-        limsReason = ""
 
-    # Kedogou rule
-    elif "1-I G:i:---1-I 13:i:---1-Kedougou" in consensus:
-        limsSerotype = "Kedougou"
 
     # Monophasic Typhi rule
     elif consensus in ["4,12:-:-", "4,12:-:1,2", "4,12:I:-", "4,5,12:-:-", "4,5,12:-:1,2", "4,5,12:I:-"]:
@@ -415,9 +433,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # RULE 13 NO RESULTS
     if len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
-        limsReason = "Contaminated: noIDedSerotypes"
-        print("No identified serotypes:", limsSerotypes)
-        limsStatus = "Inconclusive"
+        if mostLight != "RED":
+            limsReason = "Contaminated: noIDedSerotypes"
+            print("No identified serotypes:", limsSerotypes)
+            limsStatus = "Inconclusive"
     # NEW RULE 17
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsSerotype = "Houtenae IV 44:z4,z23:-"
@@ -456,11 +475,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVariant = "Monophasic Typhimurium"
         limsStatus = "Pass"
 
-    # Monophasic Kedogou/Idikan
-    elif "1,13,23:i:l,w" in consensus:
-        limsVariant = "Monophasic Kedougou"
-    elif "1,13,23:i:1,5" in consensus:
-        limsVariant = "Monophasic Idikan"
+
 
     # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
@@ -481,14 +496,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B")]) == len(limsSerotypes) and sseJ == 'Paratyphi':
         limsSerotype = "Paratyphi B"
         limsStatus = "Pass"
-    # RULE 20 MONO IDIKAN
-    elif mono == "MonophasicIdikan":
-        limsVariant = "Monophasic Idikan"
-        limsStatus = "Pass"
-    # RULE 21 MONO KEDOUGOU
-    if mono == "MonophasicKedougou":
-        limsVariant = "Monophasic Kedougou"
-        limsStatus = "Pass"
+
+
 
     # RULE 22 4,12:D:-
     elif consensus == "1-No Type--1-Unnamed--1-I 4,[5],12:d:-":
@@ -579,11 +588,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Pass"
             limsReason = ""
     if "3-No Type" in consensus:
-        limsStatus = "CheckRequired"
-        limsReason = "Contaminated: noIDedSerotypes"
+        if mostLight != "RED":
+            limsStatus = "Inconclusive"
+            limsReason = "Contaminated: noIDedSerotypes"
     if "2-No Type" in consensus and "e,h:-" in consensus:
-        limsStatus = "CheckRequired"
-        limsReason = "Contaminated: noIDedSerotypes"
+        if mostLight != "RED":
+            limsStatus = "Inconclusive"
+            limsReason = "Contaminated: noIDedSerotypes"
     if limsSerotype == "no_consensus":
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
