@@ -41,6 +41,8 @@ bash install/install-srst2.sh
 bash install/install-nextflow.sh
 bash install/install-sra-toolkit.sh
 bash install/setup-environment.sh
+pip install awscli
+pip install boto3
 
 # Output folder for running jobs
 mkdir $HOME/WGS_Data/TestIsolates/ $HOME/WGS_Results/TestIsolates/ 

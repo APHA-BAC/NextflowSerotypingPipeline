@@ -9,8 +9,8 @@ from archiver import *
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
-DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
-DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
+DEFAULT_KMERID_REF = os.path.expanduser('/root//KmerID_Ref_Genomes/ref/')
+DEFAULT_KMERID_CONFIG = os.path.expanduser('/root/KmerID_Ref_Genomes/config/')
 s3_destination = "s3://s3-staging-area/arslanhussaini/"
 
 def run(cmd):
@@ -31,10 +31,8 @@ def run(cmd):
 def run_pipeline(plate_name):
     """ Run the Salmonella pipeline using docker """
     
-    run([
-        "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
-        "--runID", plate_name
-    ])
+    run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
+        "--runID", plate_name])
 
 def download_s3(s3_uri, destination):
     """ Recursively download a S3 Object """
@@ -97,9 +95,14 @@ def upload_s3(summaryTable_path, s3_destination):
     except:
         print("Does the destination path exist?")
 
+def download_kmerid():
+    run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive", "s3://s3-ranch-046/KmerID_Ref_Genomes", "/root/KmerID_Ref_Genomes/"])
+     
+
 def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
 
     """ Download, process and store a plate of raw Salmonella data """
+    download_kmerid()
 
     # Add trailing slash to directory names
     reads_dir = os.path.join(reads_dir, '')
