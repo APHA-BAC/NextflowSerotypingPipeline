@@ -6,8 +6,8 @@ import boto3
 from archiver import *
 
 # TODO: Rename directories to BGE defaults
-DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
-DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
+DEFAULT_READS_DIRECTORY = os.path.expanduser('/root/WGS_Data')
+DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('/root/WGS_Data')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
 DEFAULT_KMERID_REF = os.path.expanduser('/root//KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('/root/KmerID_Ref_Genomes/config/')
@@ -144,8 +144,8 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
     # If running plate from s3_uri, backup
     try:
         if local == 0:
-            new_s3_uri = s3_uri[16:-1]
-            check_mount()
+            new_s3_uri = s3_uri[16:-1
+]            check_mount()
             outDir, readFiles, readSizes = check_WGS(new_s3_uri)
             homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
             archive_WGS(outDir, readFiles, homeWGSDir)
@@ -156,14 +156,15 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
     if transfer == 1:
         # Sets up the string that is the path to the summary table
         TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
-        summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
+        summaryTable_path = os.path.join("~/root/WGS_Results/",plate_name,TableFile)
         summaryTable_path = os.path.expanduser(summaryTable_path)
-        upload_s3(summaryTable_path,s3_destination)
+        upload_s3(summaryTable_path,transfer)
 
 
 
 if __name__ == '__main__':
     # Parse
+    
     parser = argparse.ArgumentParser(description="run pipeline on a routine Salmonella Plate")
     parser.add_argument("-s","--s3_uri", help="s3 uri that corresponds to the fastq plate to run")
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
@@ -172,7 +173,7 @@ if __name__ == '__main__':
     parser.add_argument("-l","--local", default=0, help="Set to 1 if your reads are in a local directory. Default is 0")
     parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
     parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
-    parser.add_argument("-t", "--transfer", default=0, help="Seto to 1 to transfer to S3 bucket")
+    parser.add_argument("-t", "--transfer", default=False, help="Set to to 1 to transfer to S3 bucket")
 
 
     args = parser.parse_args()
