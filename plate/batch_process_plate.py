@@ -153,7 +153,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
     except:
         print("Archive failed")
 
-    if transfer == 1:
+    if transfer:
         # Sets up the string that is the path to the summary table
         TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
         summaryTable_path = os.path.join("~/root/WGS_Results/",plate_name,TableFile)
