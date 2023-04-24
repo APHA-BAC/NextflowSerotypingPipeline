@@ -7,7 +7,7 @@ from archiver import *
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('/root/WGS_Data')
-DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('/root/WGS_Data')
+DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('/root/WGS_Results')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
 DEFAULT_KMERID_REF = os.path.expanduser('/root//KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('/root/KmerID_Ref_Genomes/config/')
