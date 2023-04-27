@@ -131,28 +131,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
 
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
-    # Process
-    run_pipeline(plate_name)
-    if upload == 1:
-        for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
-            try:
-                shutil.copy(file, '~/mnt/my_share/CR2009')
-                print("Summary table copied")
-            except:
-                print("Copy of summary table failed. Is the drive mounted?")
-
-    # If running plate from s3_uri, backup
-    # try:
-    #     if local == 0:
-    #         new_s3_uri = s3_uri[16:-1]            
-    #         check_mount()
-    #         outDir, readFiles, readSizes = check_WGS(new_s3_uri)
-    #         homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
-    #         archive_WGS(outDir, readFiles, homeWGSDir)
-    #         shutil.rmtree(homeWGSDir)
-    # except:
-    #     print("Archive failed")
-
+    
     if transfer:
         # Sets up the string that is the path to the summary table
         TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
