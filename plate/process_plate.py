@@ -8,7 +8,7 @@ from archiver import *
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
-DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
+DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:process_cleanup"
 DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
 s3_destination = "s3://s3-staging-area/arslanhussaini/"
@@ -97,10 +97,9 @@ def rename_fastq_file(filepath):
 
 def upload_s3(summaryTable_path, s3_destination):
     """ Upload summary table to S3 bucket """
-    print("****** " + summaryTable_path + " ******")
-    print("****** " + s3_destination + " ******")
     try:
         run(["aws", "s3", "cp",summaryTable_path,s3_destination])
+        print("Summary table uploaded to: {}".format(s3_destination))
     except:
         print("Does the destination path exist?")
 
@@ -135,9 +134,11 @@ def run_plate(s3_uri, reads_dir, results_dir, runID, upload, transfer):
 
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
-    # Process
     
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+
+
+    # Upload summary table to SMB staging area if upload flag set
     if upload == 1:
         for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
             try:
@@ -148,7 +149,7 @@ def run_plate(s3_uri, reads_dir, results_dir, runID, upload, transfer):
 
     # If running plate from s3_uri, backup
     try:
-        if runID:
+        if not runID:
             new_s3_uri = s3_uri[16:-1]
             check_mount()
             outDir, readFiles, readSizes = check_WGS(new_s3_uri)
@@ -158,13 +159,13 @@ def run_plate(s3_uri, reads_dir, results_dir, runID, upload, transfer):
     except:
         print("Archive failed")
 
-    if transfer == 1:
+    # Transfer to S3 if transfer flag set
+    if transfer:
         # Sets up the string that is the path to the summary table
         TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
         summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
         summaryTable_path = os.path.expanduser(summaryTable_path)
         upload_s3(summaryTable_path,s3_destination)
-
 
 
 if __name__ == '__main__':
@@ -174,17 +175,13 @@ if __name__ == '__main__':
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
-    parser.add_argument("-l","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
+    parser.add_argument("-r","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
     #parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
     parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
     parser.add_argument("-t", "--transfer", default=0, help="Seto to 1 to transfer to S3 bucket")
 
-
     args = parser.parse_args()
     
-    
-
     # Run
-
     run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.runID, args.upload, args.transfer)
 
