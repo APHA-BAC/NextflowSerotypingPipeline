@@ -606,6 +606,18 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: multiSerotypes(SeqSero2)"
 
+    # Remove this one or other
+    # Just look at order of if-else statements
+
+    if assemblySize > 5800000:
+        limsReason = "Contaminated: assembly>5.8Mbp"
+        print("Assembly too large:", assemblySize)
+        limsStatus = "Inconclusive"
+    if numContigs > 600:
+        limsReason = "PoorAssembly: contigCount>600"
+        print("Too many contigs:", numContigs)
+        limsStatus = "Inconclusive"
+
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
 
