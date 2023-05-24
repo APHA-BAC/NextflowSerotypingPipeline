@@ -131,6 +131,8 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
 
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
+
+    run_pipeline(plate_name)
     
     if transfer:
         # Sets up the string that is the path to the summary table
