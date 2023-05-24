@@ -30,6 +30,7 @@ def run(cmd):
 
 def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEFAULT_KMERID_REF, kmerid_config=DEFAULT_KMERID_CONFIG):
     """ Run the Salmonella pipeline using docker """
+    
     run(["sudo", "docker", "pull", image])
     run([
         "sudo", "docker", "run", "--rm", "-it",
@@ -103,7 +104,7 @@ def upload_s3(summaryTable_path, s3_destination):
     except:
         print("Does the destination path exist?")
 
-def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
+def run_plate(s3_uri, reads_dir, results_dir, runID, upload, transfer):
 
     """ Download, process and store a plate of raw Salmonella data """
 
@@ -114,7 +115,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
     plate_results_dir = ''
     plate_name = ''
 
-    if local == 0:
+    if not runID:
         # Storage paths
         plate_name = s3_uri_to_plate_name(s3_uri)
         plate_reads_dir = reads_dir + plate_name + '/'
@@ -126,7 +127,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
 
-    elif local == 1:
+    elif runID:
 
         plate_name = runID
         plate_reads_dir = reads_dir + runID + '/'
@@ -135,6 +136,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
     # Process
+    
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
     if upload == 1:
         for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
@@ -146,7 +148,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
 
     # If running plate from s3_uri, backup
     try:
-        if local == 0:
+        if runID:
             new_s3_uri = s3_uri[16:-1]
             check_mount()
             outDir, readFiles, readSizes = check_WGS(new_s3_uri)
@@ -172,18 +174,17 @@ if __name__ == '__main__':
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
-    parser.add_argument("-l","--local", default=0, help="Set to 1 if your reads are in a local directory. Default is 0")
-    parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
+    parser.add_argument("-l","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
+    #parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
     parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
     parser.add_argument("-t", "--transfer", default=0, help="Seto to 1 to transfer to S3 bucket")
 
 
     args = parser.parse_args()
-    args.local = int(args.local)
-    if args.runID == None and args.local == 1:
-         parser.error("--local requires --runID")
+    
+    
 
     # Run
 
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.local, args.runID, args.upload, args.transfer)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.runID, args.upload, args.transfer)
 
