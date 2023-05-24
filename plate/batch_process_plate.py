@@ -32,7 +32,7 @@ def run_pipeline(plate_name):
     """ Run the Salmonella pipeline using docker """
     
     run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
-        "--runID", plate_name])
+        "--local", plate_name])
 
 def download_s3(s3_uri, destination):
     """ Recursively download a S3 Object """
@@ -99,7 +99,7 @@ def download_kmerid():
     run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive", "s3://s3-ranch-046/KmerID_Ref_Genomes", "/root/KmerID_Ref_Genomes/"])
      
 
-def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
+def run_plate(s3_uri, reads_dir, results_dir, local, upload, transfer):
 
     """ Download, process and store a plate of raw Salmonella data """
     download_kmerid()
@@ -123,11 +123,11 @@ def run_plate(s3_uri, reads_dir, results_dir, local, runID, upload, transfer):
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
 
-    elif local == 1:
+    elif local:
 
-        plate_name = runID
-        plate_reads_dir = reads_dir + runID + '/'
-        plate_results_dir = results_dir + runID +'/'
+        plate_name = local
+        plate_reads_dir = reads_dir + local + '/'
+        plate_results_dir = results_dir + local +'/'
 
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
@@ -151,18 +151,17 @@ if __name__ == '__main__':
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
-    parser.add_argument("-l","--local", default=0, help="Set to 1 if your reads are in a local directory. Default is 0")
-    parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
+    parser.add_argument("-l","--local", default=False, help="Use for local run using the name of the directory with your reads")
+    #parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
     parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
     parser.add_argument("-t", "--transfer", default=False, help="Set to to 1 to transfer to S3 bucket")
 
 
     args = parser.parse_args()
     args.local = int(args.local)
-    if args.runID == None and args.local == 1:
-         parser.error("--local requires --runID")
+    
 
     # Run
 
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.local, args.runID, args.upload, args.transfer)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.local, args.upload, args.transfer)
 
