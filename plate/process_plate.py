@@ -34,8 +34,8 @@ def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEF
     run(["sudo", "docker", "pull", image])
     run([
         "sudo", "docker", "run", "--rm", "-it",
-        "-v", f"{reads}:/root/WGS_Data/{plate_name}/",
-        "-v", f"{results}:/root/WGS_Results/{plate_name}/",
+        "-v", f"{reads}:/root/wgs-reads/{plate_name}/",
+        "-v", f"{results}:/root/wgs-results/{plate_name}/",
         "-v", f"{kmerid_ref}:/opt/kmerid/ref/",
         "-v", f"{kmerid_config}:/opt/kmerid/config",
         image,
