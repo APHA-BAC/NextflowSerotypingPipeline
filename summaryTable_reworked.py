@@ -584,7 +584,7 @@ def fill_summary(resultsDir, runID):
 # Command line args
 def main():
     parser = argparse.ArgumentParser(description="Create summary table from Salmonella pipeline run.")
-    parser.add_argument("runID", help="The run ID of the specific pipeline output to be analysed, e.g. 1234 would be the run ID for ~/WGS_Results/1234")
+    parser.add_argument("runID", help="The run ID of the specific pipeline output to be analysed, e.g. 1234 would be the run ID for ~/wgs-results/1234")
     parser.add_argument("--instantiate", default=False, action='store_true')
     args = parser.parse_args()
     return args
@@ -593,7 +593,7 @@ if __name__ == '__main__':
     args = main()
     runID = args.runID
     print(runID)
-    resultsDir = os.path.join(os.path.expanduser("~/WGS_Results"), runID)
+    resultsDir = os.path.join(os.path.expanduser("~/wgs-results"), runID)
     print(resultsDir)
     if args.instantiate:
         print("Instantiating summary table...")
@@ -611,7 +611,7 @@ quit()
 
 # runID = sys.argv[0]
 # print(runID)
-# resultsDir = os.path.join(os.path.expanduser("~/WGS_Results"), runID)
+# resultsDir = os.path.join(os.path.expanduser("~/wgs-results"), runID)
 # print(resultsDir)
 # outTable = [tableHeader]
 # sampleDirs = get_subdirs(resultsDir)

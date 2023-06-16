@@ -11,8 +11,8 @@ subsamp = params.subsampThreshold - 500000
 params.runID = "TestIsolates"
 println params.runID
 
-readPath = "$HOME/WGS_Data/${params.runID}/*_{R1,R2}.fastq.gz"
-publishDirectory = "$HOME/WGS_Results/${params.runID}/"
+readPath = "$HOME/wgs-reads/${params.runID}/*_{R1,R2}.fastq.gz"
+publishDirectory = "$HOME/wgs-results/${params.runID}/"
 
 println readPath
 
@@ -37,7 +37,7 @@ process git_sha {
 reads = Channel.fromFilePairs(readPath)
 
 process count_reads {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/readcount", mode: 'move'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/readcount", mode: 'move'
 
     input:
     tuple sample_id, readPair from reads
@@ -120,7 +120,7 @@ process check_data {
 */
 
 process fastp_qual_trim {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/fastp", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
     val go from goCh1
@@ -142,7 +142,7 @@ process fastp_qual_trim {
 */
 
 process subsampling {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/subsampling", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/subsampling", mode: 'copy'
 
     input:
     val logfile from cleanup_ch1
@@ -156,8 +156,8 @@ process subsampling {
     shell:
     '''
     sleep 15
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz > cleanup.txt || echo "no files found"
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
+    ls $HOME/wgs-results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz > cleanup.txt || echo "no files found"
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/fastp/*.fastq.gz || echo "nothing to delete"
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_subsampling.log
@@ -179,8 +179,8 @@ process subsampling {
     CLEANUPDIR=$(dirname !{logfile})
     ls $CLEANUPDIR/*.fastq.gz >> cleanup.txt || echo "no files found"
     rm $CLEANUPDIR/*.fastq.gz || echo "nothing to delete"
-    cp $(basename $READFILE1) $HOME/WGS_Data/!{params.runID}
-    cp $(basename $READFILE2) $HOME/WGS_Data/!{params.runID}
+    cp $(basename $READFILE1) $HOME/wgs-reads/!{params.runID}
+    cp $(basename $READFILE2) $HOME/wgs-reads/!{params.runID}
     '''
 }
 
@@ -197,8 +197,8 @@ process intermediate_reads_cleanup {
     shell:
     '''
     sleep 15
-    ls $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz > cleanup.txt || echo "no files found"
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
+    ls $HOME/wgs-results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz > cleanup.txt || echo "no files found"
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/subsampling/*.fastq.gz || echo "nothing to delete"
     '''
 }
 
@@ -208,7 +208,7 @@ process intermediate_reads_cleanup {
 */
 
 process fastqc {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports", mode: 'move'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/FASTQC_Reports", mode: 'move'
 
     input:
     tuple sample_id, file(reads_file) from reads1
@@ -232,7 +232,7 @@ process fastqc {
 */
 
 process shovill {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/shovill", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/shovill", mode: 'copy'
 
     input:
     tuple sample_id, file(reads_file) from reads2
@@ -248,8 +248,8 @@ process shovill {
     script:
     """
     #/opt/conda/bin/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
-    /opt/conda/bin/shovill --outdir $HOME/WGS_Results/${params.runID}/${sample_id}/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
-    mv $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/contigs.fa ${sample_id}_contigs.fa
+    /opt/conda/bin/shovill --outdir $HOME/wgs-results/${params.runID}/${sample_id}/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
+    mv $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
     """
 }
@@ -264,7 +264,7 @@ quast_ch
     .set { quast_in }
 
 process quast {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/quast",  mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/quast",  mode: 'copy'
 
     input:
     set sample_id, file("${sample_id}_contigs.fa"), file (reads_file) from quast_in
@@ -276,7 +276,7 @@ process quast {
 
     script:
     """
-    python /usr/local/bin/quast.py -o $HOME/WGS_Results/${params.runID}/${sample_id}/quast "${sample_id}_contigs.fa"
+    python /usr/local/bin/quast.py -o $HOME/wgs-results/${params.runID}/${sample_id}/quast "${sample_id}_contigs.fa"
     touch ${sample_id}_3.txt
     """
 }
@@ -287,7 +287,7 @@ process quast {
 */
 
 process kmerid {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid",  mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/Kmerid",  mode: 'copy'
 
     input:
     tuple sample_id, file(reads_file) from reads4
@@ -310,7 +310,7 @@ process kmerid {
 */
 
 process seqsero2 {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/SeqSero2", mode: 'copy'
 
     input:
     tuple sample_id, file(reads_file) from reads5
@@ -321,7 +321,7 @@ process seqsero2 {
 
     script:
     """
-    /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]}
+    /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/wgs-results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]}
     touch ${sample_id}_5.txt
     """
 }
@@ -336,7 +336,7 @@ sistr_ch
     .set { sistr_in }
 
 process sistr {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/sistr", mode: 'move'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/sistr", mode: 'move'
 
     input:
     set sample_id, file("${sample_id}_contigs.fa"), file (reads_file) from sistr_in
@@ -359,7 +359,7 @@ process sistr {
 */
 
 process most {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/MOST", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/MOST", mode: 'copy'
 
     input:
     tuple sample_id, file(reads_file) from reads7
@@ -371,10 +371,10 @@ process most {
 
     shell:
     '''
-    python /opt/most/MOST-master/MOST.py -1 !{reads_file[0]} -2 !{reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
-    if grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml
+    python /opt/most/MOST-master/MOST.py -1 !{reads_file[0]} -2 !{reads_file[1]} -st /opt/most/MOST-master/MLST_data/salmonella --output_directory $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST -serotype True --bowtie /opt/most/bowtie2-2.1.0/bowtie2 --samtools /opt/most/samtools-0.1.18/samtools
+    if grep "predicted_serotype" $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml
     then
-        grep "predicted_serotype" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
+        grep "predicted_serotype" $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
         if grep -q "ST-serotype" serovar1.txt
         then
             awk '{print substr(\$2,1,5); }' serovar1.txt > serovar2.txt
@@ -384,16 +384,16 @@ process most {
             mv serovar2.txt  !{sample_id}_serovar.tsv
         fi
     else
-        grep "profile" $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
+        grep "profile" $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/!{sample_id}_R1.fastq.results.xml >> serovar1.txt
         awk '{print substr(\$3,1,5); }' serovar1.txt > serovar2.txt
         mv serovar2.txt  !{sample_id}_serovar.tsv
     fi
     touch !{sample_id}_7.txt
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.pileup
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.fa
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.fa.fai
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.bam
-    rm $HOME/WGS_Results/!{params.runID}/!{sample_id}/MOST/tmp/*.bam.bai
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/tmp/*.pileup
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/tmp/*.fa
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/tmp/*.fa.fai
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/tmp/*.bam
+    rm $HOME/wgs-results/!{params.runID}/!{sample_id}/MOST/tmp/*.bam.bai
     '''
 }
 
@@ -408,7 +408,7 @@ most_out_ch
 
 
 process srst2 {
-    publishDir "$HOME/WGS_Results/${params.runID}/${sample_id}/srst2", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/srst2", mode: 'copy'
 
     input:
     set sample_id, file("${sample_id}_serovar.tsv"), file (reads_file) from sero_in
@@ -423,7 +423,7 @@ process srst2 {
     then
     export SRST2_BOWTIE2=/opt/srst2/bowtie2-2.2.3/bowtie2
     export SRST2_BOWTIE2_BUILD=/opt/srst2/bowtie2-2.2.3/bowtie2-build
-    srst2.py  --input_pe ${sample_id}_R1.fastq.gz ${sample_id}_R2.fastq.gz --forward _R1 --reverse _R2 --output $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/ --log --gene_db /opt/srst2/VaccineDifferentiation/allVacDB9h1_clustered.fasta
+    srst2.py  --input_pe ${sample_id}_R1.fastq.gz ${sample_id}_R2.fastq.gz --forward _R1 --reverse _R2 --output $HOME/wgs-results/${params.runID}/${sample_id}/srst2/ --log --gene_db /opt/srst2/VaccineDifferentiation/allVacDB9h1_clustered.fasta
     touch ${sample_id}_8.txt
     else
     touch ${sample_id}_8.txt
@@ -437,7 +437,7 @@ process srst2 {
 */
 
 process summary_and_lims {
-    publishDir "$HOME/WGS_Results/${params.runID}", mode: 'copy'
+    publishDir "$HOME/wgs-results/${params.runID}", mode: 'copy'
 
     input:
     val read from reads_summ1.count()
@@ -469,7 +469,7 @@ process summary_and_lims {
     script:
     """
     python $HOME/summary/summaryTable_reworked.py ${params.runID}
-    python3 $HOME/summary/lims_rules.py $HOME/WGS_Results/${params.runID}/${params.runID}_SummaryTable.csv
+    python3 $HOME/summary/lims_rules.py $HOME/wgs-results/${params.runID}/${params.runID}_SummaryTable.csv
     """
 }
 
@@ -505,13 +505,13 @@ process final_cleanup {
 
     script:
     """
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/FASTQC_Reports/${sample_id}_1.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/shovill/${sample_id}_2.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/quast/${sample_id}_3.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/Kmerid/${sample_id}_4.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/SeqSero2/${sample_id}_5.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/sistr/${sample_id}_6.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/MOST/${sample_id}_7.txt || echo "nothing to delete"
-    rm $HOME/WGS_Results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/FASTQC_Reports/${sample_id}_1.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/shovill/${sample_id}_2.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/quast/${sample_id}_3.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/Kmerid/${sample_id}_4.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/SeqSero2/${sample_id}_5.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/sistr/${sample_id}_6.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/MOST/${sample_id}_7.txt || echo "nothing to delete"
+    rm $HOME/wgs-results/${params.runID}/${sample_id}/srst2/${sample_id}_8.txt || echo "nothing to delete"
     """
 }
