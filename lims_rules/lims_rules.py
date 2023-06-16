@@ -355,27 +355,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     #     limsSerotype = "Arizonae IIIa 44:z4,z23:-"
     #     limsStatus = "CheckRequired"
 
-    # RULE 5 RED LIGHT
-    elif mostLight == "RED":
-        limsReason = "Contaminated: MOSTlightRED"
-        print("Most light:", mostLight)
-        limsStatus = "Inconclusive"
-    # SeqSero comment 2:
-
-    # RULE 6 SEQSERO2 COMMENT
-    elif "Co-existence of multiple serotypes detected" in seqseroComment:
-        if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
-            limsStatus = "Inconclusive"
-            limsReason = "multipleSerotypesDetected(SeqSero2)"
-        else:
-            limsStatus = "Inconclusive"
-            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
-
-    # RULE 7 ASSEMBLY SIZE UPPER
-    elif assemblySize > 5800000:
-        limsReason = "Contaminated: assembly>5.8Mbp"
-        print("Assembly too large:", assemblySize)
-        limsStatus = "Inconclusive"
+    
     # RULE 8 N50
     elif n50 < 20000:
         limsReason = "PoorAssembly: N50<20Kbp"
@@ -392,10 +372,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         print("MLST coverage:", mlstMeanCov)
         limsStatus = "Inconclusive"
     # RULE 11 LOW MLST COVERAGE
-    elif limsSerotypes != ["Typhimurium"] and mlstMeanCov < 30:
-        limsReason = "PoorAssembly: MLSTcov<30x"
-        print("MLST coverage:", mlstMeanCov)
-        limsStatus = "Inconclusive"
+    elif mlstMeanCov != "no_result":
+        if limsSerotypes != ["Typhimurium"] and mlstMeanCov < 30:
+            limsReason = "PoorAssembly: MLSTcov<30x"
+            print("MLST coverage:", mlstMeanCov)
+            limsStatus = "Inconclusive"
     # RULE 12 ASSEMBLY SIZE LOWER
     elif assemblySize < 4000000:
         limsReason = "PoorAssembly: assembly<4Mbp"
@@ -608,15 +589,27 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # Remove this one or other
     # Just look at order of if-else statements
-
-    if assemblySize > 5800000:
-        limsReason = "Contaminated: assembly>5.8Mbp"
-        print("Assembly too large:", assemblySize)
+    if assemblySize != "no_result":
+        if assemblySize > 5800000:
+            limsReason = "Contaminated: assembly>5.8Mbp"
+            print("Assembly too large:", assemblySize)
+            limsStatus = "Inconclusive"
+    elif mostLight == "RED":
+        limsReason = "Contaminated: MOSTlightRED"
+        print("Most light:", mostLight)
         limsStatus = "Inconclusive"
-    if numContigs > 600:
-        limsReason = "PoorAssembly: contigCount>600"
-        print("Too many contigs:", numContigs)
-        limsStatus = "Inconclusive"
+    elif numContigs != "no_result":
+        if numContigs > 600:
+            limsReason = "PoorAssembly: contigCount>600"
+            print("Too many contigs:", numContigs)
+            limsStatus = "Inconclusive"
+    elif "Co-existence of multiple serotypes detected" in seqseroComment:
+        if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
+            limsStatus = "Inconclusive"
+            limsReason = "multipleSerotypesDetected(SeqSero2)"
+        else:
+            limsStatus = "Inconclusive"
+            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
