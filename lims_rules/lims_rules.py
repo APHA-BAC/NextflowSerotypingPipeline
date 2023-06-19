@@ -103,7 +103,7 @@ def parse_seros(serotypes):
         if serotype == "Bovis-morbificans":
             serotype = "Bovismorbificans"
             lookupSero = "Bovismorbificans"
-        if serotype == "Gold-coast":
+        if serotype == "Gold-coast" or serotype == "Gold-Coast":
             serotype = "Goldcoast"
             lookupSero = "Goldcoast"
         lookupSero = lookupSero.strip()
@@ -586,6 +586,14 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         else:
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: multiSerotypes(SeqSero2)"
+
+
+    # Gold coast stop gap rule
+    if "2-Goldcoast" in consensus and "Gold-Coast" in consensus:
+
+        consensus = "3-Goldcoast"
+        limsStatus = "Pass"
+        limsReason= ""
 
     # Remove this one or other
     # Just look at order of if-else statements
