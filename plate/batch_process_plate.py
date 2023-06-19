@@ -6,8 +6,8 @@ import boto3
 from archiver import *
 
 # TODO: Rename directories to BGE defaults
-DEFAULT_READS_DIRECTORY = os.path.expanduser('/root/WGS_Data')
-DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('/root/WGS_Results')
+DEFAULT_READS_DIRECTORY = os.path.expanduser('/root/wgs-reads')
+DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('/root/wgs-results')
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
 DEFAULT_KMERID_REF = os.path.expanduser('/root//KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('/root/KmerID_Ref_Genomes/config/')
@@ -137,7 +137,7 @@ def run_plate(s3_uri, reads_dir, results_dir, local, upload, transfer):
     if transfer:
         # Sets up the string that is the path to the summary table
         TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
-        summaryTable_path = os.path.join("~/root/WGS_Results/",plate_name,TableFile)
+        summaryTable_path = os.path.join("~/root/wgs-results/",plate_name,TableFile)
         summaryTable_path = os.path.expanduser(summaryTable_path)
         upload_s3(summaryTable_path,transfer)
 

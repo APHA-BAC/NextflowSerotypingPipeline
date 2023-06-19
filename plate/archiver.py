@@ -116,7 +116,7 @@ def check_retrieval(homeWGSDir, readFile, readSize):
         return False
 
 def retrieve_from_bucket(s3uri, outDir, readFiles, readSizes):
-    homeWGSDir = os.path.expanduser("~/WGS_Data/{}".format(outDir))
+    homeWGSDir = os.path.expanduser("~/wgs-reads/{}".format(outDir))
     if not os.path.isdir(homeWGSDir):
         os.makedirs(homeWGSDir)
     retrieveCommand = "aws s3 cp s3://s3-csu-001/{} {} --recursive --include \"*.fastq.gz\"".format(s3uri, homeWGSDir)

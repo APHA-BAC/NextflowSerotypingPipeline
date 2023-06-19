@@ -38,7 +38,7 @@ This script installs the following pipeline component software:
 
 # Running the pipeline
 
-To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be stored in `~/WGS_Data/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/WGS_Data/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`.
+To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be stored in `~/wgs-reads/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/wgs-reads/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`.
 
 Then, to run the pipeline from the terminal call:
 ```
@@ -46,7 +46,7 @@ $ nextflow run SCE3_pipeline_update.nf --runID <runID>
 
 ```
 
-Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
+Pipeline output is stored in  `~/wgs-results/<runID>/` and contains:
 - TODO
 
 ## Run from docker
