@@ -568,7 +568,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     if limsVaccine == "2-Pullorum":
         limsVaccine = ""
     elif "srst2 result file not found" in vaccine:
-        limsVaccine = "NOT VACCINE STRAIN"
+        limsVaccine = "Not typed by srst2"
 
     limsSerotype = limsSerotype.replace("(2/3consensus)", "")
 
