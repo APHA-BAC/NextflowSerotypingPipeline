@@ -2,7 +2,7 @@ import subprocess
 import os
 import glob
 import argparse
-
+import logging
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/root/wgs-reads')
 
@@ -92,13 +92,11 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 
-def upload_s3(summaryTable_path, s3_destination):
+def upload_s3(file_path, s3_destination):
     """
-        Upload summary table to S3 bucket
+        Uploads a file to S3
     """
-    print("****** " + summaryTable_path + " ******")
-    print("****** " + s3_destination + " ******")
-    run(["aws", "s3", "cp", summaryTable_path, s3_destination])
+    run(["aws", "s3", "cp", file_path, s3_destination])
 
 
 def download_kmerid():
@@ -130,7 +128,7 @@ def run_plate(reads_uri, reads_dir, results_uri):
     summaryTable_path = os.path.join("~/root/wgs-results/", plate_name,
                                      TableFile_name)
     summaryTable_path = os.path.expanduser(summaryTable_path)
-    upload_s3(summaryTable_path, results_uri)
+    upload_s3(summaryTable_path, os.path.join(results_uri, "."))
 
 
 if __name__ == '__main__':
@@ -146,5 +144,14 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    log_file_path = os.path.expanduser("~/root/batch_process_plate.log")
+    logging.basicConfig(level=logging.INFO,
+                        handlers=[logging.FileHandler(log_file_path)])
+
     # Run
-    run_plate(args.reads_uri, args.reads_dir, args.results_uri)
+    try:
+        run_plate(args.reads_uri, args.reads_dir, args.results_uri)
+        upload_s3(log_file_path, os.path.join(args.results_uri, "."))
+    except Exception as e:
+        logging.exception(e)
+        upload_s3(log_file_path, f"{args.results_uri.rstrip('/')}_failed/.")
