@@ -5,24 +5,29 @@ import argparse
 import logging
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/root/wgs-reads')
+DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
 
 
-def run(cmd):
-    """ Run a command and assert that the process exits with a non-zero
-        exit code.
+def run(cmd, *args, **kwargs):
+    """
+        Run a command and assert that the process exits with a non-zero
+        exit code. See python's subprocess.run command for args/kwargs.
+        If capture_output=True, then the stdout of the subcommand is
+        logged
 
         Parameters:
             cmd (list): List of strings defining the command, see
             (subprocess.run in python docs)
     """
-    # TODO: store stdout to a file
-    returncode = subprocess.run(cmd).returncode
-
+    ps = subprocess.run(cmd, *args, **kwargs)
+    returncode = ps.returncode
+    if "capture_output" in kwargs and kwargs["capture_output"]:
+        logging.info(ps.stdout.decode().strip('\n'))
     if returncode:
         raise Exception("""*****
             %s
             cmd failed with exit code %i
-        *****""" % (cmd, returncode))
+          *****""" % (cmd, returncode))
 
 
 def run_pipeline(plate_name):
@@ -99,36 +104,42 @@ def upload_s3(file_path, s3_destination):
     run(["aws", "s3", "cp", file_path, s3_destination])
 
 
-def download_kmerid():
+def download_kmerid(kmer_uri):
     """
         Downloads reference genomes from s3
     """
     run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive",
-         "s3://s3-ranch-046/KmerID_Ref_Genomes", "/root/KmerID_Ref_Genomes/"])
+         kmer_uri, "/root/KmerID_Ref_Genomes/"])
 
 
-def run_plate(reads_uri, reads_dir, results_uri):
+def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     """
         Download, process and store a plate of raw Salmonella data
     """
-    download_kmerid()
+    logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
+    download_kmerid(kmer_uri)
 
     # Download reads
+    logging.info(f"Downloading reads: {reads_uri}")
     download_s3(reads_uri, reads_dir)
 
     # Rename fastq files
+    logging.info(f"Renaming fastq files: {reads_dir}")
     for filepath in glob.glob(reads_dir + '/*.fastq.gz'):
         rename_fastq_file(filepath)
 
+    logging.info("Running Nextflow pipeline")
     run_pipeline(reads_dir)
 
+    # Upload results to s3
     plate_name = s3_uri_to_plate_name(reads_uri)
     TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
     summaryTable_path = os.path.join("~/root/wgs-results/", plate_name,
                                      TableFile_name)
     summaryTable_path = os.path.expanduser(summaryTable_path)
-    upload_s3(summaryTable_path, os.path.join(results_uri, "."))
+    logging.info(f"Uploading results: {results_uri}")
+    upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name))
 
 
 if __name__ == '__main__':
@@ -141,17 +152,27 @@ if __name__ == '__main__':
                         help="s3 uri where results are to be uploaded")
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,
                         help="local directory for storing reads")
+    parser.add_argument("--kmer_uri", default=DEFAULT_KMER_URI,
+                        help="s3 uri of KmerID reference genomes")
 
     args = parser.parse_args()
 
+    # setup logging
     log_file_path = os.path.expanduser("~/root/batch_process_plate.log")
-    logging.basicConfig(level=logging.INFO,
+    logging.basicConfig(level=logging.INFO, format="%(message)s",
                         handlers=[logging.FileHandler(log_file_path)])
 
     # Run
     try:
-        run_plate(args.reads_uri, args.reads_dir, args.results_uri)
-        upload_s3(log_file_path, os.path.join(args.results_uri, "."))
+        run_plate(args.reads_uri, args.reads_dir, args.results_uri,
+                  args.kmer_uri)
     except Exception as e:
+        # if the run fails, append "_failed" to the results_uri
+        results_uri = \
+            f"{args.results_uri.rstrip('/')}_failed"
         logging.exception(e)
-        upload_s3(log_file_path, f"{args.results_uri.rstrip('/')}_failed/.")
+
+    # upload log file
+    log_uri = os.path.join(results_uri, "batch_process_plate.log")
+    logging.info(f"Uploading log file: {log_uri}")
+    upload_s3(log_file_path, log_uri)
