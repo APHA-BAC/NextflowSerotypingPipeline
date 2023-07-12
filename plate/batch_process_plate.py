@@ -30,15 +30,24 @@ def run(cmd, *args, **kwargs):
           *****""" % (cmd, returncode))
 
 
-def run_pipeline(plate_name):
+def run_pipeline(plate_name, **kwargs):
     """ Run the Salmonella pipeline using docker """
     run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--local",
-         plate_name])
+         plate_name], **kwargs)
 
 
-def download_s3(s3_uri, destination):
-    """ Recursively download a S3 Object """
-    run(["aws", "s3", "cp", "--recursive", s3_uri, destination])
+def download_s3(s3_uri, destination, **kwargs):
+    """
+        Recursively download a S3 Object
+    """
+    run(["aws", "s3", "cp", "--recursive", s3_uri, destination], **kwargs)
+
+
+def upload_s3(file_path, s3_destination, **kwargs):
+    """
+        Uploads a file to S3
+    """
+    run(["aws", "s3", "cp", file_path, s3_destination], **kwargs)
 
 
 def s3_object_release_date(s3_key):
@@ -97,19 +106,12 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 
-def upload_s3(file_path, s3_destination):
-    """
-        Uploads a file to S3
-    """
-    run(["aws", "s3", "cp", file_path, s3_destination])
-
-
-def download_kmerid(kmer_uri):
+def download_kmerid(kmer_uri, **kwargs):
     """
         Downloads reference genomes from s3
     """
     run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive",
-         kmer_uri, "/root/KmerID_Ref_Genomes/"])
+         kmer_uri, "/root/KmerID_Ref_Genomes/"], **kwargs)
 
 
 def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
@@ -118,11 +120,11 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         Download, process and store a plate of raw Salmonella data
     """
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
-    download_kmerid(kmer_uri)
+    download_kmerid(kmer_uri, capture_output=True)
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}")
-    download_s3(reads_uri, reads_dir)
+    download_s3(reads_uri, reads_dir, capture_output=True)
 
     # Rename fastq files
     logging.info(f"Renaming fastq files: {reads_dir}")
@@ -130,7 +132,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         rename_fastq_file(filepath)
 
     logging.info("Running Nextflow pipeline")
-    run_pipeline(reads_dir)
+    run_pipeline(reads_dir, capture_output=True)
 
     # Upload results to s3
     plate_name = s3_uri_to_plate_name(reads_uri)
@@ -139,7 +141,8 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
                                      TableFile_name)
     summaryTable_path = os.path.expanduser(summaryTable_path)
     logging.info(f"Uploading results: {results_uri}")
-    upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name))
+    upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
+              capture_output=True)
 
 
 if __name__ == '__main__':
