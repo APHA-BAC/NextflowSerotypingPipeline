@@ -2,57 +2,74 @@ import subprocess
 import os
 import glob
 import argparse
-import boto3
-from archiver import *
+import logging
 
-# TODO: Rename directories to BGE defaults
-DEFAULT_READS_DIRECTORY = os.path.expanduser('/root/wgs-reads')
-DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('/root/wgs-results')
-DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
-DEFAULT_KMERID_REF = os.path.expanduser('/root//KmerID_Ref_Genomes/ref/')
-DEFAULT_KMERID_CONFIG = os.path.expanduser('/root/KmerID_Ref_Genomes/config/')
-s3_destination = "s3://s3-staging-area/arslanhussaini/"
+DEFAULT_READS_DIRECTORY = os.path.expanduser('~/root/wgs-reads')
+DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
 
-def run(cmd):
-    """ Run a command and assert that the process exits with a non-zero exit code.
+
+def run(cmd, *args, **kwargs):
+    """
+        Run a command and assert that the process exits with a non-zero
+        exit code. See python's subprocess.run command for args/kwargs.
+        If capture_output=True, then the stdout of the subcommand is
+        logged
 
         Parameters:
-            cmd (list): List of strings defining the command, see (subprocess.run in python docs)
+            cmd (list): List of strings defining the command, see
+            (subprocess.run in python docs)
     """
-    # TODO: store stdout to a file
-    returncode = subprocess.run(cmd).returncode
-
+    ps = subprocess.run(cmd, *args, **kwargs)
+    returncode = ps.returncode
+    if "capture_output" in kwargs and kwargs["capture_output"]:
+        logging.info(ps.stdout.decode().strip('\n'))
     if returncode:
         raise Exception("""*****
             %s
             cmd failed with exit code %i
-        *****""" % (cmd, returncode))
+          *****""" % (cmd, returncode))
 
-def run_pipeline(plate_name):
+
+def run_pipeline(plate_name, **kwargs):
     """ Run the Salmonella pipeline using docker """
-    
-    run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
-        "--local", plate_name])
+    run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--local",
+         plate_name], **kwargs)
 
-def download_s3(s3_uri, destination):
-    """ Recursively download a S3 Object """
-    run(["aws", "s3", "cp", "--recursive",
-        s3_uri,
-        destination
-    ])
+
+def download_s3(s3_uri, destination, **kwargs):
+    """
+        Recursively download a S3 Object
+    """
+    run(["aws", "s3", "cp", "--recursive", s3_uri, destination], **kwargs)
+
+
+def upload_s3(file_path, s3_destination, **kwargs):
+    """
+        Uploads a file to S3
+    """
+    run(["aws", "s3", "cp", file_path, s3_destination], **kwargs)
+
 
 def s3_object_release_date(s3_key):
-    """ Date s3 object was published. Returns a 3 element list with format [year, month, day] """
+    """
+        Date s3 object was published. Returns a 3 element list with
+        format [year, month, day]
+    """
 
     # Retrieve metadata from S3
     ls_cmd = f"aws s3 ls {s3_key}/"
-    contents = [x.decode("utf-8") for x in subprocess.check_output(ls_cmd, shell=True).splitlines()]
+    contents = [x.decode("utf-8") for x in
+                subprocess.check_output(ls_cmd, shell=True).splitlines()]
 
     # Extract date
     return contents[0].split()[0].split("-")
 
+
 def s3_uri_to_plate_name(s3_key):
-    """ Convert a S3 URI from CSU to a plate name with consistent naming convention """
+    """
+        Convert a S3 URI from CSU to a plate name with consistent naming
+        convention
+    """
 
     # Remove trailing slash
     s3_key = s3_key.strip('/')
@@ -63,12 +80,15 @@ def s3_uri_to_plate_name(s3_key):
 
     return f"{day}{month}{year[-2:]}_APHA_{run_name}"
 
+
 def rename_fastq_file(filepath):
-    """ Rename a fastq file from CSU's convention to BGE """
+    """
+        Rename a fastq file from CSU's convention to BGE
+    """
 
     # Parse
     directory = os.path.dirname(filepath)
-    filename = os.path.basename(filepath) + '/'
+    filename = os.path.join(os.path.basename(filepath), "")
     sample_name = filename.split("_")[0]
 
     # Determine Read Number
@@ -86,82 +106,76 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 
-def upload_s3(summaryTable_path, s3_destination):
-    """ Upload summary table to S3 bucket """
-    print("****** " + summaryTable_path + " ******")
-    print("****** " + s3_destination + " ******")
-    try:
-        run(["aws", "s3", "cp",summaryTable_path,s3_destination])
-    except:
-        print("Does the destination path exist?")
+def download_kmerid(kmer_uri, **kwargs):
+    """
+        Downloads reference genomes from s3
+    """
+    run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive",
+         kmer_uri, "/root/KmerID_Ref_Genomes/"], **kwargs)
 
-def download_kmerid():
-    run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive", "s3://s3-ranch-046/KmerID_Ref_Genomes", "/root/KmerID_Ref_Genomes/"])
-     
 
-def run_plate(s3_uri, reads_dir, results_dir, local, upload, transfer):
+def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
-    """ Download, process and store a plate of raw Salmonella data """
-    download_kmerid()
+    """
+        Download, process and store a plate of raw Salmonella data
+    """
+    logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
+    download_kmerid(kmer_uri, capture_output=True)
 
-    # Add trailing slash to directory names
-    reads_dir = os.path.join(reads_dir, '')
-    results_dir = os.path.join(results_dir, '')
-    plate_reads_dir = ''
-    plate_results_dir = ''
-    plate_name = ''
+    # Download reads
+    logging.info(f"Downloading reads: {reads_uri}")
+    download_s3(reads_uri, reads_dir, capture_output=True)
 
-    if local == 0:
-        # Storage paths
-        plate_name = s3_uri_to_plate_name(s3_uri)
-        plate_reads_dir = reads_dir + plate_name + '/'
-        plate_results_dir = results_dir + plate_name + '/'
+    # Rename fastq files
+    logging.info(f"Renaming fastq files: {reads_dir}")
+    for filepath in glob.glob(reads_dir + '/*.fastq.gz'):
+        rename_fastq_file(filepath)
 
-        # Download
-        download_s3(s3_uri, plate_reads_dir)
+    logging.info("Running Nextflow pipeline")
+    run_pipeline(reads_dir, capture_output=True)
 
-        for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
-            rename_fastq_file(filepath)
-
-    elif local:
-
-        plate_name = local
-        plate_reads_dir = reads_dir + local + '/'
-        plate_results_dir = results_dir + local +'/'
-
-        for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
-            rename_fastq_file(filepath)
-
-    run_pipeline(plate_name)
-    
-    if transfer:
-        # Sets up the string that is the path to the summary table
-        TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
-        summaryTable_path = os.path.join("~/root/wgs-results/",plate_name,TableFile)
-        summaryTable_path = os.path.expanduser(summaryTable_path)
-        upload_s3(summaryTable_path,transfer)
-
+    # Upload results to s3
+    plate_name = s3_uri_to_plate_name(reads_uri)
+    TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
+    summaryTable_path = os.path.join("~/root/wgs-results/", plate_name,
+                                     TableFile_name)
+    summaryTable_path = os.path.expanduser(summaryTable_path)
+    logging.info(f"Uploading results: {results_uri}")
+    upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
+              capture_output=True)
 
 
 if __name__ == '__main__':
     # Parse
-    
-    parser = argparse.ArgumentParser(description="run pipeline on a routine Salmonella Plate")
-    parser.add_argument("-s","--s3_uri", help="s3 uri that corresponds to the fastq plate to run")
-    parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,  help="base directory that s3 objects are stored to")
-    parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
-    parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
-    parser.add_argument("-l","--local", default=False, help="Use for local run using the name of the directory with your reads")
-    #parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
-    parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
-    parser.add_argument("-t", "--transfer", default=False, help="Set to to 1 to transfer to S3 bucket")
-
+    parser = argparse.ArgumentParser(
+        description="run pipeline on a routine Salmonella Plate")
+    parser.add_argument("-i", "--reads_uri",
+                        help="s3 uri corresponding to the fastq plate to run")
+    parser.add_argument("-o", "--results_uri",
+                        help="s3 uri where results are to be uploaded")
+    parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,
+                        help="local directory for storing reads")
+    parser.add_argument("--kmer_uri", default=DEFAULT_KMER_URI,
+                        help="s3 uri of KmerID reference genomes")
 
     args = parser.parse_args()
-    args.local = int(args.local)
-    
+
+    # setup logging
+    log_file_path = os.path.expanduser("~/root/batch_process_plate.log")
+    logging.basicConfig(level=logging.INFO, format="%(message)s",
+                        handlers=[logging.FileHandler(log_file_path)])
 
     # Run
+    try:
+        run_plate(args.reads_uri, args.reads_dir, args.results_uri,
+                  args.kmer_uri)
+    except Exception as e:
+        # if the run fails, append "_failed" to the results_uri
+        results_uri = \
+            f"{args.results_uri.rstrip('/')}_failed"
+        logging.exception(e)
 
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.local, args.upload, args.transfer)
-
+    # upload log file
+    log_uri = os.path.join(results_uri, "batch_process_plate.log")
+    logging.info(f"Uploading log file: {log_uri}")
+    upload_s3(log_file_path, log_uri)
