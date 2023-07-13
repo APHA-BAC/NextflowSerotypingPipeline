@@ -4,7 +4,7 @@ import glob
 import argparse
 import logging
 
-DEFAULT_READS_DIRECTORY = os.path.expanduser('~/root/wgs-reads')
+DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
 
 
@@ -137,7 +137,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     # Upload results to s3
     plate_name = s3_uri_to_plate_name(reads_uri)
     TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
-    summaryTable_path = os.path.join("~/root/wgs-results/", plate_name,
+    summaryTable_path = os.path.join("~/wgs-results/", plate_name,
                                      TableFile_name)
     summaryTable_path = os.path.expanduser(summaryTable_path)
     logging.info(f"Uploading results: {results_uri}")
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # setup logging
-    log_file_path = os.path.expanduser("~/root/batch_process_plate.log")
+    log_file_path = os.path.expanduser("~/batch_process_plate.log")
     logging.basicConfig(level=logging.INFO, format="%(message)s",
                         handlers=[logging.FileHandler(log_file_path)])
 
