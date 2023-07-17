@@ -56,7 +56,6 @@ def s3_object_release_date(s3_key):
         Date s3 object was published. Returns a 3 element list with
         format [year, month, day]
     """
-
     # Retrieve metadata from S3
     ls_cmd = f"aws s3 ls {s3_key}/"
     contents = [x.decode("utf-8") for x in
@@ -71,7 +70,6 @@ def s3_uri_to_plate_name(s3_key):
         Convert a S3 URI from CSU to a plate name with consistent naming
         convention
     """
-
     # Remove trailing slash
     s3_key = s3_key.strip('/')
 
@@ -86,22 +84,17 @@ def rename_fastq_file(filepath):
     """
         Rename a fastq file from CSU's convention to BGE
     """
-
     # Parse
     directory = os.path.dirname(filepath)
     filename = os.path.join(os.path.basename(filepath), "")
     sample_name = filename.split("_")[0]
-
     # Determine Read Number
     if "_R1" in filename:
         read_number = 1
-
     elif "_R2" in filename:
         read_number = 2
-
     else:
         raise Exception("Unable to determine read pair number: ", filename)
-
     # Rename
     renamed = f"{directory}/{sample_name}_R{read_number}.fastq.gz"
     os.rename(filepath, renamed)
@@ -111,8 +104,7 @@ def download_kmerid(kmer_uri, **kwargs):
     """
         Downloads reference genomes from s3
     """
-    run(["aws", "s3", "cp", "--acl", "bucket-owner-full-control", "--recursive",
-         kmer_uri, "/root/KmerID_Ref_Genomes/"], **kwargs)
+    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", **kwargs)
 
 
 def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
