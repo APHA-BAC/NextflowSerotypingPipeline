@@ -47,7 +47,8 @@ def upload_s3(file_path, s3_destination, **kwargs):
     """
         Uploads a file to S3
     """
-    run(["aws", "s3", "cp", file_path, s3_destination], **kwargs)
+    run(["aws", "s3", "cp", file_path, s3_destination, "--acl",
+         "bucket-owner-full-control"], **kwargs)
 
 
 def s3_object_release_date(s3_key):
@@ -163,7 +164,8 @@ if __name__ == '__main__':
     # setup logging
     log_file_path = os.path.expanduser("~/batch_process_plate.log")
     logging.basicConfig(level=logging.INFO, format="%(message)s",
-                        handlers=[logging.FileHandler(log_file_path)])
+                        handlers=[logging.StreamHandler(),
+                                  logging.FileHandler(log_file_path)])
 
     # Run
     try:
