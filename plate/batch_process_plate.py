@@ -113,7 +113,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         Download, process and store a plate of raw Salmonella data
     """
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
-    download_kmerid(kmer_uri, capture_output=True)
+    download_kmerid(kmer_uri)
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}")
