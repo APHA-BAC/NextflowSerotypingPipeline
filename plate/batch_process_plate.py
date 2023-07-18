@@ -165,8 +165,11 @@ if __name__ == '__main__':
         results_uri = \
             f"{args.results_uri.rstrip('/')}_failed"
         logging.exception(e)
-
-    # upload log file
-    log_uri = os.path.join(results_uri, "batch_process_plate.log")
-    logging.info(f"Uploading log file: {log_uri}")
-    upload_s3(log_file_path, log_uri)
+        # re-raise the caught exception
+        raise e
+    # the finally block runs before re-raising 'e'.
+    finally:
+        # upload log file
+        log_uri = os.path.join(results_uri, "batch_process_plate.log")
+        logging.info(f"Uploading log file: {log_uri}")
+        upload_s3(log_file_path, log_uri)
