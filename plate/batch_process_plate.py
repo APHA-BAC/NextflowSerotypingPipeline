@@ -125,7 +125,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}")
-    downloadDirectoryFroms3("s3-csu-001", "FZ2000/M01765_0638/", reads_dir)
+    #downloadDirectoryFroms3("s3-csu-001", "FZ2000/M01765_0638/", reads_dir)
     download_s3(reads_uri, reads_dir, capture_output=True)
 
     # Rename fastq files
