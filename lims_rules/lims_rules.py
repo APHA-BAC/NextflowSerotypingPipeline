@@ -597,11 +597,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # Remove this one or other
     # Just look at order of if-else statements
-    if assemblySize != "no_result":
-        if assemblySize > 5800000:
-            limsReason = "Contaminated: assembly>5.8Mbp"
-            print("Assembly too large:", assemblySize)
-            limsStatus = "Inconclusive"
+    if assemblySize != "no_result" and assemblySize > 5800000:
+        
+        limsReason = "Contaminated: assembly>5.8Mbp"
+        print("Assembly too large:", assemblySize)
+        limsStatus = "Inconclusive"
     elif mostLight == "RED":
         limsReason = "Contaminated: MOSTlightRED"
         print("Most light:", mostLight)
