@@ -3,6 +3,7 @@ import os
 import glob
 import argparse
 import logging
+from textwrap import dedent
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
@@ -24,10 +25,12 @@ def run(cmd, *args, **kwargs):
     if "capture_output" in kwargs and kwargs["capture_output"]:
         logging.info(ps.stdout.decode().strip('\n'))
     if returncode:
-        raise Exception("""*****
-            %s
-            cmd failed with exit code %i
-          *****""" % (cmd, returncode))
+        raise Exception(dedent(f"""
+                                   *****
+                                   cmd '{(" ").join(cmd)}' failed with exit \
+                                   code {returncode}
+                                   *****
+                                """))
 
 
 def run_pipeline(plate_name, **kwargs):
@@ -100,20 +103,14 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 
-def download_kmerid(kmer_uri, **kwargs):
-    """
-        Downloads reference genomes from s3
-    """
-    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", **kwargs)
-
-
 def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     """
         Download, process and store a plate of raw Salmonella data
     """
+    # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
-    download_kmerid(kmer_uri)
+    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}")
