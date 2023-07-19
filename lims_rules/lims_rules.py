@@ -592,6 +592,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # Remove this one or other
     # Just look at order of if-else statements
+
     #  FINAL CHECK INCONCLUSIVE
     if numReads < 500000 or numReads == "no_result":
         limsReason = "InsufficientData: readCount<500K"
@@ -618,7 +619,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsReason = "Contaminated: assembly>5.8Mbp"
             print("Assembly too large:", assemblySize)
             limsStatus = "Inconclusive"
-    elif mostLight == "RED":
+
+    if assemblySize != "no_result" and assemblySize > 5800000:
+        
+        limsReason = "Contaminated: assembly>5.8Mbp"
+        print("Assembly too large:", assemblySize)
+        limsStatus = "Inconclusive"
+        elif mostLight == "RED":
         limsReason = "Contaminated: MOSTlightRED"
         print("Most light:", mostLight)
         limsStatus = "Inconclusive"
@@ -643,6 +650,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
+
 
 
 def parse_table(summaryTable):
