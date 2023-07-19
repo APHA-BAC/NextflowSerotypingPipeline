@@ -355,9 +355,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     #     limsSerotype = "Arizonae IIIa 44:z4,z23:-"
     #     limsStatus = "CheckRequired"
 
-    
+
     # RULE 8 N50
-    
+
         limsStatus = "Inconclusive"
     # RULE 9 CONTIG COUNT
     elif numContigs > 600:
@@ -376,7 +376,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             print("MLST coverage:", mlstMeanCov)
             limsStatus = "Inconclusive"
     # RULE 12 ASSEMBLY SIZE LOWER
-    
+
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
         LIMS_SerotypeID = "Paratyphi B Variant Java"
@@ -621,11 +621,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Inconclusive"
 
     if assemblySize != "no_result" and assemblySize > 5800000:
-        
+
         limsReason = "Contaminated: assembly>5.8Mbp"
         print("Assembly too large:", assemblySize)
         limsStatus = "Inconclusive"
-        elif mostLight == "RED":
+    elif mostLight == "RED":
         limsReason = "Contaminated: MOSTlightRED"
         print("Most light:", mostLight)
         limsStatus = "Inconclusive"
