@@ -355,11 +355,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     #     limsSerotype = "Arizonae IIIa 44:z4,z23:-"
     #     limsStatus = "CheckRequired"
 
-    
+
     # RULE 8 N50
-    elif n50 < 20000:
-        limsReason = "PoorAssembly: N50<20Kbp"
-        print("N50 too small:", n50)
+
         limsStatus = "Inconclusive"
     # RULE 9 CONTIG COUNT
     elif numContigs > 600:
@@ -378,10 +376,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             print("MLST coverage:", mlstMeanCov)
             limsStatus = "Inconclusive"
     # RULE 12 ASSEMBLY SIZE LOWER
-    elif assemblySize < 4000000:
-        limsReason = "PoorAssembly: assembly<4Mbp"
-        print("Assembly too small:", assemblySize)
-        limsStatus = "Inconclusive"
+
     # NEW RULE 12
     elif limsSubgenus == 'I' and salmPercent > 75 and consensus ==  '1-I 1,4,[5],12:b:---1-I 4:b:---1-Paratyphi' and sseJ == 'Java':
         LIMS_SerotypeID = "Paratyphi B Variant Java"
@@ -597,8 +592,36 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # Remove this one or other
     # Just look at order of if-else statements
+
+    #  FINAL CHECK INCONCLUSIVE
+    if numReads < 500000 or numReads == "no_result":
+        limsReason = "InsufficientData: readCount<500K"
+        print("Low read count:", numReads)
+        limsStatus = "Inconclusive"
+    elif numContigs != "no_result":
+        if numContigs > 600:
+            limsReason = "PoorAssembly: contigCount>600"
+            print("Too many contigs:", numContigs)
+            limsStatus = "Inconclusive"
+    elif n50 < 20000:
+        limsReason = "PoorAssembly: N50<20Kbp"
+        print("N50 too small:", n50)
+    elif assemblySize < 4000000:
+        limsReason = "PoorAssembly: assembly<4Mbp"
+        print("Assembly too small:", assemblySize)
+        limsStatus = "Inconclusive"
+    elif mlstMeanCov < 30:
+        limeReason = "PoorAssembly: MLSTcov<30x"
+        limsStatus = "Inconclusive"
+    # FINAL CHECK CONTAMINATED
+    elif assemblySize != "no_result":
+        if assemblySize > 5800000:
+            limsReason = "Contaminated: assembly>5.8Mbp"
+            print("Assembly too large:", assemblySize)
+            limsStatus = "Inconclusive"
+
     if assemblySize != "no_result" and assemblySize > 5800000:
-        
+
         limsReason = "Contaminated: assembly>5.8Mbp"
         print("Assembly too large:", assemblySize)
         limsStatus = "Inconclusive"
@@ -606,11 +629,17 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Contaminated: MOSTlightRED"
         print("Most light:", mostLight)
         limsStatus = "Inconclusive"
-    elif numContigs != "no_result":
-        if numContigs > 600:
-            limsReason = "PoorAssembly: contigCount>600"
-            print("Too many contigs:", numContigs)
-            limsStatus = "Inconclusive"
+    # RULE 3 LOW KMERID ENTERICA
+    elif limsSubgenus == "I" and salmPercent < 75:
+        limsReason = "Contaminated: EntericaKmerID<75%"
+        print("Low KmerID score for Enterica (< 75%):", salmPercent)
+        limsStatus = "Inconclusive"
+    # RULE 4 LOW KMERID NON-ENTERICA
+    elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
+        limsReason = "Contaminated: non-EntericaKmerID<38%"
+        print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
+        limsStatus = "Inconclusive"
+    # RULE 5 MULTIPLE SEROTYPES DETECTED
     elif "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
             limsStatus = "Inconclusive"
@@ -621,6 +650,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
+
 
 
 def parse_table(summaryTable):
