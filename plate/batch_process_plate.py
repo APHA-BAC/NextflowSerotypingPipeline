@@ -4,16 +4,7 @@ import glob
 import argparse
 import logging
 from textwrap import dedent
-import boto3
-import os 
 
-def downloadDirectoryFroms3(bucketName, remoteDirectoryName, dest):
-    s3_resource = boto3.resource('s3')
-    bucket = s3_resource.Bucket(bucketName) 
-    for obj in bucket.objects.filter(Prefix = remoteDirectoryName):
-        if not os.path.exists(os.path.dirname(obj.key)):
-            os.makedirs(os.path.dirname(obj.key))
-        bucket.download_file(obj.key, os.path.join(dest, os.path.basename(obj.key))) # save to same path
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
@@ -34,18 +25,18 @@ def run(cmd, *args, **kwargs):
     returncode = ps.returncode
     if "capture_output" in kwargs and kwargs["capture_output"]:
         logging.info(ps.stdout.decode().strip('\n'))
-#    if returncode:
-#        raise Exception(dedent(f"""
-#                                   *****
-#                                   cmd '{(" ").join(cmd)}' failed with exit \
-#                                   code {returncode}
-#                                   *****
-#                                """))
+    if returncode:
+        raise Exception(dedent(f"""
+                                   *****
+                                   cmd '{(" ").join(cmd)}' failed with exit \
+                                   code {returncode}
+                                   *****
+                                """))
 
 
 def run_pipeline(plate_name, **kwargs):
     """ Run the Salmonella pipeline using docker """
-    run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--local",
+    run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--runID",
          plate_name], **kwargs)
 
 
@@ -118,26 +109,27 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     """
         Download, process and store a plate of raw Salmonella data
     """
+    # Set paths
+    plate_name = s3_uri_to_plate_name(reads_uri)
+    plate_reads_dir = os.path.join(reads_dir, plate_name)
+
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
     download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
-    run(["df", "-h"], capture_output=True)
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}")
-    #downloadDirectoryFroms3("s3-csu-001", "FZ2000/M01765_0638/", reads_dir)
-    download_s3(reads_uri, reads_dir, capture_output=True)
+    download_s3(reads_uri, plate_reads_dir, capture_output=True)
 
     # Rename fastq files
     logging.info(f"Renaming fastq files: {reads_dir}")
-    for filepath in glob.glob(reads_dir + '/*.fastq.gz'):
+    for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
         rename_fastq_file(filepath)
 
     logging.info("Running Nextflow pipeline")
-    run_pipeline(reads_dir, capture_output=True)
+    run_pipeline(plate_name, capture_output=True)
 
     # Upload results to s3
-    plate_name = s3_uri_to_plate_name(reads_uri)
     TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
     summaryTable_path = os.path.join("~/wgs-results/", plate_name,
                                      TableFile_name)
@@ -172,6 +164,7 @@ if __name__ == '__main__':
     try:
         run_plate(args.reads_uri, args.reads_dir, args.results_uri,
                   args.kmer_uri)
+        results_uri = args.results_uri
     except Exception as e:
         # if the run fails, append "_failed" to the results_uri
         results_uri = \
