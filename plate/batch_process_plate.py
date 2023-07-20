@@ -55,13 +55,13 @@ def upload_s3(file_path, s3_destination, **kwargs):
          "bucket-owner-full-control"], **kwargs)
 
 
-def s3_object_release_date(s3_key):
+def s3_object_release_date(s3_uri):
     """
         Date s3 object was published. Returns a 3 element list with
         format [year, month, day]
     """
     # Retrieve metadata from S3
-    ls_cmd = f"aws s3 ls {s3_key}/"
+    ls_cmd = f"aws s3 ls {os.path.join(s3_uri)}"
     contents = [x.decode("utf-8") for x in
                 subprocess.check_output(ls_cmd, shell=True).splitlines()]
 
@@ -69,17 +69,17 @@ def s3_object_release_date(s3_key):
     return contents[0].split()[0].split("-")
 
 
-def s3_uri_to_plate_name(s3_key):
+def s3_uri_to_plate_name(s3_uri):
     """
         Convert a S3 URI from CSU to a plate name with consistent naming
         convention
     """
     # Remove trailing slash
-    s3_key = s3_key.strip('/')
+    s3_uri = s3_uri.rstrip("/")
 
     # Format
-    year, month, day = s3_object_release_date(s3_key)
-    run_name = s3_key.split("/")[-1]
+    year, month, day = s3_object_release_date(s3_uri)
+    run_name = s3_uri.split("/")[-1]
 
     return f"{day}{month}{year[-2:]}_APHA_{run_name}"
 
