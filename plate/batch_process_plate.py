@@ -24,18 +24,31 @@ def run(cmd, *args, **kwargs):
     ps = subprocess.run(cmd, *args, **kwargs)
     returncode = ps.returncode
     if "capture_output" in kwargs and kwargs["capture_output"]:
-        logging.info(ps.stdout.decode().strip('\n'))
+        logging.info(format_subprocess_output(ps.stdout))
     if returncode:
         raise Exception(dedent(f"""
                                    *****
                                    cmd '{(" ").join(cmd)}' failed with exit \
                                    code {returncode}
+                                   {format_subprocess_output(ps.stderr)}
                                    *****
                                 """))
 
 
+def format_subprocess_output(output):
+    """
+        Removes any output which proceeds '\r' without a trailing '\n'
+        character, i.e. removes any output with carriage return and
+        without newline. Lots of AWS CLI commands produce output which
+        overwrites itself by using '\r'. This output looks ugly in a
+        logfile so we remove it.
+    """
+    return "\n".join([split_line.split("\r")[-1] for split_line in
+                      output.decode().split("\n")])
+
+
 def run_pipeline(plate_name, **kwargs):
-    """ Run the Salmonella pipeline using docker """
+    """ Run the Salmonella pipeline """
     run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--runID",
          plate_name], **kwargs)
 
@@ -114,11 +127,11 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     plate_reads_dir = os.path.join(reads_dir, plate_name)
 
     # Download reference genomes from s3
-    logging.info(f"Downloading KmerID reference genomes: {kmer_uri}")
+    logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
     download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
 
     # Download reads
-    logging.info(f"Downloading reads: {reads_uri}")
+    logging.info(f"Downloading reads: {reads_uri}\n")
     download_s3(reads_uri, plate_reads_dir, capture_output=True)
 
     # Rename fastq files
