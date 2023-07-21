@@ -10,7 +10,7 @@ DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
 
 
-def run(cmd, *args, **kwargs):
+def run(cmd, record_output=False):
     """
         Run a command and assert that the process exits with a non-zero
         exit code. See python's subprocess.run command for args/kwargs.
@@ -21,15 +21,14 @@ def run(cmd, *args, **kwargs):
             cmd (list): List of strings defining the command, see
             (subprocess.run in python docs)
     """
-    ps = subprocess.run(cmd, *args, **kwargs)
+    ps = subprocess.run(cmd, capture_output=True)
     returncode = ps.returncode
-    if "capture_output" in kwargs and kwargs["capture_output"]:
+    if record_output:
         logging.info(format_subprocess_output(ps.stdout))
     if returncode:
         raise Exception(dedent(f"""
                                    *****
-                                   cmd '{(" ").join(cmd)}' failed with exit \
-                                   code {returncode}
+                                   cmd '{(" ").join(cmd)}' failed with exit code {returncode}
                                    {format_subprocess_output(ps.stderr)}
                                    *****
                                 """))
@@ -74,7 +73,7 @@ def s3_object_release_date(s3_uri):
         format [year, month, day]
     """
     # Retrieve metadata from S3
-    ls_cmd = f"aws s3 ls {os.path.join(s3_uri)}"
+    ls_cmd = f"aws s3 ls {os.path.join(s3_uri, '')}"
     contents = [x.decode("utf-8") for x in
                 subprocess.check_output(ls_cmd, shell=True).splitlines()]
 
@@ -180,8 +179,7 @@ if __name__ == '__main__':
         results_uri = args.results_uri
     except Exception as e:
         # if the run fails, append "_failed" to the results_uri
-        results_uri = \
-            f"{args.results_uri.rstrip('/')}_failed"
+        results_uri = f"{args.results_uri.rstrip('/')}_failed"
         logging.exception(e)
         # re-raise the caught exception
         raise e
