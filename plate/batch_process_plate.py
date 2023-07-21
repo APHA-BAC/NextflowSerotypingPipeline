@@ -133,11 +133,11 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     download_s3(reads_uri, plate_reads_dir, record_output=True)
 
     # Rename fastq files
-    logging.info(f"Renaming fastq files: {reads_dir}")
+    logging.info(f"Renaming fastq files: {reads_dir}\n")
     for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
         rename_fastq_file(filepath)
 
-    logging.info("Running Nextflow pipeline")
+    logging.info("Running Nextflow pipeline\n")
     run_pipeline(plate_name, record_output=True)
 
     # Upload results to s3
@@ -145,7 +145,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     summaryTable_path = os.path.join("~/wgs-results/", plate_name,
                                      TableFile_name)
     summaryTable_path = os.path.expanduser(summaryTable_path)
-    logging.info(f"Uploading results: {results_uri}")
+    logging.info(f"Uploading results: {results_uri}\n")
     upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
               record_output=True)
 
