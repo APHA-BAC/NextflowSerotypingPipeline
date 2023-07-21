@@ -13,9 +13,8 @@ DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
 def run(cmd, record_output=False):
     """
         Run a command and assert that the process exits with a non-zero
-        exit code. See python's subprocess.run command for args/kwargs.
-        If capture_output=True, then the stdout of the subcommand is
-        logged
+        exit code. If record_output=True, then the stdout of the
+        subcommand is logged
 
         Parameters:
             cmd (list): List of strings defining the command, see
@@ -131,7 +130,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}\n")
-    download_s3(reads_uri, plate_reads_dir, capture_output=True)
+    download_s3(reads_uri, plate_reads_dir, record_output=True)
 
     # Rename fastq files
     logging.info(f"Renaming fastq files: {reads_dir}")
@@ -139,7 +138,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         rename_fastq_file(filepath)
 
     logging.info("Running Nextflow pipeline")
-    run_pipeline(plate_name, capture_output=True)
+    run_pipeline(plate_name, record_output=True)
 
     # Upload results to s3
     TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
@@ -148,7 +147,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     summaryTable_path = os.path.expanduser(summaryTable_path)
     logging.info(f"Uploading results: {results_uri}")
     upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
-              capture_output=True)
+              record_output=True)
 
 
 if __name__ == '__main__':
