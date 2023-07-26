@@ -154,9 +154,9 @@ if __name__ == '__main__':
     # Parse
     parser = argparse.ArgumentParser(
         description="run pipeline on a routine Salmonella Plate")
-    parser.add_argument("-i", "--reads_uri",
+    parser.add_argument("reads_uri",
                         help="s3 uri corresponding to the fastq plate to run")
-    parser.add_argument("-o", "--results_uri",
+    parser.add_argument("results_uri",
                         help="s3 uri where results are to be uploaded")
     parser.add_argument("--reads-dir", default=DEFAULT_READS_DIRECTORY,
                         help="local directory for storing reads")
