@@ -3,6 +3,7 @@ import os
 import glob
 import argparse
 import logging
+import signal
 from textwrap import dedent
 
 
@@ -150,6 +151,12 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
               record_output=True)
 
 
+def upload_logfile(results_uri):
+    log_uri = os.path.join(results_uri, "batch_process_plate.log")
+    logging.info(f"Uploading log file: {log_uri}")
+    upload_s3(log_file_path, log_uri)
+
+
 if __name__ == '__main__':
     # Parse
     parser = argparse.ArgumentParser(
@@ -170,7 +177,10 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format="%(message)s",
                         handlers=[logging.StreamHandler(),
                                   logging.FileHandler(log_file_path)])
-
+    # setup handler to upload log if batch job times out
+    signal.signal(signal.SIGTERM,
+                  upload_logfile(
+                      f"{args.results_uri.rstrip('/')}_timeout_error"))
     # Run
     try:
         run_plate(args.reads_uri, args.reads_dir, args.results_uri,
@@ -184,7 +194,4 @@ if __name__ == '__main__':
         raise e
     # the finally block runs before re-raising 'e'.
     finally:
-        # upload log file
-        log_uri = os.path.join(results_uri, "batch_process_plate.log")
-        logging.info(f"Uploading log file: {log_uri}")
-        upload_s3(log_file_path, log_uri)
+        upload_logfile(results_uri)
