@@ -115,3 +115,21 @@ To release a new version of the software:
 
 ![image](https://user-images.githubusercontent.com/6979169/153393500-b2313500-9dc0-4883-bcb9-9d9ef65f734c.png)
 ![image](https://user-images.githubusercontent.com/6979169/153393680-a6f42c9d-ade7-4390-8c52-5b34837a0ebb.png)
+
+# Deployment
+
+The software is deployed on AWS batch within the SCE's [SCE-batch](https://defra.sharepoint.com/teams/Team741/SitePages/Services.aspx#batch) system. The pipeline is automatically triggered in AWS batch by the `wey-001` physical server, running [`bcl-manager.py`](https://github.com/APHA-CSU/sequence-manager).
+
+Deployment simply requires pushing the production Docker image to the appropriate [Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html) repository in the Salmonella account of the SCE. This can be done from any EC2 instance within SCE with write access to the appropriate ECR repository, `714385292749.dkr.ecr.eu-west-1.amazonaws.com/salmonella-ec2-0-1-1`. To gain write access, simply make a request in SCE slack.
+
+[`deploy.bash`](https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/deploy.bash) streamlines the deployment process into a single script and one-liner:
+
+```
+bash deploy.bash
+```
+This script will:
+1. download the production Docker image from Dockerhub;
+1. tag the image so you can push the image to the ECR repository;
+1. retrieve an authentication token and authenticate your Docker client to your registry;
+1. push this image to the ECR repository.
+
