@@ -18,7 +18,8 @@ class TimeoutHandler:
         signal.signal(signal.SIGTERM, self.handler)
 
     def handler(self, *_):
-        upload_logfile(results_uri)
+        logging.info("\nAWS batch job timed out\n")
+        upload_logfile(self.results_uri)
         logging.shutdown()
         sys.exit(1)
 
