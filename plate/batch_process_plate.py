@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import os
 import glob
 import argparse
@@ -9,6 +10,17 @@ from textwrap import dedent
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
+
+
+class TimeoutHandler:
+    def __init__(self, results_uri):
+        self.results_uri = results_uri
+        signal.signal(signal.SIGTERM, self.handler)
+
+    def handler(self, *_):
+        upload_logfile(results_uri)
+        logging.shutdown()
+        sys.exit(1)
 
 
 def run(cmd, record_output=False):
@@ -178,9 +190,8 @@ if __name__ == '__main__':
                         handlers=[logging.StreamHandler(),
                                   logging.FileHandler(log_file_path)])
     # setup handler to upload log if batch job times out
-    signal.signal(signal.SIGTERM,
-                  upload_logfile(
-                      f"{args.results_uri.rstrip('/')}_timeout_error"))
+    timeout_handler = \
+        TimeoutHandler(f"{args.results_uri.rstrip('/')}_timeout_error")
     # Run
     try:
         run_plate(args.reads_uri, args.reads_dir, args.results_uri,
