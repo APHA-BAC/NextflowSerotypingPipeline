@@ -117,6 +117,7 @@ To release a new version of the software:
 ![image](https://user-images.githubusercontent.com/6979169/153393680-a6f42c9d-ade7-4390-8c52-5b34837a0ebb.png)
 
 # AWS Batch
+<img src="https://github.com/APHA-BAC/NextflowSerotypingPipeline/assets/10742324/075ba043-9ce0-40bd-b431-3eb8b8967ca7" alt="batch-architecture" width="750"/>
 
 The software is deployed in AWS batch within the SCE's [SCE-batch](https://defra.sharepoint.com/teams/Team741/SitePages/Services.aspx#batch) system. The pipeline is automatically triggered in AWS batch by the `wey-001` physical server, running [`bcl-manager.py`](https://github.com/APHA-CSU/sequence-manager) in a synchronous manor, i.e. once the server has finished uploading Salmonella data to `s3-csu-001`, the pipeline is triggered by submitting a "job submission form" to the submission bucket (see architecture diagram above). Once triggered, the pipeline runs asynchronously (with respect to `bcl-manager.py`) in AWS batch.
 
@@ -129,13 +130,13 @@ Successful runs are saved in an object in `s3-ranch-050` with a standardised nam
 Within the s3 object of a successful run, there are two file objects:
 
 1. `APHA_test_plate_SummaryTable_plusLIMS.csv` - the main results table
-2. `batch_process_plate.log` - the log file produced by [`batch_process_plate.py`](#https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/plate/batch_process_plate.py)
+2. `batch_process_plate.log` - the log file produced by [`batch_process_plate.py`](https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/plate/batch_process_plate.py)
 
 ## Failed runs
 
 The output of failed runs are also saved to `s3-ranch-050`. These objects have the same naming convention as successful runs, with an additional `_failed` or `_timeout_error` postfix for runs that have failed or timed-out respectively. For example, `NB501786_0554_20230824195329_failed` or `NB501786_0554_20230824195329_timeout_error`.
 
-Within the s3 object of a failed (including timeout) runs, there is one file object: `batch_process_plate.log`. As with successful runs, this is  the log file produced by [`batch_process_plate.py`](#https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/plate/batch_process_plate.py). In the case of failed runs this file can be viewed to inspect the cause of failure.
+Within the s3 object of a failed (including timeout) runs, there is one file object: `batch_process_plate.log`. As with successful runs, this is  the log file produced by [`batch_process_plate.py`](https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/plate/batch_process_plate.py). In the case of failed runs this file can be viewed to inspect the cause of failure.
 
 
 # Deployment
