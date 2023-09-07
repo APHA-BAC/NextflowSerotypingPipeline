@@ -419,7 +419,7 @@ process srst2 {
 
     script:
     """
-    if grep -E "(Typhimurium|Enteritidis|Gallinarum|Pullorum|Idikan|Kedougou|Java|Paratyphi)" ${sample_id}_serovar.tsv
+    if grep -E "(Typhimurium|Enteritidis|Gallinarum|Pullorum|Idikan|Kedougou|Java|Paratyphi|type=)" ${sample_id}_serovar.tsv
     then
     export SRST2_BOWTIE2=/opt/srst2/bowtie2-2.2.3/bowtie2
     export SRST2_BOWTIE2_BUILD=/opt/srst2/bowtie2-2.2.3/bowtie2-build
