@@ -59,7 +59,7 @@ When running the pipeline on data stored locally, you can run the following comm
 and will then run the pipeline in a docker container on your locally stored fastq files:
 ```
 $ cd plate
-$ python process_plate.py --local 1 --runID <runID>
+$ python process_plate.py --runID <runID>
 
 ```
 # Run options
@@ -70,8 +70,7 @@ These are the run options for process_plate.py:
 - --reads-dir Sets the directory for where the directory containing the reads are stored. Default is: "~/wgs-reads"
 - --results-dir Sets the directory for where the directory containing the results are stored. Default is: "~/wgs-results"
 - --image Select a specific docker image to use. Default is: "jguzinski/salmonella-seq:prod"
-- --local Set to 1 if your reads are in a local directory. Default is: 0
-- --runID The name of the run which will also be the name of the directory for the results. Only needed if --local is set to 1
+- --runID The name of the run which will also be the name of the directory for the results. Only needed if for running local reads
 
 # Pipeline Algorithm
 
