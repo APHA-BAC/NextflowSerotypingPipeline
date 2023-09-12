@@ -38,7 +38,7 @@ This script installs the following pipeline component software:
 
 # Running the pipeline
 
-To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be stored in `~/WGS_Data/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/WGS_Data/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`.
+To run the pipeline on a batch of samples, the raw `.fastq.gz` files must be stored in `~/wgs-reads/<runID>`.  Each read-pair sample is represented by a pair of files named `*_R1.fastq.gz` and `*_R2.fastq.gz`. For example, to batch two samples named `salmonella_a` and `salmonella_b`, a `~/wgs-reads/<runID>` directory containing four files is required: `salmonella_a_R1.fastq.gz`, `salmonella_a_R2.fastq.gz`,  `salmonella_b_R1.fastq.gz` and `salmonella_b_R2.fastq.gz`.
 
 Then, to run the pipeline from the terminal call:
 ```
@@ -46,7 +46,7 @@ $ nextflow run SCE3_pipeline_update.nf --runID <runID>
 
 ```
 
-Pipeline output is stored in  `~/WGS_Results/<runID>/` and contains:
+Pipeline output is stored in  `~/wgs-results/<runID>/` and contains:
 - TODO
 
 ## Run from docker
@@ -59,7 +59,7 @@ When running the pipeline on data stored locally, you can run the following comm
 and will then run the pipeline in a docker container on your locally stored fastq files:
 ```
 $ cd plate
-$ python process_plate.py --local 1 --runID <runID>
+$ python process_plate.py --runID <runID>
 
 ```
 # Run options
@@ -70,8 +70,7 @@ These are the run options for process_plate.py:
 - --reads-dir Sets the directory for where the directory containing the reads are stored. Default is: "~/wgs-reads"
 - --results-dir Sets the directory for where the directory containing the results are stored. Default is: "~/wgs-results"
 - --image Select a specific docker image to use. Default is: "jguzinski/salmonella-seq:prod"
-- --local Set to 1 if your reads are in a local directory. Default is: 0
-- --runID The name of the run which will also be the name of the directory for the results. Only needed if --local is set to 1
+- --runID The name of the run which will also be the name of the directory for the results. Only needed if for running local reads
 
 # Pipeline Algorithm
 
@@ -115,3 +114,42 @@ To release a new version of the software:
 
 ![image](https://user-images.githubusercontent.com/6979169/153393500-b2313500-9dc0-4883-bcb9-9d9ef65f734c.png)
 ![image](https://user-images.githubusercontent.com/6979169/153393680-a6f42c9d-ade7-4390-8c52-5b34837a0ebb.png)
+
+# AWS Batch
+<img src="https://github.com/APHA-BAC/NextflowSerotypingPipeline/assets/10742324/075ba043-9ce0-40bd-b431-3eb8b8967ca7" alt="batch-architecture" width="750"/>
+
+The software is deployed in AWS batch within the SCE's [SCE-batch](https://defra.sharepoint.com/teams/Team741/SitePages/Services.aspx#batch) system. The pipeline is automatically triggered in AWS batch by the `wey-001` physical server, running [`bcl-manager.py`](https://github.com/APHA-CSU/sequence-manager) in a synchronous manor, i.e. once the server has finished uploading Salmonella data to `s3-csu-001`, the pipeline is triggered by submitting a "job submission form" to the submission bucket (see architecture diagram above). Once triggered, the pipeline runs asynchronously (with respect to `bcl-manager.py`) in AWS batch.
+
+Each AWS batch job processes an entire plate of Salmonella data as a batch, i.e. in one run.
+
+## Expected output
+
+Successful runs are saved in an object in `s3-ranch-050` with a standardised naming convention, `{run_id}_yyyymmddHMS`, where `run_id` is formatted as `instrument-id_run-number` and the datetime is the time at which the job is submitted, approximately the time at which the raw reads are uploaded to `s3-csu-001`. For example, `NB501786_0554_20230824195329`.
+
+Within the s3 object of a successful run, there are two file objects:
+
+1. `APHA_test_plate_SummaryTable_plusLIMS.csv` - the main results table
+2. `batch_process_plate.log` - the log file produced by [`batch_process_plate.py`](https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/plate/batch_process_plate.py)
+
+## Failed runs
+
+The output of failed runs are also saved to `s3-ranch-050`. These objects have the same naming convention as successful runs, with an additional `_failed` or `_timeout_error` postfix for runs that have failed or timed-out respectively. For example, `NB501786_0554_20230824195329_failed` or `NB501786_0554_20230824195329_timeout_error`.
+
+Within the s3 object of a failed (including timeout) runs, there is one file object: `batch_process_plate.log`. As with successful runs, this is  the log file produced by [`batch_process_plate.py`](https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/plate/batch_process_plate.py). In the case of failed runs this file can be viewed to inspect the cause of failure.
+
+
+# Deployment
+
+Deployment simply requires pushing the production Docker image to the appropriate [Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html) repository in the Salmonella account of the SCE. This can be done from any EC2 instance within SCE with write access to the appropriate ECR repository, `714385292749.dkr.ecr.eu-west-1.amazonaws.com/salmonella-ec2-0-1-1`. To gain write access, simply make a request in SCE slack.
+
+[`deploy.bash`](https://github.com/APHA-BAC/NextflowSerotypingPipeline/blob/master/deploy.bash) streamlines the deployment process into a single script and one-liner:
+
+```
+bash deploy.bash
+```
+This script will:
+1. download the production Docker image from Dockerhub;
+1. tag the image so you can push the image to the ECR repository;
+1. retrieve an authentication token and authenticate your Docker client to your registry;
+1. push this image to the ECR repository.
+

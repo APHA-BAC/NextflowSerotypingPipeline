@@ -2,8 +2,8 @@ set -e
 
 #################################################################################################
 # Remaining setup
-mkdir $HOME/WGS_Data
-mkdir $HOME/WGS_Results
+mkdir $HOME/wgs-reads
+mkdir $HOME/wgs-results
 
 #################################################################################################
 # Summary table script
