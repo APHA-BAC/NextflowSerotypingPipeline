@@ -9,7 +9,8 @@ from archiver import *
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 # DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:process_cleanup"
-DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
+# DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
+DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:qscore_change"
 DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
 DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
 s3_destination = "s3://s3-staging-area/arslanhussaini/"
