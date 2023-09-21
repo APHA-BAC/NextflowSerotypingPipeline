@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import argparse
 
-DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
+DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:most_consensus_test"
 DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/validation_panel_Feb2022/')
 DEFAULT_RESULTS_DIR = os.path.expanduser('~/wgs-results/validation_test/')
 DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_Feb2022_EXPECTED_SummaryTable.csv'
