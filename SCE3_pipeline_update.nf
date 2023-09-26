@@ -132,7 +132,7 @@ process fastp_qual_trim {
 
     script:
     """
-    fastp --in1 ${readFile1} --in2 ${readFile2} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz --qualified_quality_phred 30 > ${sample_id}_fastp.log 2>&1
+    fastp --in1 ${readFile1} --in2 ${readFile2} --out1 ${sample_id}_R1.fastq.gz --out2 ${sample_id}_R2.fastq.gz --qualified_quality_phred 30 -u 50 > ${sample_id}_fastp.log 2>&1
     """
 }
 
