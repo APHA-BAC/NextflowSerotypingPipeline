@@ -140,26 +140,7 @@ def run_plate(s3_uri, reads_dir, results_dir, runID, upload, transfer):
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
 
 
-    # Upload summary table to SMB staging area if upload flag set
-    if upload == 1:
-        for file in glob.glob(results_dir + runID + "/" + r'*plusLIMS.csv'):
-            try:
-                shutil.copy(file, '~/mnt/my_share/CR2009')
-                print("Summary table copied")
-            except:
-                print("Copy of summary table failed. Is the drive mounted?")
-
-    # If running plate from s3_uri, backup
-    try:
-        if not runID:
-            new_s3_uri = s3_uri[16:-1]
-            check_mount()
-            outDir, readFiles, readSizes = check_WGS(new_s3_uri)
-            homeWGSDir = retrieve_from_bucket(new_s3_uri, outDir, readFiles, readSizes)
-            archive_WGS(outDir, readFiles, homeWGSDir)
-            shutil.rmtree(homeWGSDir)
-    except:
-        print("Archive failed")
+    
 
     # Transfer to S3 if transfer flag set
     if transfer:
@@ -178,12 +159,10 @@ if __name__ == '__main__':
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
     parser.add_argument("-r","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
-    #parser.add_argument("-r","--runID", help="The name of the run which will also be the name of the directory for the results. Only needed if running locally")
-    parser.add_argument("-u", "--upload", default=0, help="Set to 1 if you want to upload to SMB staging area")
     parser.add_argument("-t", "--transfer", default=0, help="Seto to 1 to transfer to S3 bucket")
 
     args = parser.parse_args()
     
     # Run
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.runID, args.upload, args.transfer)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer)
 
