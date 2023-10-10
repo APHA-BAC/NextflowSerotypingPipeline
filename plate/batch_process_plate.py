@@ -1,5 +1,4 @@
 import subprocess
-import sys
 import os
 import glob
 import argparse
@@ -19,9 +18,7 @@ class TimeoutHandler:
 
     def handler(self, *_):
         logging.info("\nAWS batch job timed out\n")
-        upload_logfile(self.results_uri)
-        logging.shutdown()
-        sys.exit(1)
+        raise TimeoutError
 
 
 def run(cmd, record_output=False):
@@ -199,9 +196,13 @@ if __name__ == '__main__':
                   args.kmer_uri)
         results_uri = args.results_uri
     except Exception as e:
-        # if the run fails, append "_failed" to the results_uri
-        results_uri = f"{args.results_uri.rstrip('/')}_failed"
-        logging.exception(e)
+        if isinstance(e, TimeoutError):
+            # append "_timout" to the results_uri
+            results_uri = f"{args.results_uri.rstrip('/')}_timeout_error"
+        else:
+            # append "_failed" to the results_uri
+            results_uri = f"{args.results_uri.rstrip('/')}_failed"
+            logging.exception(e)
         # re-raise the caught exception
         raise e
     # the finally block runs before re-raising 'e'.
