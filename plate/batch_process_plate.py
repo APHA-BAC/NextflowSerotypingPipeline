@@ -31,17 +31,21 @@ def run(cmd, record_output=False):
             cmd (list): List of strings defining the command, see
             (subprocess.run in python docs)
     """
-    ps = subprocess.run(cmd, capture_output=True)
-    returncode = ps.returncode
-    if record_output:
+    try:
+        ps = subprocess.run(cmd, capture_output=True)
+        returncode = ps.returncode
+        if record_output:
+            logging.info(format_subprocess_output(ps.stdout))
+        if returncode:
+            raise Exception(dedent(f"""
+                                    *****
+                                    cmd '{(" ").join(cmd)}' failed with exit code {returncode}
+                                    {format_subprocess_output(ps.stderr)}
+                                    *****
+                                    """))
+    except TimeoutError as e:
         logging.info(format_subprocess_output(ps.stdout))
-    if returncode:
-        raise Exception(dedent(f"""
-                                   *****
-                                   cmd '{(" ").join(cmd)}' failed with exit code {returncode}
-                                   {format_subprocess_output(ps.stderr)}
-                                   *****
-                                """))
+        raise e
 
 
 def format_subprocess_output(output):
@@ -137,7 +141,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
-    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
+    #download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}\n")
