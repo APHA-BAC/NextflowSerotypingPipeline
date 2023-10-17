@@ -32,19 +32,23 @@ def run(cmd, record_output=False):
             (subprocess.run in python docs)
     """
     try:
-        ps = subprocess.run(cmd, capture_output=True)
-        returncode = ps.returncode
+        ps = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+        ps.wait()
         if record_output:
             logging.info(format_subprocess_output(ps.stdout))
-        if returncode:
+        if ps.returncode:
             raise Exception(dedent(f"""
                                     *****
-                                    cmd '{(" ").join(cmd)}' failed with exit code {returncode}
+                                    cmd '{(" ").join(cmd)}' failed with exit code {ps.returncode}
                                     {format_subprocess_output(ps.stderr)}
                                     *****
                                     """))
     except TimeoutError as e:
-        logging.info(format_subprocess_output(ps.stdout))
+        print("hello")
+        ps.kill()
+        print(format_subprocess_output(ps.stdout.read() + b"\n"))
+        #logging.info(format_subprocess_output(ps.stdout))
         raise e
 
 
@@ -201,7 +205,7 @@ if __name__ == '__main__':
         results_uri = args.results_uri
     except Exception as e:
         if isinstance(e, TimeoutError):
-            # append "_timout" to the results_uri
+            # append "_timeout" to the results_uri
             results_uri = f"{args.results_uri.rstrip('/')}_timeout_error"
         else:
             # append "_failed" to the results_uri
