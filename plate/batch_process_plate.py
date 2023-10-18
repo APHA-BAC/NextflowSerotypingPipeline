@@ -149,7 +149,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
-    #download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
+    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}\n")
