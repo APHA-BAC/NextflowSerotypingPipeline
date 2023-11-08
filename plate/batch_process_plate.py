@@ -1,10 +1,10 @@
 import subprocess
-import sys
 import os
 import glob
 import argparse
 import logging
 import signal
+import tempfile
 from textwrap import dedent
 
 
@@ -18,10 +18,7 @@ class TimeoutHandler:
         signal.signal(signal.SIGTERM, self.handler)
 
     def handler(self, *_):
-        logging.info("\nAWS batch job timed out\n")
-        upload_logfile(self.results_uri)
-        logging.shutdown()
-        sys.exit(1)
+        raise TimeoutError
 
 
 def run(cmd, record_output=False):
@@ -34,17 +31,29 @@ def run(cmd, record_output=False):
             cmd (list): List of strings defining the command, see
             (subprocess.run in python docs)
     """
-    ps = subprocess.run(cmd, capture_output=True)
-    returncode = ps.returncode
-    if record_output:
-        logging.info(format_subprocess_output(ps.stdout))
-    if returncode:
-        raise Exception(dedent(f"""
-                                   *****
-                                   cmd '{(" ").join(cmd)}' failed with exit code {returncode}
-                                   {format_subprocess_output(ps.stderr)}
-                                   *****
-                                """))
+    tf = tempfile.NamedTemporaryFile(delete=False)
+    try:
+        with open(tf.name, mode="wb") as stdout_fo:
+            ps = subprocess.Popen(cmd, stdout=stdout_fo, stderr=subprocess.PIPE)
+            ps.wait()
+        with open(tf.name, mode="rb") as stdout_fo:
+            if record_output:
+                logging.info(format_subprocess_output(stdout_fo.read()))
+            if ps.returncode:
+                raise Exception(dedent(f"""
+                                        *****
+                                        cmd '{(" ").join(cmd)}' failed with exit code {ps.returncode}
+                                        {format_subprocess_output(ps.stderr.read())}
+                                        *****
+                                        """))
+    except TimeoutError as e:
+        with open(tf.name, mode="rb") as stdout_fo:
+            ps.kill()
+            logging.info(format_subprocess_output(stdout_fo.read()))
+            raise e
+    finally:
+        tf.close()
+        os.unlink(tf.name)
 
 
 def format_subprocess_output(output):
@@ -199,9 +208,14 @@ if __name__ == '__main__':
                   args.kmer_uri)
         results_uri = args.results_uri
     except Exception as e:
-        # if the run fails, append "_failed" to the results_uri
-        results_uri = f"{args.results_uri.rstrip('/')}_failed"
-        logging.exception(e)
+        if isinstance(e, TimeoutError):
+            # append "_timeout" to the results_uri
+            results_uri = f"{args.results_uri.rstrip('/')}_timeout_error"
+            logging.info("\nAWS batch job timed out\n")
+        else:
+            # append "_failed" to the results_uri
+            results_uri = f"{args.results_uri.rstrip('/')}_failed"
+            logging.exception(e)
         # re-raise the caught exception
         raise e
     # the finally block runs before re-raising 'e'.
