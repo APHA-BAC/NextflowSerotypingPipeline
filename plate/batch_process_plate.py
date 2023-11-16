@@ -196,7 +196,8 @@ if __name__ == '__main__':
 
     # setup logging
     log_file_path = os.path.expanduser("~/batch_process_plate.log")
-    logging.basicConfig(level=logging.INFO, format="%(message)s",
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s",
+                        datefmt='%m/%d/%Y %I:%M:%S %p',
                         handlers=[logging.StreamHandler(),
                                   logging.FileHandler(log_file_path)])
     # setup handler to upload log if batch job times out
