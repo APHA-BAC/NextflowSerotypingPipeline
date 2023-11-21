@@ -4,10 +4,26 @@ import os
 import argparse
 
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
-DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/validation_panel_Feb2022/')
+DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/validation_panel_Nov23/')
 DEFAULT_RESULTS_DIR = os.path.expanduser('~/wgs-results/validation_test/')
-DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_Feb2022_EXPECTED_SummaryTable_plusLIMS.csv'
+DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_EXPECTED_SummaryTable_plusLIMS.csv'
 DEFAULT_OUTCOME_PATH = './outcome.csv'
+
+
+def run(cmd):
+    """ Run a command and assert that the process exits with a non-zero exit code.
+
+        Parameters:
+            cmd (list): List of strings defining the command, see (subprocess.run in python docs)
+    """
+    # TODO: store stdout to a file
+    returncode = subprocess.run(cmd).returncode
+
+    if returncode:
+        raise Exception("""*****
+            %s
+            cmd failed with exit code %i
+        *****""" % (cmd, returncode))
 
 def load_summary_table(csv_path):
     """ Returns a DataFrame containing Consensus and unique Isolate_ID columns """
@@ -66,7 +82,7 @@ def validate(
 
     # os.makedirs(results_path)
 
-    # process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
+    run(['python', 'process_plate.py', '-r', 'DEFAULT_READS_DIR'])
     actual_csv_path = results_path + "/validation_test_SummaryTable_plusLIMS.csv"
 
     merged = analyse_results(expected_csv_path, actual_csv_path)
