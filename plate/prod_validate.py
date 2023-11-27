@@ -46,12 +46,12 @@ def load_summary_table(csv_path):
 def analyse_results(expected_csv_path, actual_csv_path):
     """ Returns a merged DataFrame containing an Outcome column that indicates consistency """
     # Load
-    expected_df = load_summary_table(expected_csv_path)[["Isolate_ID", "Consensus", "LIMS_Status", "LIMS_Reason", "MOST_Light"]]
+    expected_df = load_summary_table(expected_csv_path)[["Isolate_ID", "Consensus", "LIMS_Status", "LIMS_Reason"]]
     actual_df = load_summary_table(actual_csv_path)
 
     # Rename Columns
-    expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus", "LIMS_Status": "ExpectedStatus", "LIMS_Reason": "ExpectedReason", "MOST_Light": "ExpectedLight"})
-    actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus", "LIMS_Status": "ActualStatus", "LIMS_Reason": "ActualReason", "MOST_Light": "ActualLight"})
+    expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus", "LIMS_Status": "ExpectedStatus", "LIMS_Reason": "ExpectedReason"})
+    actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus", "LIMS_Status": "ActualStatus", "LIMS_Reason": "ActualReason"})
 
     # Join
     merged = expected_df.merge(actual_df, on='Isolate_ID', how='left')
@@ -77,10 +77,10 @@ def validate(
     outcome_csv_path,
     image
 ):
-    # if os.path.exists(results_path):
-    #     raise Exception("Results path already exists; Path must not exist: ", results_path)
+    if os.path.exists(results_path):
+        raise Exception("Results path already exists; Path must not exist: ", results_path)
 
-    # os.makedirs(results_path)
+    os.makedirs(results_path)
 
     run(['python', 'process_plate.py', '-r', 'DEFAULT_READS_DIR'])
     actual_csv_path = results_path + "/validation_test_SummaryTable_plusLIMS.csv"
