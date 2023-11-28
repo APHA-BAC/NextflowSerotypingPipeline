@@ -4,10 +4,26 @@ import os
 import argparse
 
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
-DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/validation_panel_Feb2022/')
+DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/validation_panel_Nov23/')
 DEFAULT_RESULTS_DIR = os.path.expanduser('~/wgs-results/validation_test/')
-DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_Feb2022_EXPECTED_SummaryTable.csv'
+DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_EXPECTED_SummaryTable_plusLIMS.csv'
 DEFAULT_OUTCOME_PATH = './outcome.csv'
+
+
+def run(cmd):
+    """ Run a command and assert that the process exits with a non-zero exit code.
+
+        Parameters:
+            cmd (list): List of strings defining the command, see (subprocess.run in python docs)
+    """
+    # TODO: store stdout to a file
+    returncode = subprocess.run(cmd).returncode
+
+    if returncode:
+        raise Exception("""*****
+            %s
+            cmd failed with exit code %i
+        *****""" % (cmd, returncode))
 
 def load_summary_table(csv_path):
     """ Returns a DataFrame containing Consensus and unique Isolate_ID columns """
@@ -30,12 +46,12 @@ def load_summary_table(csv_path):
 def analyse_results(expected_csv_path, actual_csv_path):
     """ Returns a merged DataFrame containing an Outcome column that indicates consistency """
     # Load
-    expected_df = load_summary_table(expected_csv_path)[["Isolate_ID", "Consensus"]]
+    expected_df = load_summary_table(expected_csv_path)[["Isolate_ID", "Consensus", "LIMS_Status", "LIMS_Reason"]]
     actual_df = load_summary_table(actual_csv_path)
 
     # Rename Columns
-    expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus"})
-    actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus"})
+    expected_df = expected_df.rename(columns={"Consensus": "ExpectedConsensus", "LIMS_Status": "ExpectedStatus", "LIMS_Reason": "ExpectedReason"})
+    actual_df = actual_df.rename(columns={"Consensus": "ActualConsensus", "LIMS_Status": "ActualStatus", "LIMS_Reason": "ActualReason"})
 
     # Join
     merged = expected_df.merge(actual_df, on='Isolate_ID', how='left')
@@ -45,6 +61,11 @@ def analyse_results(expected_csv_path, actual_csv_path):
     merged.loc[merged['ActualConsensus']==merged['ExpectedConsensus'], 'Outcome'] = 'success'
     merged.loc[merged['ActualConsensus']!=merged['ExpectedConsensus'], 'Outcome'] = 'fail'
     merged.loc[merged['ActualConsensus'].isna(), 'success'] = 'missing'
+    
+    merged.loc[merged['ActualStatus']==merged['ExpectedStatus'], 'Outcome'] = 'success'
+    merged.loc[merged['ActualStatus']!=merged['ExpectedStatus'], 'Outcome'] = 'fail'
+    merged.loc[merged['ActualStatus'].isna(), 'success'] = 'missing'
+    
 
     # Outcome
     return merged
@@ -61,8 +82,8 @@ def validate(
 
     os.makedirs(results_path)
 
-    process_plate.run_pipeline(reads_path, results_path, "validation_test", image)
-    actual_csv_path = results_path + "/validation_test_SummaryTable.csv"
+    run(['python', 'process_plate.py', '-r', 'DEFAULT_READS_DIR'])
+    actual_csv_path = results_path + "/validation_test_SummaryTable_plusLIMS.csv"
 
     merged = analyse_results(expected_csv_path, actual_csv_path)
 

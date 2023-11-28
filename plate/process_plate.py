@@ -4,6 +4,7 @@ import glob
 import argparse
 import boto3
 from archiver import *
+import update_master_sum.py
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
@@ -104,7 +105,7 @@ def upload_s3(summaryTable_path, s3_destination):
     except:
         print("Does the destination path exist?")
 
-def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer):
+def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum):
 
     """ Download, process and store a plate of raw Salmonella data """
 
@@ -137,9 +138,16 @@ def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer):
             rename_fastq_file(filepath)
     
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+    summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
+    summaryTable_path = os.path.expanduser(summaryTable_path)
 
+    if updateSum:
+        try:
+            update_master_sum.update_summary(updateSum, summaryTable_path)
+            print("Master summary table updated")
+        except:
+            print("Unable to update master summary table")
 
-    
 
     # Transfer to S3 if transfer flag set
     if transfer:
@@ -158,10 +166,11 @@ if __name__ == '__main__':
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
     parser.add_argument("-r","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
-    parser.add_argument("-t", "--transfer", default=0, help="Seto to 1 to transfer to S3 bucket")
+    parser.add_argument("-t", "--transfer", default=0, help="Se to to 1 to transfer to S3 bucket")
+    parser.add_argument("-u", "--updateSum", default=False, help="Set to path of master summary table if you want to update the master the summary table with the results from this run")
 
     args = parser.parse_args()
     
     # Run
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer, args.masterSum)
 
