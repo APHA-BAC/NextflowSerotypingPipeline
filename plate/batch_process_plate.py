@@ -11,7 +11,7 @@ from textwrap import dedent
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
-DEFAULT_MASTER_SUMMARY_URI = "s3://s3-ranch-050/master_sum.csv"
+DEFAULT_MASTER_SUMMARY_URI = "s3://s3-ranch-050/master_summary.csv"
 
 
 class TimeoutHandler:
