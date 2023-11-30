@@ -152,7 +152,7 @@ def update_master_summary(TableFile_name,
     """
     df_new_sum = pd.read_csv(TableFile_name)
     download_s3(master_sum_uri, "master_sum.csv", record_output=True)
-    df_new_sum.to_csv("master_sum.csv", mode="a", index=False)
+    df_new_sum.to_csv("master_sum.csv", mode="a", header=False, index=False)
     upload_s3("master_sum.csv", master_sum_uri, record_output=True)
 
 
