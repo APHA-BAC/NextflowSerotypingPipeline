@@ -150,8 +150,8 @@ def update_master_summary(TableFile_name,
         appending the latest results to a master CSV containing all
         historical results
     """
-    download_s3(master_sum_uri, "master_sum.csv", record_output=True)
     df_new_sum = pd.read_csv(TableFile_name)
+    download_s3(master_sum_uri, "master_sum.csv", record_output=True)
     df_new_sum.to_csv("master_sum.csv", mode="a", index=False)
     upload_s3("master_sum.csv", master_sum_uri, record_output=True)
 
