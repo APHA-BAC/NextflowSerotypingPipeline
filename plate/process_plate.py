@@ -4,7 +4,7 @@ import glob
 import argparse
 import boto3
 from archiver import *
-import update_master_sum.py
+import update_master_sum
 
 # TODO: Rename directories to BGE defaults
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
@@ -172,5 +172,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     # Run
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer, args.masterSum)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer, args.updateSum)
 

@@ -2,13 +2,20 @@ import process_plate
 import pandas as pd
 import os
 import argparse
+import shutil
+from shutil import copy2
+import subprocess
+import logging
 
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
-DEFAULT_READS_DIR = os.path.expanduser('~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella/validation_panel_Nov23/')
-DEFAULT_RESULTS_DIR = os.path.expanduser('~/wgs-results/validation_test/')
-DEFAULT_EXPECTED_CSV_PATH = '../validation250/validation250_EXPECTED_SummaryTable_plusLIMS.csv'
-DEFAULT_OUTCOME_PATH = './outcome.csv'
+DEFAULT_READS_DIR = os.path.expanduser("~/wgs-reads/")
+READS_250_LOCATION = os.path.expanduser("~/mnt/Salmonella/BAC3_NGS_Archive/Validation/250_validation_Nov23/")
+EXPECTED_RESULTS_PATH = "~/NextflowSerotypingPipeline/validation250/250_validation_EXPECTED_summary.csv"
 
+
+def copy2_verbose(src, dst):
+    print('Copying {0}'.format(src))
+    copy2(src,dst)
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
@@ -70,23 +77,26 @@ def analyse_results(expected_csv_path, actual_csv_path):
     # Outcome
     return merged
 
-def validate(
-    reads_path,
-    results_path,
-    expected_csv_path,
-    outcome_csv_path,
-    image
-):
-    if os.path.exists(results_path):
-        raise Exception("Results path already exists; Path must not exist: ", results_path)
+def validate(image, expected_path, reads_path, fastq_path):
+    
+    # Copy the 250 isolates and create all the necessary directories
+    full_reads_path = os.path.expanduser("~/wgs-reads/validation_test")
+    
+    shutil.copytree(fastq_path, full_reads_path, copy_function=copy2_verbose)
+    
+    full_results_path = "~/wgs-results/" + "validation_test/"
+    full_results_path = os.path.expanduser(full_results_path)
 
-    os.makedirs(results_path)
+    if os.path.exists(full_results_path):
+        raise Exception("Results path already exists; Path must not exist: ", full_results_path)
+    
+    # Start running the 250 through the pipeline
+    run(['python', 'process_plate.py', '-r', 'validation_test', '--image', image])
+    actual_csv_path = full_results_path + "validation_test_SummaryTable_plusLIMS.csv"
 
-    run(['python', 'process_plate.py', '-r', 'DEFAULT_READS_DIR'])
-    actual_csv_path = results_path + "/validation_test_SummaryTable_plusLIMS.csv"
-
-    merged = analyse_results(expected_csv_path, actual_csv_path)
-
+    # Compare results of the run against the expected results
+    merged = analyse_results(expected_path, actual_csv_path)
+    outcome_csv_path = os.path.expanduser("~/NextflowSerotypingPipeline/validation250/validation_outcome.csv")
     merged.to_csv(outcome_csv_path)
 
     if (merged["Outcome"] == "success").all():
@@ -96,17 +106,8 @@ def validate(
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Validate a docker image")
-    parser.add_argument("--reads", default=DEFAULT_READS_DIR, help="Directory containing fastq reads")
-    parser.add_argument("--results", default=DEFAULT_RESULTS_DIR, help="Output directory for writing sequenced results")
-    parser.add_argument("--expected", default=DEFAULT_EXPECTED_CSV_PATH, help="Path to csv that contains expected results")
-    parser.add_argument("--outcome", default=DEFAULT_OUTCOME_PATH, help="Output outcome csv")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="Docker image")
 
     args = parser.parse_args()
 
-    validate(os.path.expanduser(args.reads), 
-        os.path.expanduser(args.results), 
-        os.path.expanduser(args.expected), 
-        os.path.expanduser(args.outcome), 
-        args.image
-        )
+    validate(args.image, EXPECTED_RESULTS_PATH, DEFAULT_READS_DIR, READS_250_LOCATION)
