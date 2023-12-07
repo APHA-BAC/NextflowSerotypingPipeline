@@ -5,11 +5,13 @@ import argparse
 import logging
 import signal
 import tempfile
+import pandas as pd
 from textwrap import dedent
 
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
 DEFAULT_KMER_URI = "s3://s3-ranch-046/KmerID_Ref_Genomes"
+DEFAULT_MASTER_SUMMARY_URI = "s3://s3-ranch-050/master_summary.csv"
 
 
 class TimeoutHandler:
@@ -74,11 +76,14 @@ def run_pipeline(plate_name, **kwargs):
          plate_name], **kwargs)
 
 
-def download_s3(s3_uri, destination, **kwargs):
+def download_s3(s3_uri, destination, recursive=False, **kwargs):
     """
-        Recursively download a S3 Object
+        Download a S3 Object
     """
-    run(["aws", "s3", "cp", "--recursive", s3_uri, destination], **kwargs)
+    if recursive:
+        run(["aws", "s3", "cp", "--recursive", s3_uri, destination], **kwargs)
+    else:
+        run(["aws", "s3", "cp", s3_uri, destination], **kwargs)
 
 
 def upload_s3(file_path, s3_destination, **kwargs):
@@ -138,6 +143,19 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 
+def update_master_summary(TableFile_name,
+                          master_sum_uri=DEFAULT_MASTER_SUMMARY_URI):
+    """
+        Updates the master summary table stored in s3-ranch-050,
+        appending the latest results to a master CSV containing all
+        historical results
+    """
+    df_new_sum = pd.read_csv(TableFile_name)
+    download_s3(master_sum_uri, "master_sum.csv", record_output=True)
+    df_new_sum.to_csv("master_sum.csv", mode="a", header=False, index=False)
+    upload_s3("master_sum.csv", master_sum_uri, record_output=True)
+
+
 def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     """
@@ -149,11 +167,11 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
-    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes")
+    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", recursive=True)
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}\n")
-    download_s3(reads_uri, plate_reads_dir, record_output=True)
+    download_s3(reads_uri, plate_reads_dir, recursive=True, record_output=True)
 
     # Rename fastq files
     logging.info(f"Renaming fastq files: {reads_dir}\n")
@@ -171,6 +189,10 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     logging.info(f"Uploading results: {results_uri}\n")
     upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
               record_output=True)
+
+    # Update master summary table
+    logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
+    update_master_summary(summaryTable_path)
 
 
 def upload_logfile(results_uri):
