@@ -3,7 +3,6 @@ import os
 import glob
 import argparse
 import boto3
-from archiver import *
 import update_master_sum
 
 # TODO: Rename directories to BGE defaults
@@ -11,8 +10,9 @@ DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 # DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:process_cleanup"
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
-DEFAULT_KMERID_REF = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/ref/')
-DEFAULT_KMERID_CONFIG = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/config/')
+DEFAULT_KMERID = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/')
+DEFAULT_KMERID_REF = os.path.expanduser(str(DEFAULT_KMERID) + "ref/")
+DEFAULT_KMERID_CONFIG = os.path.expanduser(str(DEFAULT_KMERID) + "config/")
 s3_destination = "s3://s3-staging-area/arslanhussaini/"
 
 def run(cmd):
@@ -168,6 +168,7 @@ if __name__ == '__main__':
     parser.add_argument("-r","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
     parser.add_argument("-t", "--transfer", default=0, help="Se to to 1 to transfer to S3 bucket")
     parser.add_argument("-u", "--updateSum", default=False, help="Set to path of master summary table if you want to update the master the summary table with the results from this run")
+    parser.add_argument("-k", "--kmerID", default = DEFAULT_KMERID, help="Set path to KMER ID genome files")
 
     args = parser.parse_args()
     
