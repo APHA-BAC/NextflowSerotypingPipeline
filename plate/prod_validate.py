@@ -2,20 +2,13 @@ import process_plate
 import pandas as pd
 import os
 import argparse
-import shutil
-from shutil import copy2
 import subprocess
-import logging
 
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:master"
 DEFAULT_READS_DIR = os.path.expanduser("~/wgs-reads/")
-READS_250_LOCATION = os.path.expanduser("~/mnt/Salmonella/BAC3_NGS_Archive/Validation/250_validation_Nov23/")
+READS_250_LOCATION = "s3://s3-ranch-055/BAC3_NGS_Archive/Validation/250_validation_Nov23/"
 EXPECTED_RESULTS_PATH = "~/NextflowSerotypingPipeline/validation250/250_validation_EXPECTED_summary.csv"
 
-
-def copy2_verbose(src, dst):
-    print('Copying {0}'.format(src))
-    copy2(src,dst)
 
 def run(cmd):
     """ Run a command and assert that the process exits with a non-zero exit code.
@@ -81,8 +74,9 @@ def validate(image, expected_path, reads_path, fastq_path):
     
     # Copy the 250 isolates and create all the necessary directories
     full_reads_path = os.path.expanduser("~/wgs-reads/validation_test")
+    os.mkdir(full_reads_path)
     
-    shutil.copytree(fastq_path, full_reads_path, copy_function=copy2_verbose)
+    run(['aws', 's3', 'cp', READS_250_LOCATION, full_reads_path, "--recursive"])
     
     full_results_path = "~/wgs-results/" + "validation_test/"
     full_results_path = os.path.expanduser(full_results_path)
