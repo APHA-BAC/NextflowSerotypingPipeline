@@ -10,9 +10,8 @@ import hashlib
 
 # Check presence of mounted FSx archive disk
 # Needs to be updated to mount the disk it if not mounted, rather than just exit!
-def check_mount():
-    if not os.path.isdir(os.path.expanduser("~/mnt/Salmonella/BAC3_NGS_Archive/Salmonella")):
-        sys.exit("Error, FSx-Salmonella drive not mounted! Please mount first and try again.")
+
+    
 
 # This is for the user to interactively choose the WGS directory when the --dir option is not specified
 def choose_dir():
@@ -109,7 +108,7 @@ def main():
 confirm = "Y"
 
 if __name__ == '__main__':
-    check_mount()
+    
     args = main()
     print(args)
     if args.uri:
