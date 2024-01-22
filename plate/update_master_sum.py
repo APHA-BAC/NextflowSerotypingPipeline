@@ -19,7 +19,3 @@ def update_summary(master_sum,new_sum):
 
 	master_df=pd.concat([master_df,new_df])
 	master_df.to_csv(master_sum,index=False)
-
-
-
-update_summary("./master_summary.csv","170124_APHA_NB552234_0302_SummaryTable_plusLIMS.csv")
