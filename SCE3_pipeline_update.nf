@@ -4,9 +4,9 @@
  * PRE-STEP i - define the input path to the sequences that will be analysed
 */
 
-params.minReads = 500000
-params.subsampThreshold = 3500000
-subsamp = params.subsampThreshold - 500000
+params.minReads = 399999
+params.subsampThreshold = 400000
+subsamp = params.subsampThreshold - 399999
 
 params.runID = "TestIsolates"
 println params.runID
