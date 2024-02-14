@@ -241,7 +241,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
         else:
             limsStatus = "Inconclusive"
-            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
+            limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
         print("SeqSero2 comment:", seqseroComment)
 
     if "Detected a deletion that causes O5- variant of Typhimurium" in seqseroComment:
@@ -577,10 +577,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     if "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
             limsStatus = "Inconclusive"
-            limsReason = "multipleSerotypesDetected(SeqSero2)"
+            limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
         else:
             limsStatus = "Inconclusive"
-            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
+            limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
 
 
     # Gold coast stop gap rule
@@ -643,10 +643,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif "Co-existence of multiple serotypes detected" in seqseroComment:
         if assemblySize < 5800000 and assemblySize > 4000000 and n50 > 20000 and numContigs < 600 and mlstMeanCov > 20 and len(limsSerotypes) == 1:
             limsStatus = "Inconclusive"
-            limsReason = "multipleSerotypesDetected(SeqSero2)"
+            limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
         else:
             limsStatus = "Inconclusive"
-            limsReason = "Contaminated: multiSerotypes(SeqSero2)"
+            limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ

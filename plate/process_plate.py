@@ -138,6 +138,7 @@ def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum)
             rename_fastq_file(filepath)
     
     run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+    TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
     summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
     summaryTable_path = os.path.expanduser(summaryTable_path)
 
