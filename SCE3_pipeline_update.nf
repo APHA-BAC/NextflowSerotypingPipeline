@@ -251,7 +251,13 @@ process shovill {
     /opt/conda/bin/shovill --outdir $HOME/wgs-results/${params.runID}/${sample_id}/shovill --R1 ${sample_id}_R1.fastq.gz --R2 ${sample_id}_R2.fastq.gz
     mv $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
+    
+    cp $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fasta $HOME/wgs-results/${params.runID}/assemblies/${sample_id}_contigs.fa
+
+    
     """
+
+
 }
 
 
@@ -417,6 +423,8 @@ process srst2 {
     file("${sample_id}_8.txt") into out8_ch
     file("${sample_id}_8.txt") into out8_ch_rem
 
+    
+
     script:
     """
     if grep -E "(Typhimurium|Enteritidis|Gallinarum|Pullorum|Idikan|Kedougou|Java|Paratyphi|type=)" ${sample_id}_serovar.tsv
@@ -428,7 +436,11 @@ process srst2 {
     else
     touch ${sample_id}_8.txt
     fi
+    
     """
+
+
+
 }
 
 

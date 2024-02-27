@@ -481,10 +481,15 @@ def paratyphiB_java_diff(sampleDir, mostType):
 def instantiate_summary(resultsDir, runID):
     sampleDirs = get_subdirs(resultsDir)
     sampleNames = [os.path.basename(x) for x in sampleDirs]
+    sampleNames.remove("assemblies")
+    
     df = pd.DataFrame(columns = tableHeader, index = sampleNames)
     df.index.rename('Isolate_ID', inplace=True)
     df = df.fillna('no_result')
     for sampleDir in sampleDirs:
+        
+        if "assemblies" in sampleDir:
+            continue
         sampleID = os.path.basename(sampleDir)
         rawCount = raw_count(sampleDir, sampleID)
         if rawCount:
@@ -496,9 +501,12 @@ def instantiate_summary(resultsDir, runID):
 
 def fill_summary(resultsDir, runID):
     summaryFileName = os.path.join(resultsDir, runID + "_SummaryTable.csv")
+    
     df = pd.read_csv(summaryFileName, index_col=0)
     sampleDirs = get_subdirs(resultsDir)
     for sampleDir in sampleDirs:
+        if "assemblies" in sampleDir:
+            continue
         sampleID = os.path.basename(sampleDir)
         readCount, poorReads, readLen, gcR1 = fastqc_summary(sampleDir, sampleID)
         if readCount:
