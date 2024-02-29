@@ -195,6 +195,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     # Update master summary table
     logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
     update_master_summary(summaryTable_path)
+    upload_fasta("~/wgs-results/{}/assemblies/".format(plate_name))
 
 
 def upload_logfile(results_uri):
