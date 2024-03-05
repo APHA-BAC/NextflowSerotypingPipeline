@@ -53,7 +53,20 @@ process count_reads {
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_readcount.txt
+    
     '''
+
+    
+}
+
+/*
+ * PRE-STEP iv make fasta dir
+*/
+process make_dir{
+    script:
+    """
+    mkdir $HOME/wgs-results/${params.runID}/assemblies/
+    """
 }
 
 countInt1 = countStr1.toInteger()
@@ -73,7 +86,7 @@ names2
 
 
 /*
- * PRE-STEP iv - instantiate summary table
+ * PRE-STEP v - instantiate summary table
 */
 
 samplecount_ch = Channel.fromFilePairs(readPath)

@@ -93,7 +93,9 @@ def upload_s3(file_path, s3_destination, **kwargs):
     run(["aws", "s3", "cp", file_path, s3_destination, "--acl",
          "bucket-owner-full-control"], **kwargs)
 
-def upload_fasta(fasta_path):
+def upload_fasta(assemblies_dir):
+
+    logging.info(f"Uploading fasta")
     run(["aws", "s3", "cp", "--recursive", assemblies_dir, "s3://s3-ranch-050/assemblies", "--acl", "bucket-owner-full-control"])
 
 def s3_object_release_date(s3_uri):
@@ -166,6 +168,8 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     # Set paths
     plate_name = s3_uri_to_plate_name(reads_uri)
     plate_reads_dir = os.path.join(reads_dir, plate_name)
+    assemblies_dir = os.path.join("/root/wgs-results/{}/assemblies/".format(plate_name))
+
 
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
@@ -181,6 +185,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         rename_fastq_file(filepath)
 
     logging.info("Running Nextflow pipeline\n")
+    
     run_pipeline(plate_name, record_output=True)
 
     # Upload results to s3
@@ -195,7 +200,8 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     # Update master summary table
     logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
     update_master_summary(summaryTable_path)
-    upload_fasta("~/wgs-results/{}/assemblies/".format(plate_name))
+
+    upload_fasta(assemblies_dir)
 
 
 def upload_logfile(results_uri):

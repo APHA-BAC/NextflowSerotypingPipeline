@@ -481,7 +481,10 @@ def paratyphiB_java_diff(sampleDir, mostType):
 def instantiate_summary(resultsDir, runID):
     sampleDirs = get_subdirs(resultsDir)
     sampleNames = [os.path.basename(x) for x in sampleDirs]
-    sampleNames.remove("assemblies")
+    try:
+        sampleNames.remove("assemblies")
+    except:
+        pass
     
     df = pd.DataFrame(columns = tableHeader, index = sampleNames)
     df.index.rename('Isolate_ID', inplace=True)
@@ -501,7 +504,7 @@ def instantiate_summary(resultsDir, runID):
 
 def fill_summary(resultsDir, runID):
     summaryFileName = os.path.join(resultsDir, runID + "_SummaryTable.csv")
-    
+
     df = pd.read_csv(summaryFileName, index_col=0)
     sampleDirs = get_subdirs(resultsDir)
     for sampleDir in sampleDirs:
