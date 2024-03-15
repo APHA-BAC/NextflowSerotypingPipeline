@@ -12,6 +12,7 @@ def update_summary(master_sum,new_sum):
 	day=date[0:2]
 	month=date[2:4]
 	year=date[4:6]
+	year = "20" + year
 	date=day+"/"+month+"/"+year
 
 	new_df.loc[0:,'Date']=date
