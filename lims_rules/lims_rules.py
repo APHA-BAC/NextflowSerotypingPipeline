@@ -480,6 +480,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "I 4,[5],12:d:-"
         limsStatus = "Pass"
 
+    # !!!CHECK THIS!!!
     # RULE 23 DIARIZONAE
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)","1-IIIb 61:k:1,5,(7)--1-Arizonae--1-IIIb O:61:k:1,5,7"):
         limsSerotype = "61:k:1,5,7"
@@ -582,7 +583,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
 
-
+    
     # Gold coast stop gap rule
     if "2-Goldcoast" in consensus and "Gold-Coast" in consensus:
 
