@@ -96,7 +96,7 @@ def upload_s3(file_path, s3_destination, **kwargs):
 def upload_fasta(assemblies_dir):
 
     logging.info(f"Uploading fasta")
-    run(["aws", "s3", "cp", "--recursive", assemblies_dir, "s3://s3-ranch-050/assemblies", "--acl", "bucket-owner-full-control"])
+    run(["aws", "s3", "cp", "--recursive", assemblies_dir, "s3://s3-ranch-055/assemblies", "--acl", "bucket-owner-full-control"])
 
 def s3_object_release_date(s3_uri):
     """

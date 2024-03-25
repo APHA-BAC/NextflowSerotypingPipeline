@@ -265,7 +265,7 @@ process shovill {
     mv $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
     
-    cp $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fasta $HOME/wgs-results/${params.runID}/assemblies/${sample_id}_contigs.fa
+    cp $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fasta $HOME/wgs-results/${params.runID}/assemblies/${sample_id}.fa
 
     
     """
