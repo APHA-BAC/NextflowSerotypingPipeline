@@ -30,7 +30,7 @@ def run(cmd):
             cmd failed with exit code %i
         *****""" % (cmd, returncode))
 
-def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEFAULT_KMERID_REF, kmerid_config=DEFAULT_KMERID_CONFIG):
+def run_pipeline(reads, results, plate_name, assemblies_dir, image=DEFAULT_IMAGE, kmerid_ref=DEFAULT_KMERID_REF, kmerid_config=DEFAULT_KMERID_CONFIG):
     """ Run the Salmonella pipeline using docker """
     
     run(["sudo", "docker", "pull", image])
@@ -38,6 +38,7 @@ def run_pipeline(reads, results, plate_name, image=DEFAULT_IMAGE, kmerid_ref=DEF
         "sudo", "docker", "run", "--rm", "-it",
         "-v", f"{reads}:/root/wgs-reads/{plate_name}/",
         "-v", f"{results}:/root/wgs-results/{plate_name}/",
+        "-v", f"{assemblies_dir}:/root/wgs-results/{plate_name}/assemblies/",
         "-v", f"{kmerid_ref}:/opt/kmerid/ref/",
         "-v", f"{kmerid_config}:/opt/kmerid/config",
         image,
@@ -105,13 +106,14 @@ def upload_s3(summaryTable_path, s3_destination):
     except:
         print("Does the destination path exist?")
 
-def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum):
+def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum, upload_fasta):
 
     """ Download, process and store a plate of raw Salmonella data """
 
     # Add trailing slash to directory names
     reads_dir = os.path.join(reads_dir, '')
     results_dir = os.path.join(results_dir, '')
+    
     plate_reads_dir = ''
     plate_results_dir = ''
     plate_name = ''
@@ -136,8 +138,9 @@ def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum)
 
         for filepath in glob.glob(plate_reads_dir + '/*.fastq.gz'):
             rename_fastq_file(filepath)
-    
-    run_pipeline(plate_reads_dir, plate_results_dir, plate_name, image=args.image)
+    # run(["mkdir", assemblies_dir])
+    assemblies_dir = str(plate_results_dir) + "assemblies/"
+    run_pipeline(plate_reads_dir, plate_results_dir, plate_name, assemblies_dir, image=args.image)
     TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
     summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
     summaryTable_path = os.path.expanduser(summaryTable_path)
@@ -158,6 +161,11 @@ def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum)
         summaryTable_path = os.path.expanduser(summaryTable_path)
         upload_s3(summaryTable_path,s3_destination)
 
+    if upload_fasta:
+        
+        run(["aws", "s3", "cp", "--recursive", assemblies_dir, "s3://s3-ranch-050/assemblies", "--acl", "bucket-owner-full-control"])
+        
+
 
 if __name__ == '__main__':
     # Parse
@@ -170,9 +178,10 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--transfer", default=0, help="Se to to 1 to transfer to S3 bucket")
     parser.add_argument("-u", "--updateSum", default=False, help="Set to path of master summary table if you want to update the master the summary table with the results from this run")
     parser.add_argument("-k", "--kmerID", default = DEFAULT_KMERID, help="Set path to KMER ID genome files")
+    parser.add_argument("-f", "--fasta", default=False, help="Upload fasta files to S3 bucket. Default is False")
 
     args = parser.parse_args()
     
     # Run
-    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer, args.updateSum)
+    run_plate(args.s3_uri, args.reads_dir, args.results_dir, args.image, args.runID, args.transfer, args.updateSum, args.fasta)
 

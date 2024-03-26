@@ -659,6 +659,7 @@ def parse_table(summaryTable):
     outFileName = os.path.basename(summaryTable).replace(".csv", "_plusLIMS.csv")
     df = pd.read_csv(summaryTable, keep_default_na=False)
     for idx, row in df.iterrows():
+        
         if idx == 0:
             otherColNames = [x for x in list(df.columns) if x not in ('Isolate_ID', 'Consensus')]
             outTable.append(firstColNames + otherColNames)

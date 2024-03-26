@@ -7,7 +7,6 @@ import signal
 import tempfile
 import pandas as pd
 from textwrap import dedent
-import update_master_sum
 
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
@@ -97,11 +96,11 @@ def upload_s3(file_path, s3_destination, **kwargs):
 def upload_fasta(assemblies_dir):
 
     logging.info(f"Uploading fasta")
-    run(["aws", "s3", "cp", "--recursive", assemblies_dir, "s3://s3-ranch-050/assemblies", "--acl", "bucket-owner-full-control"])
+    run(["aws", "s3", "cp", "--recursive", assemblies_dir, "s3://s3-ranch-055/assemblies", "--acl", "bucket-owner-full-control"])
 
 def s3_object_release_date(s3_uri):
     """
-        Date s3 obj: {results_uri}\nas published. Returns a 3 element list with
+        Date s3 object was published. Returns a 3 element list with
         format [year, month, day]
     """
     # Retrieve metadata from S3
@@ -148,25 +147,17 @@ def rename_fastq_file(filepath):
     os.rename(filepath, renamed)
 
 
-# def update_master_summary(TableFile_name,
-#                           master_sum_uri=DEFAULT_MASTER_SUMMARY_URI):
-#     """
-#         Updates the master summary table stored in s3-ranch-050,
-#         appending the latest results to a master CSV containing all
-#         historical results
-#     """
-#     new_df = pd.read_csv(TableFile_name)
-#     download_s3(master_sum_uri, "master_sum.csv", record_output=True)
-#     df_new_sum.to_csv("master_sum.csv", mode="a", header=False, index=False)
-#     upload_s3("master_sum.csv", master_sum_uri, record_output=True)
-
-#     master_df=pd.read_csv(master_sum_uri)
-
-#     sum_info=re.search("(\d{6})_APHA_(.*_\d{4})",str(TableFile_name))
-#     date=sum_info.group(1)
-#     plate_id=sum_info.group(2)
-
-    
+def update_master_summary(TableFile_name,
+                          master_sum_uri=DEFAULT_MASTER_SUMMARY_URI):
+    """
+        Updates the master summary table stored in s3-ranch-050,
+        appending the latest results to a master CSV containing all
+        historical results
+    """
+    df_new_sum = pd.read_csv(TableFile_name)
+    download_s3(master_sum_uri, "master_sum.csv", record_output=True)
+    df_new_sum.to_csv("master_sum.csv", mode="a", header=False, index=False)
+    upload_s3("master_sum.csv", master_sum_uri, record_output=True)
 
 
 def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
@@ -207,11 +198,8 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
               record_output=True)
 
     # Update master summary table
-    logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
-    run(["aws", "s3", "cp", "s3://s3-ranch-050/master_summary.csv", "/root/"])
-    update_master_sum.update_summary("/root/master_summary.csv",summaryTable_path)
-    run(["aws", "s3", "cp", "/root/master_summary.csv", "s3://s3-ranch-050/", "--acl", "bucket-owner-full-control"])
-
+    # logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
+    # update_master_summary(summaryTable_path)
 
     upload_fasta(assemblies_dir)
 
