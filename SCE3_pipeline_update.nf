@@ -318,7 +318,7 @@ process seqsero2 {
     output:
     file("${sample_id}_5.txt") into out5_ch
     file("${sample_id}_5.txt") into out5_ch_rem
-
+    errorStrategy 'ignore'
     script:
     """
     /opt/conda/bin/SeqSero2_package.py -m a -b mem -t 2 -d $HOME/wgs-results/${params.runID}/${sample_id}/SeqSero2 -i ${reads_file[0]} ${reads_file[1]}
