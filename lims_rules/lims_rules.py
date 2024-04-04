@@ -79,7 +79,8 @@ def parse_consensus(consensus):
     else:
         if not consensusRegex.match(consensus):
             print(consensus)
-            sys.exit("Error, consensus not in recognisable format!")
+            # sys.exit("Error, consensus not in recognisable format!")
+            return False
         serotypes = [x for x in [consensusRegex.match(consensus).groups()[i] for i in (1, 3, 5)] if x is not None]
     return serotypes
 
@@ -99,7 +100,7 @@ def parse_seros(serotypes):
             lookupSero = subgenusRegex.match(serotype).group(1)
         else:
             lookupSero = serotype
-        print(serotype)
+        # print(serotype)
         if serotype == "Bovis-morbificans":
             serotype = "Bovismorbificans"
             lookupSero = "Bovismorbificans"
@@ -113,7 +114,7 @@ def parse_seros(serotypes):
         if "JAVA" in lookupSero:
             lookupSero = "PARATYPHI B VAR. JAVA"
         if lookupSero not in seroDict:
-            print("Warning, serotype not in lookup dict:", lookupSero)
+            # print("Warning, serotype not in lookup dict:", lookupSero)
             serogroup = "undetermined"
             subgenus = "undetermined"
             limsSerotype = serotype
@@ -232,16 +233,16 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # RULE 1 NO PIPELINE OUTPUT
     if consensus == "no_result":
         limsStatus = "Inconclusive"
-        print("No pipeline results; most likely not Salmonella")
+        # print("No pipeline results; most likely not Salmonella")
         limsReason = "noResults_checkIfSalmonella"
 
     # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
         limsReason = "PoorAssembly: incomplSTcov(MOST)"
-        print("Incomplete ST locus coverage")
+        # print("Incomplete ST locus coverage")
         limsStatus = "Inconclusive"
 
-    # Paratyphi B rules
+    # Paratyphi B rules; all checked
     elif consensus == "2-Paratyphi--1-Paratyphi B var. Java":
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
@@ -263,6 +264,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
+    #NA
     elif len([x for x in limsSerotypes if x in ("4:b:-", "1,4,[5],12:b:-", "Paratyphi", "Paratyphi B var. Java")]) == len(limsSerotypes) and sseJ == 'Java':
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
@@ -291,34 +293,40 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
     elif "Detected a deletion that causes O5- variant of Typhimurium" in seqseroComment:
         limsVariant = "O5 negative"
-        print("SeqSero2 comment:", seqseroComment)
+        # print("SeqSero2 comment:", seqseroComment)
 
-    # Idekan rule
+    # Idekan rule checked
     elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
         limsReason = ""
+    # NA
     elif "1,13,23:i:1,5" in consensus:
         limsVariant = "Monophasic Idikan"
     elif mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
     
-    # Kedogou rule
+    # Kedogou rule CHECK THESE
     elif "1-I G:i:" in consensus or "1-I 13:i" in consensus:
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
         limsReason = ""
     elif "1-I G:i:---1-I 13:i:---1-Kedougou" in consensus:
         limsSerotype = "Kedougou"
+        limsStatus = "Pass"
+        limsReason = ""
     # Monophasic Kedogou
     elif "1,13,23:i:l,w" in consensus:
+        limsStatus = "Pass"
+        limsReason = ""
         limsVariant = "Monophasic Kedougou"
     elif mono == "MonophasicKedougou":
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
+        limsReason = ""
 
-    #RULE ARIZONAE IIIA 18:Z4:Z32
+    #RULE ARIZONAE IIIA 18:Z4:Z32 CHECKED
     elif consensus in ("2-IIIa--1-IIIa 18:z4,z23:-", "2-IIIa 18:z4,z23:---1-Arizonae"):
         limsReason = "check Serovar"
         limsSerotype = "Arizonae IIIa 18:z4,z32:-"
@@ -329,7 +337,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
         limsSerotype = "4:z4,z23:-"
         limsStatus == "CheckRequired"
-    # RULE 23 DIARIZONAE
+    
+    # RULE 23 DIARIZONAE CHECKED
     elif consensus in ("1-IIIb 61:k:1,5,(7)--1-IIIb O:61:k:1,5,7--1-Arizonae", "1-No Type--1-Arizonae--1-O61:k:1,5,7","1-Arizonae--1-IIIb O:61:k:1,5,7--1-IIIb 61:k:1,5,(7)","1-IIIb 61:k:1,5,(7)--1-Arizonae--1-IIIb O:61:k:1,5,7"):
         limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
@@ -337,21 +346,21 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
 
-    # Clarify what this should be
+    # Clarify what this should be CHECKED
     elif "1-I 1,4,[5],12:d:" in consensus:
-        consensus = "S. enterica 4,12:d:-"
         limsSerotype = "4,12:d:-"
         limsStatus = "Pass"
         limsReason = ""
+    # MAYBE NOT NEEDED?
     elif consensus == "1-I 4:d:---1-I 1,4,[5],12:d:---1-Unnamed" or consensus == "1-I 1,4,[5],12:d:---1-I 4:d:---1-Unnamed":
         limsSerotype = "S. enterica 4,12:d:-"
         limsStatus = "Pass"
 
-    # Houtenae RULE
+    # Houtenae RULE CHECKED
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsSerotype = "Houtenae IV 44:z4,z23:-"
         limsStatus = "Pass"
-    # RULE 17 HOUTENAE
+    # RULE 17 HOUTENAE N/A
     elif consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsReason = "check Serovar"
         limsSerotype = "Houtenae IV 44:z4,z23:-"
@@ -360,21 +369,18 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # Uncommon enteritidis
     elif "1-No Type--1-Gallinarum or Enteritidis--1-Berta|Pensacola|Sangalkam" == consensus or "2-No Type--1-Pensacola|Sangalkam" == consensus:
         limsSerotype = "Enteritidis"
-    elif "1-I 1,4,[5],12:i:-" in consensus:
-        limsVariant = "Monophasic Typhimurium"
-        limsStatus = "Pass"
     
-    # RULE 22 4,12:D:-
+    # RULE 22 4,12:D:- CHECKED
     elif consensus == "1-No Type--1-Unnamed--1-I 4,[5],12:d:-":
         limsSerotype = "I 4,[5],12:d:-"
         limsStatus = "Pass"
 
-    # RULE 24 BOVISMORBIFICANS
+    # RULE 24 BOVISMORBIFICANS CHECKED
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
     
-    # Gallinarum rule
+    # Gallinarum rule N/A
     elif consensus == "2-Gallinarum--1-Pullorum" or consensus == "2-Gallinarum--1-No Type":
         if limsStatus != "Inconclusive":
             limsStatus = "Pass"
@@ -473,22 +479,22 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     
     # Gold coast stop gap rule
     if "2-Goldcoast" in consensus and "Gold-Coast" in consensus:
-        consensus = "3-Goldcoast"
+        limsSerotype = "Goldcoast"
         limsStatus = "Pass"
         limsReason= ""
 
     #  QUALITY CHECKS
-    if numReads < 500000 or numReads == "no_result":
+    if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000 :
         limsReason = "InsufficientData: readCount<500K"
-        print("Low read count:", numReads)
+        # print("Low read count:", numReads)
         limsStatus = "Inconclusive"
     elif limsSubgenus == "I" and salmPercent < 75:
         limsReason = "Contaminated: EntericaKmerID<75%"
-        print("Low KmerID score for Enterica (< 75%):", salmPercent)
+        # print("Low KmerID score for Enterica (< 75%):", salmPercent)
         limsStatus = "Inconclusive"
     elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
         limsReason = "Contaminated: non-EntericaKmerID<38%"
-        print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
+        # print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
         limsStatus = "Inconclusive"
     elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
         limsStatus = limsStatus.replace(" ", "")
@@ -497,40 +503,39 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
         if len(limsStatus) <= 0:
             limsStatus = "Pass"
-    elif assemblySize != "no_result" and assemblySize > 5800000:
+    elif isinstance(assemblySize, int) and assemblySize > 5800000:
         limsReason = "Contaminated: assembly>5.8Mbp"
-        print("Assembly too large:", assemblySize)
+        # print("Assembly too large:", assemblySize)
         limsStatus = "Inconclusive"
     elif "Co-existence of multiple serotypes detected" in seqseroComment and "3-" not in consensus:
         limsStatus = "Inconclusive"
         limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
     elif mostLight == "RED":
         limsReason = "PoorQuality: MOSTlightRED"
-        print("Most light:", mostLight)
+        # print("Most light:", mostLight)
         limsStatus = "Inconclusive"
-    elif mlstMeanCov != "no_result" and mlstMeanCov < 30:
+    elif isinstance(mlstMeanCov, int) and mlstMeanCov < 30:
         limsReason = "PoorQuality: MLSTcov<30x"
-        print("MLST coverage:", mlstMeanCov)
+        # print("MLST coverage:", mlstMeanCov)
         limsStatus = "Inconclusive"
     elif st == "Failed(incomplete locus coverage)":
         limsReason = "PoorQuality: incomplSTcov(MOST)"
-        print("Incomplete ST locus coverage")
+        # print("Incomplete ST locus coverage")
         limsStatus = "Inconclusive"
-    elif numContigs != "no_result":
-        if numContigs > 600:
-            limsReason = "PoorAssembly: contigCount>600"
-            print("Too many contigs:", numContigs)
-            limsStatus = "Inconclusive"
-    elif n50 < 20000:
+    elif isinstance(numContigs, int) and numContigs > 600:
+        limsReason = "PoorAssembly: contigCount>600"
+        # print("Too many contigs:", numContigs)
+        limsStatus = "Inconclusive"
+    elif isinstance(n50, int) and n50 < 20000:
         limsReason = "PoorAssembly: N50<20Kbp"
-        print("N50 too small:", n50)
-    elif assemblySize < 4000000:
+        # print("N50 too small:", n50)
+    elif isinstance(assemblySize, int) and assemblySize < 4000000:
         limsReason = "PoorAssembly: assembly<4Mbp"
-        print("Assembly too small:", assemblySize)
+        # print("Assembly too small:", assemblySize)
         limsStatus = "Inconclusive"
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
-        print("No identified serotypes:", limsSerotypes)
+        # print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
@@ -549,6 +554,9 @@ def parse_table(summaryTable):
         sampleID = row['Isolate_ID']
         consensus = row['Consensus']
         serotypes = parse_consensus(consensus)
+        if not serotypes:
+            print("Problem on this row: {}".format(idx))
+            continue
         limsSerotypes, limsSerogroup, limsSubgenus = parse_seros(serotypes)
         limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
         if "Iiia" in consensus or "IIIa" in consensus:

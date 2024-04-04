@@ -371,11 +371,11 @@ def vaccine_diff(sampleDir, serovar):
                 elif vaccine.count('AviproE') == 2:
                     vaccine = '2-AviproE'
                 elif vaccine.count('AviproE') == 1:
-                    vaccine.count('1-AviproE--1-Wild_Type')
+                    vaccine = '1-AviproE--1-Wild_Type'
                 elif vaccine.count('AviproT') == 2:
                     vaccine = '2-AviproT'
                 elif vaccine.count('AviproT') == 1:
-                    vaccine.count('1-AviproT--1-Wild_Type')
+                    vaccine = '1-AviproT--1-Wild_Type'
                 elif vaccine.count('Gallivac') == 2:
                     vaccine = '2-Salmovac440'           # Previously known as Gallivac
                 elif vaccine.count('Gallivac') == 1:
