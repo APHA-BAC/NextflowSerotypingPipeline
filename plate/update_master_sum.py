@@ -5,6 +5,7 @@ import re
 def update_summary(master_sum,new_sum):
 	master_df=pd.read_csv(master_sum)
 	new_df=pd.read_csv(new_sum)
+	print(new_sum)
 	sum_info=re.search("(\d{6})_APHA_(.*_\d{4})",str(new_sum))
 	date=sum_info.group(1)
 	plate_id=sum_info.group(2)
