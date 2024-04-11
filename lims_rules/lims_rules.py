@@ -380,6 +380,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
+        consensus = "3-Bovismorbificans"
     
     # Gallinarum rule N/A
     elif consensus == "2-Gallinarum--1-Pullorum" or consensus == "2-Gallinarum--1-No Type":
@@ -483,6 +484,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Goldcoast"
         limsStatus = "Pass"
         limsReason= ""
+        consensus = "3-Goldcoast"
 
     #  QUALITY CHECKS
     if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000 :
