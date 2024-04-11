@@ -203,7 +203,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     logging.info(f"New sum path: {summaryTable_path}\n")
     print(summaryTable_path)
 
-    upload_fasta(assemblies_dir)
+    # upload_fasta(assemblies_dir)
 
 
 def upload_logfile(results_uri):
