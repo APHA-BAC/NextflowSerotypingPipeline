@@ -309,6 +309,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     
     # Kedogou rule CHECK THESE
     elif "1-I G:i:" in consensus or "1-I 13:i" in consensus:
+        limsSerotype = "Kedougou"
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
         limsReason = ""
