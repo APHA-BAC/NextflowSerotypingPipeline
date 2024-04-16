@@ -65,7 +65,8 @@ process count_reads {
 process make_dir{
     script:
     """
-    mkdir $HOME/wgs-results/${params.runID}/assemblies/
+    sleep 15
+    mkdir $HOME/wgs-results/${params.runID}/assemblies
     """
 }
 
