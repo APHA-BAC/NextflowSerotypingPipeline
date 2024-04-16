@@ -7,6 +7,7 @@ import signal
 import tempfile
 import pandas as pd
 from textwrap import dedent
+import update_master_sum
 
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
@@ -199,10 +200,11 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Update master summary table
     # logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
-    # update_master_summary(summaryTable_path)
+    run(["aws", "s3", "cp", "s3://s3-ranch-055/master_summary.csv", "/root/"])
+    update_master_sum.update_summary("/root/master_summary.csv",summaryTable_path)
+    run(["aws", "s3", "cp", "/root/master_summary.csv", "s3://s3-ranch-055/", "--acl", "bucket-owner-full-control"])
     logging.info(f"New sum path: {summaryTable_path}\n")
-    print(summaryTable_path)
-
+    
     # upload_fasta(assemblies_dir)
 
 
