@@ -63,9 +63,10 @@ process count_reads {
  * PRE-STEP iv make fasta dir
 */
 process make_dir{
+    errorStrategy 'ignore'
     script:
     """
-    sleep 15
+    sleep 100
     mkdir $HOME/wgs-results/${params.runID}/assemblies
     """
 }
