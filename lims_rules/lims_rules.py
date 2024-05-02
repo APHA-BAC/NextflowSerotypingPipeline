@@ -557,8 +557,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         copy_status = "No"
 
     if "3-" in consensus and ((salmPercent > 75 and (limsSubgenus == "I" or limsSubgenus == "undetermined")) or (salmPercent > 38 and limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V'))):
-        limsStatus = "Pass"
-        limsReason = ""
+        if "No Type" in consensus or "no_result" in consensus:
+            pass 
+        else:
+            limsStatus = "Pass"
+            limsReason = ""
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine, copy_status
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
