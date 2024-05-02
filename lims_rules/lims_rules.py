@@ -101,17 +101,11 @@ def parse_seros(serotypes):
             lookupSero = subgenusRegex.match(serotype).group(1)
         else:
             lookupSero = serotype
-        # print(serotype)
-        if serotype == "Bovis-morbificans":
-            serotype = "Bovismorbificans"
-            lookupSero = "Bovismorbificans"
-        if serotype == "Gold-coast" or serotype == "Gold-Coast":
-            serotype = "Goldcoast"
-            lookupSero = "Goldcoast"
+        
         lookupSero = lookupSero.strip()
         lookupSero = lookupSero.replace("_", " ")
         lookupSero = lookupSero.upper()
-
+        print(lookupSero)
         if "JAVA" in lookupSero:
             lookupSero = "PARATYPHI B VAR. JAVA"
         if lookupSero not in seroDict:
@@ -141,10 +135,12 @@ def parse_seros(serotypes):
     else:
 
         limsSerogroup = serogroups[0]
+    
     if len(subgenera) == 3:
         limsSubgenus = [x for x in subgenera if subgenera.count(x) > 1]
         if len(limsSubgenus) > 0:
             limsSubgenus = limsSubgenus[0]
+
         else:
             limsSubgenus = "undetermined"
     else:
@@ -209,6 +205,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     sampleID, consensus, rawCount, readCount, gc, kmerid, contamFlag, most, mostLight, st, eBG, mlst, mlstMeanCov, seqsero, seqseroComment, n50, serogr, serovar, seroAnt, seroCGMLST, vaccine, mono, sseJ, readRange, numContigs, numContigs25Kb, numContigs50Kb, assemblySize, assemblyGC, L50 = parse_row(row)
     numReads = safe_int(rawCount)
     assemblySize = safe_int(assemblySize)
+    copy_status = "Yes"
+    try:
+        n50.repalce(",","")
+    except:
+        pass
     n50 = safe_int(n50)
     numContigs = safe_int(numContigs)
     mlstMeanCov = safe_float(mlstMeanCov)
@@ -382,6 +383,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
         consensus = "3-Bovismorbificans"
+
+    # Goldcoast rule
+    if "2-Goldcoast" in consensus and "Gold-Coast" in consensus:
+        limsSerotype = "Goldcoast"
+        limsStatus = "Pass"
+        limsReason= ""
+        consensus = "3-Goldcoast"
     
     # Gallinarum rule N/A
     elif consensus == "2-Gallinarum--1-Pullorum" or consensus == "2-Gallinarum--1-No Type":
@@ -480,73 +488,84 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
     
-    # Gold coast stop gap rule
-    if "2-Goldcoast" in consensus and "Gold-Coast" in consensus:
-        limsSerotype = "Goldcoast"
-        limsStatus = "Pass"
-        limsReason= ""
-        consensus = "3-Goldcoast"
-
-    #  QUALITY CHECKS
-    if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000 :
-        limsReason = "InsufficientData: readCount<500K"
-        # print("Low read count:", numReads)
-        limsStatus = "Inconclusive"
-    elif limsSubgenus == "I" and salmPercent < 75:
-        limsReason = "Contaminated: EntericaKmerID<75%"
-        # print("Low KmerID score for Enterica (< 75%):", salmPercent)
-        limsStatus = "Inconclusive"
-    elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
-        limsReason = "Contaminated: non-EntericaKmerID<38%"
-        # print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
-        limsStatus = "Inconclusive"
-    elif limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
+    # Subgenus/KmerID % check
+    if limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
         limsStatus = limsStatus.replace(" ", "")
         if len(limsStatus) <= 0:
             limsStatus = "Pass"
     elif limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V') and salmPercent > 38 and "3-" in consensus and "--" not in consensus:
         if len(limsStatus) <= 0:
             limsStatus = "Pass"
+    
+    #  QUALITY CHECKS
+    if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
+        limsReason = "InsufficientData: readCount<500K"
+        copy_status = "No"
+        # print("Low read count:", numReads)
+        limsStatus = "Inconclusive"
+    elif (limsSubgenus == "I" or limsSubgenus == "undetermined") and salmPercent < 75:
+        limsReason = "Contaminated: EntericaKmerID<75%"
+        print("Low KmerID score for Enterica (< 75%):", salmPercent)
+        limsStatus = "Inconclusive"
+        copy_status = "No"
+    elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
+        limsReason = "Contaminated: non-EntericaKmerID<38%"
+        # print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
+        limsStatus = "Inconclusive"
+        copy_status = "No"
     elif isinstance(assemblySize, int) and assemblySize > 5800000:
         limsReason = "Contaminated: assembly>5.8Mbp"
-        # print("Assembly too large:", assemblySize)
         limsStatus = "Inconclusive"
+        copy_status = "No"
     elif "Co-existence of multiple serotypes detected" in seqseroComment and "3-" not in consensus:
         limsStatus = "Inconclusive"
         limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
+        copy_status = "No"
     elif mostLight == "RED":
         limsReason = "PoorQuality: MOSTlightRED"
         # print("Most light:", mostLight)
         limsStatus = "Inconclusive"
-    elif isinstance(mlstMeanCov, int) and mlstMeanCov < 30:
+        copy_status = "No"
+    elif isinstance(mlstMeanCov, float) and mlstMeanCov < 30:
         limsReason = "PoorQuality: MLSTcov<30x"
         # print("MLST coverage:", mlstMeanCov)
         limsStatus = "Inconclusive"
+        copy_status = "No"
     elif st == "Failed(incomplete locus coverage)":
         limsReason = "PoorQuality: incomplSTcov(MOST)"
         # print("Incomplete ST locus coverage")
         limsStatus = "Inconclusive"
+        copy_status = "No"
     elif isinstance(numContigs, int) and numContigs > 600:
         limsReason = "PoorAssembly: contigCount>600"
         # print("Too many contigs:", numContigs)
         limsStatus = "Inconclusive"
+        copy_status = "No"
     elif isinstance(n50, int) and n50 < 20000:
         limsReason = "PoorAssembly: N50<20Kbp"
-        # print("N50 too small:", n50)
+        print("N50 too small:", n50)
+        copy_status = "No"
     elif isinstance(assemblySize, int) and assemblySize < 4000000:
         limsReason = "PoorAssembly: assembly<4Mbp"
         # print("Assembly too small:", assemblySize)
         limsStatus = "Inconclusive"
+        copy_status = "No"
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
         # print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
+        copy_status = "No"
 
-    return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine
+    if "3-" in consensus and ((salmPercent > 75 and (limsSubgenus == "I" or limsSubgenus == "undetermined")) or (salmPercent > 38 and limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V'))):
+        limsStatus = "Pass"
+        limsReason = ""
+
+    return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine, copy_status
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
 
 def parse_table(summaryTable):
-    firstColNames = ['Isolate_ID', 'Consensus', 'LIMS_Status', 'LIMS_Reason', 'LIMS_SerotypeID', 'LIMS_Subgenus', 'LIMS_Serogroup', 'LIMS_Variant', 'LIMS_Vaccine']
+    firstColNames = ['Isolate_ID', 'Consensus', 'LIMS_Status', 'LIMS_Reason', 'LIMS_SerotypeID', 'LIMS_Subgenus', 
+    'LIMS_Serogroup', 'LIMS_Variant', 'LIMS_Vaccine', 'Copy_Status']
     outTable = []
     outFileName = os.path.basename(summaryTable).replace(".csv", "_plusLIMS.csv")
     df = pd.read_csv(summaryTable, keep_default_na=False)
@@ -562,15 +581,18 @@ def parse_table(summaryTable):
             print("Problem on this row: {}".format(idx))
             continue
         limsSerotypes, limsSerogroup, limsSubgenus = parse_seros(serotypes)
-        limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
+
         if "Iiia" in consensus or "IIIa" in consensus:
             limsSubgenus = "IIIa"
         if "IIIb" in consensus:
             limsSubgenus = "IIIb"
         if "2-IV" in consensus:
             limsSubgenus = "IV"
+        
+        limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine, copy_status = apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row)
+        
 
-        outRow = [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine] + list(row[otherColNames])
+        outRow = [sampleID, consensus, limsStatus, limsReason, limsSerotype, limsSubgenus, limsSerogroup, limsVariant, limsVaccine, copy_status] + list(row[otherColNames])
         outTable.append([str(x) for x in outRow])
     with open(outFileName, 'w') as outFile:
         writer = csv.writer(outFile, delimiter=',')

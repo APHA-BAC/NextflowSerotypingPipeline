@@ -362,7 +362,6 @@ def vaccine_diff(sampleDir, serovar):
             tab = readTable(srst2File[0])[1][1:]
             tab = [x for x in tab if "WT" not in x and "not" not in x and "Nobilis" not in x and "sseJ" not in x]
             if len(tab) > 0:
-                # print(tab)
                 vaccine = "_".join(tab)
                 if vaccine.count('Salmoporc') == 2:
                     vaccine = '2-SalmoporcSTM'
