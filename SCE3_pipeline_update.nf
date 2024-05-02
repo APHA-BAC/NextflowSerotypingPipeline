@@ -13,6 +13,7 @@ println params.runID
 
 readPath = "$HOME/wgs-reads/${params.runID}/*_{R1,R2}.fastq.gz"
 publishDirectory = "$HOME/wgs-results/${params.runID}/"
+assemblyDirectory = "$HOME/wgs-results/${params.runID}/assemblies/"
 
 println readPath
 
@@ -25,6 +26,7 @@ process git_sha {
     """
     # Save the git-sha into the results folder
     mkdir -p $publishDirectory
+    mkdir -p $assemblyDirectory
     git rev-parse HEAD > $publishDirectory/sha
     """
 }
@@ -46,6 +48,7 @@ process count_reads {
     env(READCOUNT) into countStr1, countStr2
     val sample_id into names1, names2
     val readPair into files1, files2
+    val true
     file("*_readcount.txt") into out_iii
 
     shell:
@@ -62,14 +65,16 @@ process count_reads {
 /*
  * PRE-STEP iv make fasta dir
 */
-process make_dir{
-    errorStrategy 'ignore'
-    script:
-    """
-    sleep 100
-    mkdir $HOME/wgs-results/${params.runID}/assemblies
-    """
-}
+// process make_dir{
+//     input:
+//     val ready
+    
+//     errorStrategy 'ignore'
+//     script:
+//     """
+//     mkdir $HOME/wgs-results/${params.runID}/assemblies
+//     """
+// }
 
 countInt1 = countStr1.toInteger()
 countInt2 = countStr2.toInteger()
