@@ -240,7 +240,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     # RULE 14 LOW MLST COVERAGE
     elif st == "Failed(incomplete locus coverage)":
-        limsReason = "PoorAssembly: incomplSTcov(MOST)"
+        limsReason = "PoorQuality: incomplSTcov(MOST)"
         # print("Incomplete ST locus coverage")
         limsStatus = "Inconclusive"
 
@@ -461,33 +461,31 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
 
     limsSerotype = limsSerotype.replace("(2/3consensus)", "")
 
-    # Final check
+    # Some checks
     if limsSerotype == "4,12:d:-":
         limsStatus = "Pass"
         limsReason = ""
-    if limsStatus == "" or limsStatus == "CheckRequired" and "InsufficientData" not in limsReason:
-        limsStatus = "CheckRequired"
-        limsReason = "Check Serovar"
-    if limsSerotype == "Paratyphi B Variant Java" or limsSerotype == "Monophasic Typhimurium" or limsSerotype == "Paratyphi B var. Java":
-        if limsReason == "Check Serovar":
-            limsStatus = "Pass"
-            limsReason = ""
-    if "3-" in consensus and "no_result" not in consensus:
-        if limsReason == "Check Serovar":
-            limsStatus = "Pass"
-            limsReason = ""
+    
+    # Check if these still necessary
+    # if limsStatus == "" or limsStatus == "CheckRequired" and "InsufficientData" not in limsReason:
+    #     limsStatus = "CheckRequired"
+    #     limsReason = "Check Serovar"
+    # if limsSerotype == "Paratyphi B Variant Java" or limsSerotype == "Monophasic Typhimurium" or limsSerotype == "Paratyphi B var. Java":
+    #     if limsReason == "Check Serovar":
+    #         limsStatus = "Pass"
+    #         limsReason = ""
+    
     if "3-No Type" in consensus:
-        if mostLight != "RED":
-            limsStatus = "Inconclusive"
-            limsReason = "Contaminated: noIDedSerotypes"
+        limsStatus = "Inconclusive"
+        limsReason = "Contaminated: noIDedSerotypes"
     if "2-No Type" in consensus and "e,h:-" in consensus:
-        if mostLight != "RED":
-            limsStatus = "Inconclusive"
-            limsReason = "Contaminated: noIDedSerotypes"
+        limsStatus = "Inconclusive"
+        limsReason = "Contaminated: noIDedSerotypes"
+    
+
     if limsSerotype == "no_consensus":
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
-    
     # Subgenus/KmerID % check
     if limsSubgenus == "I" and salmPercent > 75 and "3-" in consensus and "--" not in consensus:
         limsStatus = limsStatus.replace(" ", "")
@@ -501,16 +499,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
         limsReason = "InsufficientData: readCount<500K"
         copy_status = "No"
-        # print("Low read count:", numReads)
         limsStatus = "Inconclusive"
     elif (limsSubgenus == "I" or limsSubgenus == "undetermined") and salmPercent < 75:
         limsReason = "Contaminated: EntericaKmerID<75%"
-        print("Low KmerID score for Enterica (< 75%):", salmPercent)
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif limsSubgenus in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 38:
         limsReason = "Contaminated: non-EntericaKmerID<38%"
-        # print("Low KmerID score for non-Enterica (< 38%):", salmPercent)
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(assemblySize, int) and assemblySize > 5800000:
@@ -523,36 +518,30 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         copy_status = "No"
     elif mostLight == "RED":
         limsReason = "PoorQuality: MOSTlightRED"
-        # print("Most light:", mostLight)
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(mlstMeanCov, float) and mlstMeanCov < 30:
         limsReason = "PoorQuality: MLSTcov<30x"
-        # print("MLST coverage:", mlstMeanCov)
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif st == "Failed(incomplete locus coverage)":
         limsReason = "PoorQuality: incomplSTcov(MOST)"
-        # print("Incomplete ST locus coverage")
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(numContigs, int) and numContigs > 600:
         limsReason = "PoorAssembly: contigCount>600"
-        # print("Too many contigs:", numContigs)
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(n50, int) and n50 < 20000:
         limsReason = "PoorAssembly: N50<20Kbp"
-        print("N50 too small:", n50)
+        limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(assemblySize, int) and assemblySize < 4000000:
         limsReason = "PoorAssembly: assembly<4Mbp"
-        # print("Assembly too small:", assemblySize)
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
-        # print("No identified serotypes:", limsSerotypes)
         limsStatus = "Inconclusive"
         copy_status = "No"
 
