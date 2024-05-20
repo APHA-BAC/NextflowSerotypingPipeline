@@ -302,7 +302,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
         limsReason = ""
-    # NA
     elif "1,13,23:i:1,5" in consensus:
         limsVariant = "Monophasic Idikan"
     elif mono == "MonophasicIdikan":
@@ -379,9 +378,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
 
     # RULE 24 BOVISMORBIFICANS CHECKED
-    elif len([x for x in limsSerotypes if x in ("Bovismorbificans", "Bovis-Morbificans")]) == len(limsSerotypes):
+    elif "2-Bovismorbificans" in consensus and "Bovis-morbificans" in consensus:
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
+        limsReason = ""
+        copy_status = "Yes"
         consensus = "3-Bovismorbificans"
 
     # Goldcoast rule
@@ -470,6 +471,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # if limsStatus == "" or limsStatus == "CheckRequired" and "InsufficientData" not in limsReason:
     #     limsStatus = "CheckRequired"
     #     limsReason = "Check Serovar"
+    
     # if limsSerotype == "Paratyphi B Variant Java" or limsSerotype == "Monophasic Typhimurium" or limsSerotype == "Paratyphi B var. Java":
     #     if limsReason == "Check Serovar":
     #         limsStatus = "Pass"
@@ -495,7 +497,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         if len(limsStatus) <= 0:
             limsStatus = "Pass"
     
+
+    exceptions_list = ["Paratyphi B Variant Java","Paratyphi B","Monophasic Typhimurium",
+    "Kedougou","61:k:1,5,7","4,12:d:-","S. enterica 4,12:d:-","Houtenae IV 44:z4,z23:-",
+    "I 4,[5],12:d:-","Bovismorbificans"]
+
     #  QUALITY CHECKS
+
     if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
         limsReason = "InsufficientData: readCount<500K"
         copy_status = "No"
@@ -512,10 +520,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Contaminated: assembly>5.8Mbp"
         limsStatus = "Inconclusive"
         copy_status = "No"
-    elif "Co-existence of multiple serotypes detected" in seqseroComment and "3-" not in consensus:
-        limsStatus = "Inconclusive"
-        limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
-        copy_status = "No"
     elif mostLight == "RED":
         limsReason = "PoorQuality: MOSTlightRED"
         limsStatus = "Inconclusive"
@@ -529,16 +533,24 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(numContigs, int) and numContigs > 600:
-        limsReason = "PoorAssembly: contigCount>600"
+        limsReason = "PoorQuality: contigCount>600"
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(n50, int) and n50 < 20000:
-        limsReason = "PoorAssembly: N50<20Kbp"
+        limsReason = "PoorQuality: N50<20Kbp"
         limsStatus = "Inconclusive"
         copy_status = "No"
     elif isinstance(assemblySize, int) and assemblySize < 4000000:
-        limsReason = "PoorAssembly: assembly<4Mbp"
+        limsReason = "PoorQuality: assembly<4Mbp"
         limsStatus = "Inconclusive"
+        copy_status = "No"
+    elif "Co-existence of multiple serotypes detected" in seqseroComment and "3-" not in consensus:
+        limsStatus = "Inconclusive"
+        limsReason = "Contaminated: multipleSerotypesDetected(SeqSero2)"
+        copy_status = "No"
+    elif "No serotype antigens were detected. This is an atypical result that should be further investigated" in seqseroComment:
+        limsStatus = "Inconclusive"
+        limsReason = "No sertype antigens detected by SeqSero"
         copy_status = "No"
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
@@ -551,6 +563,17 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         else:
             limsStatus = "Pass"
             limsReason = ""
+    if limsSerotype == "Paratyphi B Variant Java":
+        limsStatus = "Pass"
+        limsReason = ""
+    if limsSerotype in exceptions_list:
+        limsStatus = "Pass"
+        limsReason = ""
+
+    elif "2-" in consensus and limsStatus == "":
+        limsStatus = "CheckRequired"
+        limsReason = "Check Serovar"
+        copy_status = "No"
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine, copy_status
     # numReads, assemblySize, n50, numContigs, mostLight, kmerid, st, mlstMeanCov, contamFlag, vaccine, mono, sseJ
