@@ -378,7 +378,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
 
     # RULE 24 BOVISMORBIFICANS CHECKED
-    elif "2-Bovismorbificans" in consensus and "Bovis-morbificans" in consensus:
+    elif "2-Bovismorbificans" in consensus and "Bovis-Morbificans" in consensus:
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
         limsReason = ""
@@ -467,16 +467,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
         limsReason = ""
     
-    # Check if these still necessary
-    # if limsStatus == "" or limsStatus == "CheckRequired" and "InsufficientData" not in limsReason:
-    #     limsStatus = "CheckRequired"
-    #     limsReason = "Check Serovar"
-    
-    # if limsSerotype == "Paratyphi B Variant Java" or limsSerotype == "Monophasic Typhimurium" or limsSerotype == "Paratyphi B var. Java":
-    #     if limsReason == "Check Serovar":
-    #         limsStatus = "Pass"
-    #         limsReason = ""
-    
     if "3-No Type" in consensus:
         limsStatus = "Inconclusive"
         limsReason = "Contaminated: noIDedSerotypes"
@@ -550,7 +540,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         copy_status = "No"
     elif "No serotype antigens were detected. This is an atypical result that should be further investigated" in seqseroComment:
         limsStatus = "Inconclusive"
-        limsReason = "No sertype antigens detected by SeqSero"
+        limsReason = "PoorQuality: No serotype antigens detected by SeqSero"
         copy_status = "No"
     elif len([x for x in limsSerotypes if x in ('No Type', 'No Results')]) == len(limsSerotypes):
         limsReason = "Contaminated: noIDedSerotypes"
