@@ -4,7 +4,26 @@
 
 Salmonella whole genome sequencing (WGS) serotyping pipeline was developed by APHA and is written in [Nextflow](https://www.nextflow.io/). The pipeline compares outputs from several publicly available serotyping tools to increase performance and includes bespoke differentiation of strains important for veterinary surveillance.
 
-# Installation
+## Run from docker
+
+**Note:** This is the recommended method to run the pipeline by and required docker to be installed on your machine.
+
+First clone the rpository into a local directory:
+
+```
+git clone https://github.com/APHA-BAC/NextflowSerotypingPipeline.git
+
+A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq).
+
+When running the pipeline on data stored locally, you can run the following command from the plate directory of the repository which will download the docker image if it is not downloaded
+and will then run the pipeline in a docker container on your locally stored fastq files:
+```
+$ cd plate
+$ python process_plate.py --runID <runID>
+
+```
+
+# Local installation
 To install the Nextflow salmonella serotyping pipeline:
 
 First clone the rpository into a local directory:
@@ -13,9 +32,10 @@ First clone the rpository into a local directory:
 git clone https://github.com/APHA-BAC/NextflowSerotypingPipeline.git
 
 ```
-And then run the following commands while in the repository:
+And then run the following commands while in directory where you cloned the repository:
 
 ```
+$ cd NextflowSerotypingPipeline
 $ cd install
 $ bash install.bash
 
@@ -49,19 +69,7 @@ $ nextflow run SCE3_pipeline_update.nf --runID <runID>
 Pipeline output is stored in  `~/wgs-results/<runID>/` and contains:
 - TODO
 
-## Run from docker
 
-**Note:** While running from the terminal is the easiest method for developers and data analysts, the pipeline can also be run from docker. This method has the benefit of working across platforms while guaranteeing consistency with automated tests (see below).
-
-A docker image containing all required dependencies is provided [here](https://hub.docker.com/r/jguzinski/salmonella-seq).
-
-When running the pipeline on data stored locally, you can run the following command from the plate directory of the repository which will download the docker image if it is not downloaded
-and will then run the pipeline in a docker container on your locally stored fastq files:
-```
-$ cd plate
-$ python process_plate.py --runID <runID>
-
-```
 # Run options
 
 These are the run options for process_plate.py:
@@ -71,6 +79,7 @@ These are the run options for process_plate.py:
 - --results-dir Sets the directory for where the directory containing the results are stored. Default is: "~/wgs-results"
 - --image Select a specific docker image to use. Default is: "jguzinski/salmonella-seq:prod"
 - --runID The name of the run which will also be the name of the directory for the results. Only needed if for running local reads
+- --kmerID the directory where the KmerID reference files are located
 
 # Pipeline Algorithm
 
