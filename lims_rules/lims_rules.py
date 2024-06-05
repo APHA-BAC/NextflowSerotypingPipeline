@@ -378,7 +378,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
 
     # RULE 24 BOVISMORBIFICANS CHECKED
-    elif "2-Bovismorbificans" in consensus and "Bovis-Morbificans" in consensus:
+    elif "2-Bovismorbificans" in consensus and ("Bovis-Morbificans" in consensus or "Bovid-mobificans" in consensus):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
         limsReason = ""
