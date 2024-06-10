@@ -31,6 +31,14 @@ process git_sha {
     """
 }
 
+process email_file {
+    shell:
+    '''
+    echo "The following plate has started running:" | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    echo !{params.runID} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    echo "\nIsolates that failed to process due to low readcount and need to be resequenced:" | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    '''
+}
 
 /*
  * PRE-STEP iii - count reads
@@ -56,6 +64,14 @@ process count_reads {
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_readcount.txt
+
+    
+    
+    
+    if (($READCOUNT < 500000)); 
+    then
+        echo !{sample_id} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    fi
     
     '''
 
