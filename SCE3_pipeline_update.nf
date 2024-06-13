@@ -70,7 +70,7 @@ process count_reads {
     
     if (($READCOUNT < 500000)); 
     then
-        echo !{sample_id} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+        echo !{sample_id} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_runStatus.scemail
     fi
     
     '''
