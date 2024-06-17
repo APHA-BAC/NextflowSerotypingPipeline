@@ -159,7 +159,7 @@ def run_plate(s3_uri, reads_dir, results_dir, image, runID, transfer, updateSum,
         TableFile = plate_name + "_SummaryTable_plusLIMS.csv"
         summaryTable_path = os.path.join("~/wgs-results/",plate_name,TableFile)
         summaryTable_path = os.path.expanduser(summaryTable_path)
-        upload_s3(summaryTable_path,s3_destination)
+        upload_s3(summaryTable_path,transfer)
 
     if upload_fasta:
         
@@ -175,7 +175,7 @@ if __name__ == '__main__':
     parser.add_argument("--results-dir", default=DEFAULT_RESULTS_DIRECTORY,  help="base directory where pipeline results are stored")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="docker image to use")
     parser.add_argument("-r","--runID", default=False, help="The name of the run which should be the name of the folder with your reads")
-    parser.add_argument("-t", "--transfer", default=0, help="Se to to 1 to transfer to S3 bucket")
+    parser.add_argument("-t", "--transfer", default=0, help="Set to the path for your desired s3 destination bucket")
     parser.add_argument("-u", "--updateSum", default=False, help="Set to path of master summary table if you want to update the master the summary table with the results from this run")
     parser.add_argument("-k", "--kmerID", default = DEFAULT_KMERID, help="Set path to KMER ID genome files")
     parser.add_argument("-f", "--fasta", default=False, help="Upload fasta files to S3 bucket. Default is False")
