@@ -232,20 +232,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsVaccine = ""
     limsStatus = ""
 
-    # RULE 1 NO PIPELINE OUTPUT
-    if consensus == "no_result":
-        limsStatus = "Inconclusive"
-        # print("No pipeline results; most likely not Salmonella")
-        limsReason = "noResults_checkIfSalmonella"
-
-    # RULE 14 LOW MLST COVERAGE
-    elif st == "Failed(incomplete locus coverage)":
-        limsReason = "PoorQuality: incomplSTcov(MOST)"
-        # print("Incomplete ST locus coverage")
-        limsStatus = "Inconclusive"
-
     # Paratyphi B rules; all checked
-    elif consensus == "2-Paratyphi--1-Paratyphi B var. Java":
+    if consensus == "2-Paratyphi--1-Paratyphi B var. Java":
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
@@ -302,40 +290,22 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
         limsReason = ""
-    elif "1,13,23:i:1,5" in consensus:
-        limsVariant = "Monophasic Idikan"
-    elif mono == "MonophasicIdikan":
-        limsVariant = "Monophasic Idikan"
-        limsStatus = "Pass"
+    
+    
     
     # Kedogou rule CHECK THESE
-    elif "1-I G:i:" in consensus or "1-I 13:i" in consensus:
-        limsSerotype = "Kedougou"
-        limsVariant = "Monophasic Kedougou"
-        limsStatus = "Pass"
-        limsReason = ""
-    elif "1-I G:i:---1-I 13:i:---1-Kedougou" in consensus:
-        limsSerotype = "Kedougou"
-        limsStatus = "Pass"
-        limsReason = ""
     # Monophasic Kedogou
-    elif "1,13,23:i:l,w" in consensus:
-        limsStatus = "Pass"
-        limsReason = ""
-        limsVariant = "Monophasic Kedougou"
-    elif mono == "MonophasicKedougou":
+    elif ("1-I G:i:" in consensus or "1-I 13:i" in consensus or "1-Kedogou" in consensus) and mono == "MonophasicIdikan":
+        limsSerotype = "Kedougou"
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
         limsReason = ""
-
+    elif ("1-I G:i:" in consensus and "1-I 13:i"  in consensus and "1-Kedogou" in consensus):
+        limsSerotype = "Kedougou"
+        limsStatus = "Pass"
+        limsReason = ""
+    
     #RULE ARIZONAE IIIA 18:Z4:Z32 CHECKED
-    elif consensus in ("2-IIIa--1-IIIa 18:z4,z23:-", "2-IIIa 18:z4,z23:---1-Arizonae"):
-        limsReason = "check Serovar"
-        limsSerotype = "Arizonae IIIa 18:z4,z32:-"
-        limsStatus = "CheckRequired"
-    elif "IIIa 18:z4,z23:-" in consensus or "2-IIIa 18:z4,z23:---1-Arizonae" in consensus and salmPercent > 38:
-        limsSerotype = "18:z4,z32:-"
-        limsStatus = "CheckRequired"
     elif consensus == "2-IIIa 44:z4,z23:---1-Arizonae":
         limsSerotype = "4:z4,z23:-"
         limsStatus == "CheckRequired"
@@ -346,18 +316,14 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
     elif "O:61:k:1,5,7" in consensus:
         limsSerotype = "61:k:1,5,7"
-        limsStatus = "Pass"
+        limsStatus = "CheckRequired"
 
     # Clarify what this should be CHECKED
-    elif "1-I 1,4,[5],12:d:" in consensus:
+    elif consensus == "1-I 4:d:---1-I 1,4,[5],12:d:---1-Unnamed" or consensus == "1-I 1,4,[5],12:d:---1-I 4:d:---1-Unnamed":
         limsSerotype = "4,12:d:-"
         limsStatus = "Pass"
         limsReason = ""
-    # MAYBE NOT NEEDED?
-    elif consensus == "1-I 4:d:---1-I 1,4,[5],12:d:---1-Unnamed" or consensus == "1-I 1,4,[5],12:d:---1-I 4:d:---1-Unnamed":
-        limsSerotype = "S. enterica 4,12:d:-"
-        limsStatus = "Pass"
-
+    
     # Houtenae RULE CHECKED
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
         limsSerotype = "Houtenae IV 44:z4,z23:-"
@@ -369,7 +335,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "CheckRequired"
     
     # Uncommon enteritidis
-    elif "1-No Type--1-Gallinarum or Enteritidis--1-Berta|Pensacola|Sangalkam" == consensus or "2-No Type--1-Pensacola|Sangalkam" == consensus:
+    elif ("1-No Type--" in conesnsus and "1-Gallinarum or Enteritidis" in consensus and "1-Berta|Pensacola|Sangalkam" in consensus) or "2-No Type--1-Pensacola|Sangalkam" == consensus:
         limsSerotype = "Enteritidis"
     
     # RULE 22 4,12:D:- CHECKED
