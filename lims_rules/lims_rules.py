@@ -474,9 +474,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsReason = "Contaminated: noIDedSerotypes"
         limsStatus = "Inconclusive"
         copy_status = "No"
-    if limsSubgenus not in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 75:
+    if limsSubgenus not in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 75 and limsReason != "InsufficientData: readCount<500K":
         limsStatus = "Inconclusive"
         limsReason = "Contaminated: EntericaKmerID<75%"
+        print("poo")
 
     if "3-" in consensus and ((salmPercent > 75 and (limsSubgenus == "I" or limsSubgenus == "undetermined")) or (salmPercent > 38 and limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V'))):
         if "No Type" in consensus or "no_result" in consensus:
