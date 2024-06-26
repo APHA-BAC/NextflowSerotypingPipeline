@@ -268,6 +268,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
         limsReason = ""
+
+    elif "3-Kedougou" == consensus and mono == "MonophasicKedougou":
+        limsVariant = "Monophasic Kedougou"
+        limsStatus = "Pass"
+        limsReason = ""
     
     # Kedogou rules
     # elif ("1-I G:i:" in consensus or "1-I 13:i" in consensus or "1-Kedogou" in consensus) and mono == "MonophasicIdikan":
