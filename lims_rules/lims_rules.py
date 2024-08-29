@@ -105,7 +105,7 @@ def parse_seros(serotypes):
         lookupSero = lookupSero.strip()
         lookupSero = lookupSero.replace("_", " ")
         lookupSero = lookupSero.upper()
-        print(lookupSero)
+        # print(lookupSero)
         if "JAVA" in lookupSero:
             lookupSero = "PARATYPHI B VAR. JAVA"
         if lookupSero not in seroDict:
@@ -269,7 +269,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
         limsReason = ""
 
-    elif "3-Kedougou" == consensus and mono == "MonophasicKedougou":
+    elif "3-Kedougou" == consensus and mono == "MonophasicKedougou" and salmPercent > 75:
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
         limsReason = ""
@@ -292,15 +292,27 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus == "CheckRequired"
     
     # RULE DIARIZONAE
-    elif ("1-Arizonae" in consensus and "1-IIIb 61:k:1,5,(7)" in consensus and "1-IIIb O:61:k:1,5,7" in consensus):
+    elif ("1-Arizonae" in consensus and "1-IIIb 61:k:1,5,(7)" in consensus and "1-IIIb O:61:k:1,5,7" in consensus) and salmPercent > 38:
+        print("***********")
+        print(consensus)
+        print("Is it this one")
+        print("********")
         limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
-    elif ("1-No Type" in consensus and "1-Arizonae" in consensus and "1-O61:k:1,5,7" in consensus):
+    elif ("1-diarizonae" in consensus and "1-IIIb 61:k:1,5,(7)" in consensus and "1-IIIb O:61:k:1,5,7" in consensus) and salmPercent > 38:
+        print("***********")
+        print(consensus)
+        print("or this one")
+        print("********")
         limsSerotype = "61:k:1,5,7"
         limsStatus = "Pass"
-    elif "O:61:k:1,5,7" in consensus:
+    elif ("1-No Type" in consensus and "1-Arizonae" in consensus and "1-O:61:k:1,5,7" in consensus) and salmPercent > 38:
+        print("***********")
+        print(consensus)
+        print("maybe this one")
+        print("********")
         limsSerotype = "61:k:1,5,7"
-        limsStatus = "CheckRequired"
+        limsStatus = "Pass"
 
     # Clarify what this should be
     elif ("1-I 4:d:" in consensus and "1-Unnamed" in consensus and "1-I 1,4,[5],12:d:" in consensus):
@@ -321,6 +333,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     # Uncommon enteritidis
     elif ("1-No Type--" in consensus and "1-Gallinarum or Enteritidis" in consensus and "1-Berta|Pensacola|Sangalkam" in consensus) or "2-No Type--1-Pensacola|Sangalkam" == consensus:
         limsSerotype = "Enteritidis"
+        limsStatus = "CheckRequired"
+        # limsReason = ""
     
     # RULE 22 4,12:D:-
     elif ("1-No Type" in consensus and "1-Unnamed" in consensus and "1-I 4,[5],12:d:-" in consensus):
@@ -328,7 +342,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Pass"
 
     # RULE 24 BOVISMORBIFICANS
-    elif "2-Bovismorbificans" in consensus and ("Bovis-Morbificans" in consensus or "Bovid-mobificans" in consensus):
+    elif "2-Bovismorbificans" in consensus and ("Bovis-Morbificans" in consensus or "Bovis-morbificans" in consensus):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
         limsReason = ""
@@ -345,15 +359,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif consensus == "2-IIIb 61:i:z53--1-No Type":
         limsStatus = "Pass"
         limsSerotype = "61:i:z53 "
-
-
-    
-    # Gallinarum rule N/A
-    # elif consensus == "2-Gallinarum--1-Pullorum" or consensus == "2-Gallinarum--1-No Type":
-    #     if limsStatus != "Inconclusive":
-    #         limsStatus = "Pass"
-
-    
 
     # 2-Pullorum vaccine RULE
     if vaccine == "2-Pullorum":
@@ -418,8 +423,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     
 
     exceptions_list = ["Paratyphi B Variant Java","Paratyphi B","Monophasic Typhimurium",
-    "Kedougou","61:k:1,5,7","4,12:d:-","S. enterica 4,12:d:-","Houtenae IV 44:z4,z23:-",
-    "I 4,[5],12:d:-","Bovismorbificans"]
+    "Kedougou","4,12:d:-","S. enterica 4,12:d:-","Houtenae IV 44:z4,z23:-",
+    "I 4,[5],12:d:-","Bovismorbificans", "61:k:1,5,7"]
 
     #  QUALITY CHECKS
     if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
@@ -477,7 +482,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     if limsSubgenus not in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 75 and limsReason != "InsufficientData: readCount<500K":
         limsStatus = "Inconclusive"
         limsReason = "Contaminated: EntericaKmerID<75%"
-        print("poo")
+        
 
     if "3-" in consensus and ((salmPercent > 75 and (limsSubgenus == "I" or limsSubgenus == "undetermined")) or (salmPercent > 38 and limsSubgenus in ("II", 'IIIa', 'IIIb', 'IV', 'V'))):
         if "No Type" in consensus or "no_result" in consensus:
@@ -485,7 +490,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         else:
             limsStatus = "Pass"
             limsReason = ""
-    if limsSerotype in exceptions_list:
+    
+    if limsSerotype.strip() in exceptions_list and "3-" not in consensus:
         limsStatus = "Pass"
         limsReason = ""
 
