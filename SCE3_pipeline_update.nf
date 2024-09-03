@@ -11,6 +11,10 @@ subsamp = params.subsampThreshold - 500000
 params.runID = "TestIsolates"
 println params.runID
 
+params.plateRun = "False"
+println params.plateRun
+
+
 readPath = "$HOME/wgs-reads/${params.runID}/*_{R1,R2}.fastq.gz"
 publishDirectory = "$HOME/wgs-results/${params.runID}/"
 assemblyDirectory = "$HOME/wgs-results/${params.runID}/assemblies/"

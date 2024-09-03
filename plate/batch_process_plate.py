@@ -74,7 +74,7 @@ def format_subprocess_output(output):
 def run_pipeline(plate_name, **kwargs):
     """ Run the Salmonella pipeline """
     run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--runID",
-         plate_name], **kwargs)
+         plate_name, "--plateRun", "True"], **kwargs)
 
 
 def download_s3(s3_uri, destination, recursive=False, **kwargs):
