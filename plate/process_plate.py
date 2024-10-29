@@ -43,7 +43,7 @@ def run_pipeline(reads, results, plate_name, assemblies_dir, image=DEFAULT_IMAGE
         "-v", f"{kmerid_config}:/opt/kmerid/config",
         image,
         "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
-        "--runID", plate_name, "--plateRun", "True"
+        "--runID", plate_name, "--plateRun", "False"
     ])
 
 def download_s3(s3_uri, destination):
