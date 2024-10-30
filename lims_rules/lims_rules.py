@@ -440,10 +440,10 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsReason = "PoorQuality: MLSTcov<30x"
             limsStatus = "Inconclusive"
             copy_status = "No"
-        elif st == "Failed(incomplete locus coverage)":
-            limsReason = "PoorQuality: incomplSTcov(MOST)"
-            limsStatus = "Inconclusive"
-            copy_status = "No"
+        # elif st == "Failed(incomplete locus coverage)":
+        #     limsReason = "PoorQuality: incomplSTcov(MOST)"
+        #     limsStatus = "Inconclusive"
+        #     copy_status = "No"
         elif isinstance(numContigs, int) and numContigs > 600:
             limsReason = "PoorQuality: contigCount>600"
             limsStatus = "Inconclusive"
