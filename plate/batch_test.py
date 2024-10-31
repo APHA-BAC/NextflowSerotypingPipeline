@@ -8,6 +8,7 @@ import tempfile
 import pandas as pd
 from textwrap import dedent
 import update_master_sum
+import time
 
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
@@ -215,6 +216,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     except:
         with open("{}_failed.scemail".format(plate_name), 'w') as text_file:
             text_file.write("This run has failed. Please see log file for more details")
+        time.sleep(10)
         run(['aws', 's3', 'cp', './{}_failed.scemail'.format(plate_name), 's3://s3-scemail-3cfh-salmonella-serotyping-pipeline-1-0-0/salmonella-serotyping-pipeline/request/', 
             '--acl', 'bucket-owner-full-control'])
 
