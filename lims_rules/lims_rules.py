@@ -237,7 +237,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
-    elif ("1-Paratyphi B var. Java" in consensus and "1-Java" in consensus and "1-Paratyphi B var. L(+) tartrate+" in consensus) and ssej == 'Java':
+    elif ("1-Paratyphi B var. Java" in consensus and "1-Java" in consensus and "1-Paratyphi B var. L(+) tartrate+" in consensus) and sseJ == 'Java':
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
