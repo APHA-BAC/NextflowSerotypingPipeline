@@ -233,17 +233,15 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     limsStatus = ""
 
     # Paratyphi B rules
-    if consensus == "2-Paratyphi--1-Paratyphi B var. Java":
+    if consensus == "2-Paratyphi--1-Paratyphi B var. Java" and sseJ == 'Java':
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
-        limsReason = ""
-    elif ("1-Paratyphi B var. Java" in consensus and "1-Java" in consensus and "1-Paratyphi B var. L(+) tartrate+" in consensus):
+    elif ("1-Paratyphi B var. Java" in consensus and "1-Java" in consensus and "1-Paratyphi B var. L(+) tartrate+" in consensus) and ssej == 'Java':
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Variant Java"
         limsStatus = "Pass"
     elif ("1-I 4:b:-" in consensus and "1-I 1,4,[5],12:b:-" in consensus and "1-Paratyphi" in consensus) and sseJ == "Java" and limsSubgenus == 'I' and salmPercent > 75:
-        LIMS_SerotypeID = "Paratyphi B Variant Java"
         limsSerotype = "Paratyphi B Variant Java"
         limsVariant = "Monophasic Java"
         limsStatus = "Pass"
@@ -256,7 +254,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsSerotype = "Paratyphi B"
         limsStatus = "Pass"
     
-    # Monophasic Typhi rule
+    # Monophasic Typhimurium rule
     elif ("1-I 1,4,[5],12:i:-" in consensus and "2-Typhimurium" in consensus) or ("1-Typhimurium" in consensus and "1-I 1,4,[5],12:i:" in consensus and "1-I 4,[5],12:i:-" in consensus):
         limsSerotype = "Monophasic Typhimurium"
         limsStatus = "Pass"
@@ -267,23 +265,15 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif "3-Idikan" == consensus and mono == "MonophasicIdikan":
         limsVariant = "Monophasic Idikan"
         limsStatus = "Pass"
-        limsReason = ""
 
     elif "3-Kedougou" == consensus and mono == "MonophasicKedougou" and salmPercent > 75:
         limsVariant = "Monophasic Kedougou"
         limsStatus = "Pass"
-        limsReason = ""
     
-    # Kedogou rules
-    # elif ("1-I G:i:" in consensus or "1-I 13:i" in consensus or "1-Kedogou" in consensus) and mono == "MonophasicIdikan":
-    #     limsSerotype = "Kedougou"
-    #     limsVariant = "Monophasic Kedougou"
-    #     limsStatus = "Pass"
-    #     limsReason = ""
+    
     elif ("1-I G:i:" in consensus and "1-I 13:i:" in consensus and "1-Kedougou" in consensus):
         limsSerotype = "Kedougou"
         limsStatus = "Pass"
-        limsReason = ""
     
     
     #ARIZONAE IIIA 18:Z4:Z32
@@ -309,7 +299,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif ("1-I 4:d:" in consensus and "1-Unnamed" in consensus and "1-I 1,4,[5],12:d:" in consensus):
         limsSerotype = "4,12:d:-"
         limsStatus = "Pass"
-        limsReason = ""
     
     # Houtenae RULE
     elif limsSubgenus == "IV" and salmPercent > 38 and consensus == "2-IV 44:z4,z23:---1-Unnamed":
@@ -325,7 +314,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif ("1-No Type--" in consensus and "1-Gallinarum or Enteritidis" in consensus and "1-Berta|Pensacola|Sangalkam" in consensus) or "2-No Type--1-Pensacola|Sangalkam" == consensus:
         limsSerotype = "Enteritidis"
         limsStatus = "CheckRequired"
-        # limsReason = ""
     
     # RULE 22 4,12:D:-
     elif ("1-No Type" in consensus and "1-Unnamed" in consensus and "1-I 4,[5],12:d:-" in consensus):
@@ -336,7 +324,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif "2-Bovismorbificans" in consensus and ("Bovis-Morbificans" in consensus or "Bovis-morbificans" in consensus):
         limsSerotype = "Bovismorbificans"
         limsStatus = "Pass"
-        limsReason = ""
         copy_status = "Yes"
         consensus = "3-Bovismorbificans"
 
@@ -344,7 +331,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     elif "2-Goldcoast" in consensus and "Gold-Coast" in consensus:
         limsSerotype = "Goldcoast"
         limsStatus = "Pass"
-        limsReason= ""
         consensus = "3-Goldcoast"
 
     elif consensus == "2-IIIb 61:i:z53--1-No Type":
@@ -365,27 +351,22 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         if "2-AviproE" in vaccine or "8321_AviproE*_8322_AviproE*" in vaccine:
             limsVaccine = "Salmonella Enteritidis AVIPRO VAC E Vaccine Strain"
             limsStatus = "Pass"
-            limsReason = ""
         elif "2-Salmovac440" in vaccine:
             limsVaccine = "Salmonella Enteritidis Salmovac 440 Vaccine Strain"
             if consensus == "2-Enteritidis--1-No Type" or consensus == "3-Enteritidis":
                 limsStatus = "Pass"
-                limsReason = ""
             else:
                 limsStatus = "CheckRequired"
 
         elif "2-AviproT" in vaccine or vaccine == "527E_AviproT*" or "526_21b_AviproT*_527E_AviproT" in vaccine:
             limsVaccine = "Salmonella Typhimurium AVIPRO VAC T Vaccine Strain"
             limsStatus = "Pass"
-            limsReason = ""
         elif "2-SalmoporcSTM" in vaccine:
             limsVaccine = "Salmonella Typhimurium Salmoporc STM Vaccine Strain"
             limsStatus = "Pass"
-            limsReason = ""
         elif "2-Nobilis" in vaccine:
             limsVaccine = "Salmonella Gallinarum Noblis SG 9R Vaccine Strain"
             limsStatus = "Pass"
-            limsReason = ""
         elif "2-Wild_Type" in vaccine:
             limsVaccine = "NOT VACCINE STRAIN"
         elif "Wild_Type" in vaccine:
@@ -396,13 +377,6 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsVaccine = "Not typed by srst2"
 
     limsSerotype = limsSerotype.replace("(2/3consensus)", "")
-
-    # if "3-No Type" in consensus:
-    #     limsStatus = "Inconclusive"
-    #     limsReason = "Contaminated: noIDedSerotypes"
-    # if "2-No Type" in consensus and "e,h:-" in consensus:
-    #     limsStatus = "Inconclusive"
-    #     limsReason = "Contaminated: noIDedSerotypes"
     
     if limsSerotype == "no_consensus":
         limsStatus = "CheckRequired"
