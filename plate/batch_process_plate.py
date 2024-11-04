@@ -199,9 +199,10 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
     try:
         run_pipeline(plate_name, record_output=True)
         with open("{}_finished.scemail".format(plate_name), 'w') as text_file:
-            text_file.write("This run has completed.")
+            text_file.write("Plate {} run has completed.".format(plate_name))
         run(['aws', 's3', 'cp', './{}_finished.scemail'.format(plate_name), 's3://s3-scemail-3cfh-salmonella-serotyping-pipeline-1-0-0/salmonella-serotyping-pipeline/request/', 
             '--acl', 'bucket-owner-full-control'])
+        
         # Upload results to s3
         TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
         summaryTable_path = os.path.join("~/wgs-results/", plate_name,
