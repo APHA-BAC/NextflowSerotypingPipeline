@@ -192,7 +192,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         run_pipeline(plate_name, record_output=True)
         with open("{}_finished.scemail".format(plate_name), 'w') as text_file:
             text_file.write("The following plate has completed:\n{}".format(plate_name))
-        run(['aws', 's3', 'cp', './{}_finished.scemail'.format(plate_name), 's3://s3-scemail-3cfh-salmonella-serotyping-pipeline-1-0-0/salmonella-serotyping-pipeline/request/', 
+        run(['aws', 's3', 'cp', './{}_finished.scemail'.format(plate_name), 's3-scemail-poye-salmonella-serotyping-pipeline-v2-1-0-4/salmonella-serotyping-pipeline/request/', 
             '--acl', 'bucket-owner-full-control'])
         # Upload results to s3
         TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
@@ -217,7 +217,7 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
         with open("{}_failed.scemail".format(plate_name), 'w') as text_file:
             text_file.write("The following plate has failed: \n{} \nPlease see log file for more details".format(plate_name))
         time.sleep(10)
-        run(['aws', 's3', 'cp', './{}_failed.scemail'.format(plate_name), 's3://s3-scemail-3cfh-salmonella-serotyping-pipeline-1-0-0/salmonella-serotyping-pipeline/request/', 
+        run(['aws', 's3', 'cp', './{}_failed.scemail'.format(plate_name), 's3-scemail-poye-salmonella-serotyping-pipeline-v2-1-0-4/salmonella-serotyping-pipeline/request/', 
             '--acl', 'bucket-owner-full-control'])
 
     
