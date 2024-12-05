@@ -146,7 +146,7 @@ process instantiate_summary_table {
 
     if [ !{params.batchRun} != "False" ];
     then
-        aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail s3-scemail-poye-salmonella-serotyping-pipeline-v2-1-0-4/salmonella-serotyping-pipeline/request/ --acl bucket-owner-full-control
+        aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail s3://s3-scemail-poye-salmonella-serotyping-pipeline-v2-1-0-4/salmonella-serotyping-pipeline-v2/request/ --acl bucket-owner-full-control
     fi
 
     
@@ -176,7 +176,7 @@ process check_data {
         echo !{params.runID} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail
         if [ !{params.batchRun} != "False" ];
         then
-            aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail s3-scemail-poye-salmonella-serotyping-pipeline-v2-1-0-4/salmonella-serotyping-pipeline/request/ --acl bucket-owner-full-control
+            aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail s3://s3-scemail-poye-salmonella-serotyping-pipeline-v2-1-0-4/salmonella-serotyping-pipeline-v2/request/ --acl bucket-owner-full-control
         fi
 
         """
