@@ -396,9 +396,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     "I 4,[5],12:d:-","Bovismorbificans", "61:k:1,5,7"]
 
     #  QUALITY CHECKS
-    print(consensus)
+    
     if limsVaccine not in limsVaccine_list or consensus != "2-Enteritidis--1-No Type" or consensus != "2-Typhimurium--1-No Type":
-        print("passing through this")
+        
         if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
             limsReason = "InsufficientData: readCount<500K"
             copy_status = "No"
@@ -466,11 +466,13 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Pass"
             limsReason = ""
     
-    if limsSerotype.strip() in exceptions_list and "3-" not in consensus:
+    if limsSerotype.strip() in exceptions_list and "3-" not in consensus and limsStatus == "":
         limsStatus = "Pass"
         limsReason = ""
 
     # Kmer ID checks
+    print(consensus)
+    print(limsStatus)
     if (limsSubgenus == "I" or limsSubgenus == "undetermined") and salmPercent < 75 and limsReason != "InsufficientData: readCount<500K":
         limsReason = "Contaminated: EntericaKmerID<75%"
         limsStatus = "Inconclusive"
@@ -480,10 +482,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
         copy_status = "No"
 
-    elif "2-" in consensus and limsStatus == "":
+    elif ("2-" in consensus or "1-" in consensus) and (limsStatus == "" or limsStatus == "CheckRequired"):
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
         copy_status = "No"
+    print("*********")
 
     return limsStatus, limsReason, limsSerotype, limsVariant, limsVaccine, copy_status
 
