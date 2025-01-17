@@ -354,6 +354,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         elif "2-Salmovac440" in vaccine:
             limsVaccine = "Salmonella Enteritidis Salmovac 440 Vaccine Strain"
             if consensus == "2-Enteritidis--1-No Type" or consensus == "3-Enteritidis":
+
                 limsStatus = "Pass"
             else:
                 limsStatus = "CheckRequired"
@@ -396,8 +397,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     "I 4,[5],12:d:-","Bovismorbificans", "61:k:1,5,7"]
 
     #  QUALITY CHECKS
+    print(limsVaccine)
+    print(consensus)
     
-    if limsVaccine not in limsVaccine_list or consensus != "2-Enteritidis--1-No Type" or consensus != "2-Typhimurium--1-No Type":
+    if limsVaccine not in limsVaccine_list and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type":
+
         
         if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
             limsReason = "InsufficientData: readCount<500K"
@@ -466,7 +470,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Pass"
             limsReason = ""
     
-    if limsSerotype.strip() in exceptions_list and "3-" not in consensus and limsStatus == "":
+    if limsSerotype.strip() in exceptions_list and "3-" not in consensus and limsStatus == "" and "2-Kedougou" not in consensus:
         limsStatus = "Pass"
         limsReason = ""
 
