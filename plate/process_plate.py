@@ -10,7 +10,7 @@ DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads/')
 DEFAULT_RESULTS_DIRECTORY = os.path.expanduser('~/wgs-results/')
 # DEFAULT_IMAGE = "ahussaini96/serotypingpipeline:process_cleanup"
 DEFAULT_IMAGE = "jguzinski/salmonella-seq:prod"
-DEFAULT_KMERID = os.path.expanduser('~/mnt/Salmonella/KmerID_Ref_Genomes/')
+DEFAULT_KMERID = os.path.expanduser('s3://s3-ranch-046/KmerID_Ref_Genomes/')
 DEFAULT_KMERID_REF = os.path.expanduser(str(DEFAULT_KMERID) + "ref/")
 DEFAULT_KMERID_CONFIG = os.path.expanduser(str(DEFAULT_KMERID) + "config/")
 s3_destination = "s3://s3-staging-area/arslanhussaini/"
@@ -43,7 +43,7 @@ def run_pipeline(reads, results, plate_name, assemblies_dir, image=DEFAULT_IMAGE
         "-v", f"{kmerid_config}:/opt/kmerid/config",
         image,
         "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
-        "--runID", plate_name
+        "--runID", plate_name, "--plateRun", "False"
     ])
 
 def download_s3(s3_uri, destination):
