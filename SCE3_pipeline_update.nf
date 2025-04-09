@@ -39,6 +39,7 @@ process email_file {
     shell:
     if (params.batchRun != "False")
     '''
+    touch $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
     echo "Writing out plate status file to: $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail"
     echo "The following plate has started running:" | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
     echo !{params.runID} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
@@ -146,7 +147,7 @@ process instantiate_summary_table {
 
     if [ !{params.batchRun} != "False" ];
     then
-        aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail s3://s3-scemail-3cfh-salmonella-serotyping-pipeline-1-0-0/salmonella-serotyping-pipeline/request/ --acl bucket-owner-full-control
+        aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail s3://s3-scemail-wau2-salmonella-serotyping-pipeline-v3-1-0-6/salmonella-serotyping-pipeline-v3/request/ --acl bucket-owner-full-control
     fi
 
     
@@ -176,7 +177,7 @@ process check_data {
         echo !{params.runID} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail
         if [ !{params.batchRun} != "False" ];
         then
-            aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail s3://s3-scemail-3cfh-salmonella-serotyping-pipeline-1-0-0/salmonella-serotyping-pipeline/request/ --acl bucket-owner-full-control
+            aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail s3://s3-scemail-wau2-salmonella-serotyping-pipeline-v3-1-0-6/salmonella-serotyping-pipeline-v3/request/ --acl bucket-owner-full-control
         fi
 
         """
