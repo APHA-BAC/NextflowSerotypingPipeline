@@ -400,9 +400,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     print(limsVaccine)
     print(consensus)
     
-    if limsVaccine not in limsVaccine_list and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type":
+    if (limsVaccine not in limsVaccine_list or "Co-existence" in seqseroComment or "No serotype antigens were detected" in seqseroComment) and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type":
 
-        
+        print("this passes")
         if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
             limsReason = "InsufficientData: readCount<500K"
             copy_status = "No"
