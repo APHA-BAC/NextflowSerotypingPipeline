@@ -374,6 +374,9 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsVaccine = "NOT VACCINE STRAIN"
         else:
             limsVaccine = vaccine
+        if limsSubgenus not in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 75 and limsReason != "InsufficientData: readCount<500K" and "No Type" in consensus:
+            limsStatus = "Inconclusive"
+            limsReason = "Contaminated: EntericaKmerID<75%"
     elif "srst2 result file not found" in vaccine:
         limsVaccine = "Not typed by srst2"
 
@@ -400,9 +403,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     print(limsVaccine)
     print(consensus)
     
-    if (limsVaccine not in limsVaccine_list or "Co-existence" in seqseroComment or "No serotype antigens were detected" in seqseroComment) and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type":
+    if (limsVaccine not in limsVaccine_list and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type") or (limsVaccine == "Not typed by srst2" or limsVaccine == "NOT VACCINE STRAIN"):
 
-        print("this passes")
         if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
             limsReason = "InsufficientData: readCount<500K"
             copy_status = "No"
@@ -456,7 +458,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
             limsStatus = "Inconclusive"
             copy_status = "No"
             print("No IDed serotypes")
-        if limsSubgenus not in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 75 and limsReason != "InsufficientData: readCount<500K":
+        if limsSubgenus not in ("II", "IIIa", "IIIb", "IV", "V") and salmPercent < 75 and limsReason != "InsufficientData: readCount<500K" and "No Type" in consensus:
             limsStatus = "Inconclusive"
             limsReason = "Contaminated: EntericaKmerID<75%"
     
@@ -466,11 +468,11 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         if "No Type" in consensus or "no_result" in consensus:
             pass 
         else:
-
             limsStatus = "Pass"
             limsReason = ""
     
-    if limsSerotype.strip() in exceptions_list and "3-" not in consensus and limsStatus == "" and "2-Kedougou" not in consensus:
+    if limsSerotype.strip() in exceptions_list and "3-" not in consensus and "2-Kedougou" not in consensus:
+        print("is thi passing?")
         limsStatus = "Pass"
         limsReason = ""
 
@@ -486,7 +488,7 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
         limsStatus = "Inconclusive"
         copy_status = "No"
 
-    elif ("2-" in consensus or "1-" in consensus) and (limsStatus == "" or limsStatus == "CheckRequired"):
+    elif ("2-" in consensus or "1-" in consensus) and (limsStatus == "" or limsStatus == "CheckRequired") and limsVaccine=="":
         limsStatus = "CheckRequired"
         limsReason = "Check Serovar"
         copy_status = "No"
