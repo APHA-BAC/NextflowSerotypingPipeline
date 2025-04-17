@@ -403,8 +403,8 @@ def apply_rules(limsSerotypes, limsSerogroup, limsSubgenus, row):
     print(limsVaccine)
     print(consensus)
     
-    if (limsVaccine not in limsVaccine_list and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type") or (limsVaccine == "Not typed by srst2" or limsVaccine == "NOT VACCINE STRAIN"):
-
+    if (limsVaccine not in limsVaccine_list and consensus != "2-Enteritidis--1-No Type" and consensus != "2-Typhimurium--1-No Type") or (limsVaccine == "Not typed by srst2" or limsVaccine == "NOT VACCINE STRAIN") or (limsVaccine in limsVaccine_list and "2-" in consensus and "1-No Type" not in consensus):
+        print("Quality checks...")
         if numReads == "no_result" or isinstance(numReads, int) and numReads < 500000:
             limsReason = "InsufficientData: readCount<500K"
             copy_status = "No"
