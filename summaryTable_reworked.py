@@ -219,7 +219,7 @@ def ebgs(sampleDir):
         mostFileName = mostFile[0]
         mostResults = readTable(mostFileName)
 
-        ebgFile = os.path.expanduser("~/summary/ebgs.csv")
+        ebgFile = os.path.expanduser("~/NextflowSerotypingPipeline/lookup_tables/ebgs.csv")
         ebgData = readTable(ebgFile)
 
         st = [x for x in mostResults if "st value:" in x][0][1]

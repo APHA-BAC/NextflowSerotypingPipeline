@@ -23,5 +23,5 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 sudo ./aws/install
 
-aws s3 cp --recursive s3://s3-ranch-046/KmerID_Ref_Genomes/ref/Citrobacter/ /opt/kmerid/ref/Citrobacter
-aws s3 cp --recursive s3://s3-ranch-046/KmerID_Ref_Genomes/ref/Salmonella/ /opt/kmerid/ref/Salmonella
+# aws s3 cp --recursive s3://s3-ranch-046/KmerID_Ref_Genomes/ /opt/kmerid/
+# aws s3 cp --recursive s3://s3-ranch-046/KmerID_Ref_Genomes/ref/Salmonella/ /opt/kmerid/ref/Salmonella
