@@ -142,7 +142,7 @@ process instantiate_summary_table {
 
     shell:
     """
-    python $HOME/summary/summaryTable_reworked.py ${params.runID} --instantiate
+    python $HOME/NextflowSerotypingPipeline/summaryTable_reworked.py ${params.runID} --instantiate
     touch safe_to_delete.txt
 
     if [ !{params.batchRun} != "False" ];
@@ -552,7 +552,7 @@ process summary_and_lims {
 
     script:
     """
-    python $HOME/summary/summaryTable_reworked.py ${params.runID}
+    python $HOME/NextflowSerotypingPipeline/summaryTable_reworked.py  ${params.runID}
     python3 $HOME/summary/lims_rules.py $HOME/wgs-results/${params.runID}/${params.runID}_SummaryTable.csv
     """
 }
