@@ -32,15 +32,17 @@ def run(cmd):
 
 def run_pipeline(reads, results, plate_name, assemblies_dir, image=DEFAULT_IMAGE, kmerid_ref=DEFAULT_KMERID_REF, kmerid_config=DEFAULT_KMERID_CONFIG):
     """ Run the Salmonella pipeline using docker """
-    
+    if not os.path.isdir("/opt/kmerid/"):
+        run(['sudo', 'aws', 's3', 'cp', '--recursive', 's3://s3-ranch-046/KmerID_Ref_Genomes/ref', '/opt/kmerid/ref'])
+        run(['sudo', 'aws', 's3', 'cp', '--recursive', 's3://s3-ranch-046/KmerID_Ref_Genomes/config', '/opt/kmerid/config'])
     run(["sudo", "docker", "pull", image])
     run([
         "sudo", "docker", "run", "--rm", "-it",
         "-v", f"{reads}:/root/wgs-reads/{plate_name}/",
         "-v", f"{results}:/root/wgs-results/{plate_name}/",
         "-v", f"{assemblies_dir}:/root/wgs-results/{plate_name}/assemblies/",
-        "-v", f"{kmerid_ref}:/opt/kmerid/ref/",
-        "-v", f"{kmerid_config}:/opt/kmerid/config",
+        "-v", f"/opt/kmerid/ref:/opt/kmerid/ref",
+        "-v", f"/opt/kmerid/config:/opt/kmerid/config",
         image,
         "/root/nextflow/nextflow", "SCE3_pipeline_update.nf",
         "--runID", plate_name, "--plateRun", "False"
