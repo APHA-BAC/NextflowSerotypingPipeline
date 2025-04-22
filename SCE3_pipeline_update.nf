@@ -553,7 +553,7 @@ process summary_and_lims {
     script:
     """
     python $HOME/NextflowSerotypingPipeline/summaryTable_reworked.py  ${params.runID}
-    python3 $HOME/summary/lims_rules.py $HOME/wgs-results/${params.runID}/${params.runID}_SummaryTable.csv
+    python3 $HOME/NextflowSerotypingPipeline/lims_rules/lims_rules.py $HOME/wgs-results/${params.runID}/${params.runID}_SummaryTable.csv
     """
 }
 
