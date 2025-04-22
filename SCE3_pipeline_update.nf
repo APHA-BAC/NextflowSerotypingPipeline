@@ -304,6 +304,7 @@ process fastqc {
 */
 
 process shovill {
+    time { 2.hour * task.attempt}
     publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/shovill", mode: 'copy'
 
     input:
@@ -316,6 +317,8 @@ process shovill {
     file("${sample_id}_2.txt") into out2_ch
     file("${sample_id}_2.txt") into out2_ch_rem
 
+    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
+    maxRetries 3
 
     script:
     """
@@ -324,7 +327,7 @@ process shovill {
     mv $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fa ${sample_id}_contigs.fa
     touch ${sample_id}_2.txt
     
-    cp $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fasta $HOME/wgs-results/${params.runID}/assemblies/${sample_id}.fa
+    cp $HOME/wgs-results/${params.runID}/${sample_id}/shovill/contigs.fasta $HOME/wgs-results/${params.runID}/assemblies/${sample_id}_contigs.fa
 
     
     """
