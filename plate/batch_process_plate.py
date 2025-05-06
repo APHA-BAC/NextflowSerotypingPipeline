@@ -183,7 +183,9 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
-    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", recursive=True)
+    download_s3(kmer_uri, "/opt/KmerID_Ref_Genomes", recursive=True)
+    download_s3(kmer_uri, "/opt/kmerid", recursive=True)
+    # download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", recursive=True)
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}\n")
