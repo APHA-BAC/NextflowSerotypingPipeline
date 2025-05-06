@@ -28,7 +28,7 @@ def safe_float(someValue):
 
 def build_sero_dict():
     seroDict = {}
-    with open(os.path.expanduser('~/summary/serogroup_lookup_table.tsv'), 'r') as seroLookup:
+    with open(os.path.expanduser('~/NextflowSerotypingPipeline/lookup_tables/serogroup_lookup_table.tsv'), 'r') as seroLookup:
         reader = csv.reader(seroLookup, delimiter='\t')
         for idx, row in enumerate(reader):
             if idx == 0:
@@ -53,7 +53,7 @@ def build_sero_dict():
 
             seroDict[serotype] = [seroDesc, serogroup, "undetermined"]
 
-    with open(os.path.expanduser('~/summary/subgenus_lookup_table.tsv'), 'r') as subgLookup:
+    with open(os.path.expanduser('~/NextflowSerotypingPipeline/lookup_tables/subgenus_lookup_table.tsv'), 'r') as subgLookup:
         reader = csv.reader(subgLookup, delimiter='\t')
         for idx, row in enumerate(reader):
             if idx == 0:

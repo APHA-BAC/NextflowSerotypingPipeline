@@ -8,6 +8,7 @@ import tempfile
 import pandas as pd
 from textwrap import dedent
 import update_master_sum
+import time
 
 
 DEFAULT_READS_DIRECTORY = os.path.expanduser('~/wgs-reads')
@@ -74,7 +75,7 @@ def format_subprocess_output(output):
 def run_pipeline(plate_name, **kwargs):
     """ Run the Salmonella pipeline """
     run(["/root/nextflow/nextflow", "SCE3_pipeline_update.nf", "--runID",
-         plate_name], **kwargs)
+         plate_name, "--batchRun", "True"], **kwargs)
 
 
 def download_s3(s3_uri, destination, recursive=False, **kwargs):
@@ -182,7 +183,9 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     # Download reference genomes from s3
     logging.info(f"Downloading KmerID reference genomes: {kmer_uri}\n")
-    download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", recursive=True)
+    download_s3(kmer_uri, "/opt/KmerID_Ref_Genomes", recursive=True)
+    download_s3(kmer_uri, "/opt/kmerid", recursive=True)
+    # download_s3(kmer_uri, "/root/KmerID_Ref_Genomes", recursive=True)
 
     # Download reads
     logging.info(f"Downloading reads: {reads_uri}\n")
@@ -195,25 +198,44 @@ def run_plate(reads_uri, reads_dir, results_uri, kmer_uri):
 
     logging.info("Running Nextflow pipeline\n")
     
-    run_pipeline(plate_name, record_output=True)
-
-    # Upload results to s3
-    TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
-    summaryTable_path = os.path.join("~/wgs-results/", plate_name,
+    try:
+        run_pipeline(plate_name, record_output=True)
+        with open("{}_finished.scemail".format(plate_name), 'w') as text_file:
+            text_file.write("The following plate has completed:\n{}".format(plate_name))
+        
+        
+        # Upload results to s3
+        TableFile_name = plate_name + "_SummaryTable_plusLIMS.csv"
+        summaryTable_path = os.path.join("~/wgs-results/", plate_name,
                                      TableFile_name)
-    summaryTable_path = os.path.expanduser(summaryTable_path)
-    logging.info(f"Uploading results: {results_uri}\n")
-    upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
-              record_output=True)
+        summaryTable_path = os.path.expanduser(summaryTable_path)
+        logging.info(f"Uploading results: {results_uri}\n")
+        upload_s3(summaryTable_path, os.path.join(results_uri, TableFile_name),
+                record_output=True)
+        # with open("~/wgs-results/{}".format(plate_name), 'w') as text_file:
+        
 
-    # Update master summary table
-    logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
-    run(["aws", "s3", "cp", "s3://s3-ranch-050/master_summary.csv", "/root/"])
-    update_master_sum.update_summary("/root/master_summary.csv",summaryTable_path)
-    run(["aws", "s3", "cp", "/root/master_summary.csv", "s3://s3-ranch-050/", "--acl", "bucket-owner-full-control"])
+        # Update master summary table
+        logging.info(F"Updating master summary table: {DEFAULT_MASTER_SUMMARY_URI}")
+        run(["aws", "s3", "cp", "s3://s3-ranch-050/master_summary.csv", "/root/"])
+        update_master_sum.update_summary("/root/master_summary.csv",summaryTable_path)
+        run(["aws", "s3", "cp", "/root/master_summary.csv", "s3://s3-ranch-050/", "--acl", "bucket-owner-full-control"])
 
 
-    upload_fasta(assemblies_dir)
+        upload_fasta(assemblies_dir)
+        run(['aws', 's3', 'cp', './{}_finished.scemail'.format(plate_name), 's3://s3-scemail-wau2-salmonella-serotyping-pipeline-v3-1-0-6/salmonella-serotyping-pipeline-v3/request/', 
+            '--acl', 'bucket-owner-full-control'])
+
+
+    except:
+        with open("{}_failed.scemail".format(plate_name), 'w') as text_file:
+            text_file.write("The following plate has failed: \n{} \nPlease see log file for more details".format(plate_name))
+        time.sleep(10)
+        run(['aws', 's3', 'cp', './{}_failed.scemail'.format(plate_name), 's3://s3-scemail-wau2-salmonella-serotyping-pipeline-v3-1-0-6/salmonella-serotyping-pipeline-v3/request/', 
+            '--acl', 'bucket-owner-full-control'])
+
+
+    
 
 
 def upload_logfile(results_uri):

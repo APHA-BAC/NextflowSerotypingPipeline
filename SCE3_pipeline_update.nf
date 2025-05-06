@@ -11,6 +11,10 @@ subsamp = params.subsampThreshold - 500000
 params.runID = "TestIsolates"
 println params.runID
 
+params.batchRun = "False"
+println params.batchRun
+
+
 readPath = "$HOME/wgs-reads/${params.runID}/*_{R1,R2}.fastq.gz"
 publishDirectory = "$HOME/wgs-results/${params.runID}/"
 assemblyDirectory = "$HOME/wgs-results/${params.runID}/assemblies/"
@@ -29,6 +33,24 @@ process git_sha {
     mkdir -p $assemblyDirectory
     git rev-parse HEAD > $publishDirectory/sha
     """
+}
+
+process email_file {
+    shell:
+    if (params.batchRun != "False")
+    '''
+    touch $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    echo "Writing out plate status file to: $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail"
+    echo "The following plate has started running:" | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    echo !{params.runID} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    echo "\nIsolates that failed to process due to low readcount and need to be resequenced:" | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+
+    '''
+    else
+    '''
+    echo "not a batch run"
+    '''
+    
 }
 
 
@@ -56,9 +78,18 @@ process count_reads {
     READFILE1=$(echo !{readPair[0]})
     READCOUNT=$(zcat $READFILE1|echo $(wc -l)/4|bc)
     echo $READCOUNT > !{sample_id}_readcount.txt
-    
-    '''
 
+    
+    
+    
+    if [ "$READCOUNT" -lt "500000" ] && [ !{params.batchRun} != "False" ]; 
+    then
+        echo !{sample_id} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail
+    fi
+
+
+
+    '''
     
 }
 
@@ -111,9 +142,17 @@ process instantiate_summary_table {
 
     shell:
     """
-    python $HOME/summary/summaryTable_reworked.py ${params.runID} --instantiate
+    python $HOME/NextflowSerotypingPipeline/summaryTable_reworked.py ${params.runID} --instantiate
     touch safe_to_delete.txt
+
+    if [ !{params.batchRun} != "False" ];
+    then
+        aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_low_readcounts.scemail s3://s3-scemail-wau2-salmonella-serotyping-pipeline-v3-1-0-6/salmonella-serotyping-pipeline-v3/request/ --acl bucket-owner-full-control
+    fi
+
+    
     """
+
 }
 
 
@@ -131,6 +170,17 @@ process check_data {
     }
     else {
         error "ERROR: No input .fastq.gz files found or all input .fastq.gz files < 500K reads"
+        shell:
+        """
+        echo "Writing out plate status file to: $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail"
+        echo "The following plate has failed:" | tee -a $HOME/wgs-results/!{params.runID}_failed.scemail
+        echo !{params.runID} | tee -a $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail
+        if [ !{params.batchRun} != "False" ];
+        then
+            aws s3 cp $HOME/wgs-results/!{params.runID}/!{params.runID}_failed.scemail s3://s3-scemail-wau2-salmonella-serotyping-pipeline-v3-1-0-6/salmonella-serotyping-pipeline-v3/request/ --acl bucket-owner-full-control
+        fi
+
+        """
     }
 }
 
@@ -140,6 +190,8 @@ process check_data {
 */
 
 process fastp_qual_trim {
+    
+
     publishDir "$HOME/wgs-results/${params.runID}/${sample_id}/fastp", mode: 'copy'
 
     input:
@@ -500,8 +552,8 @@ process summary_and_lims {
 
     script:
     """
-    python $HOME/summary/summaryTable_reworked.py ${params.runID}
-    python3 $HOME/summary/lims_rules.py $HOME/wgs-results/${params.runID}/${params.runID}_SummaryTable.csv
+    python $HOME/NextflowSerotypingPipeline/summaryTable_reworked.py  ${params.runID}
+    python3 $HOME/NextflowSerotypingPipeline/lims_rules/lims_rules.py $HOME/wgs-results/${params.runID}/${params.runID}_SummaryTable.csv
     """
 }
 

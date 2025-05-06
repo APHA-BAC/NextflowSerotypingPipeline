@@ -1,0 +1,717 @@
+SEROTYPE_ID,SUBGENUS_ID,DESCRIPTION
+"09,46:Z:Z39",II,II - Salmonella enterica salamae
+"1,4,[5],12,[27]:B:ENX",II,II - Salmonella enterica salamae
+11:-:-,I,I - Salmonella enterica enterica
+"11:-:1,5",I,I - Salmonella enterica enterica
+"11:B:E,N,X",VI, 
+11:C:-,I,I - Salmonella enterica enterica
+"11:C:E,N,Z15",V,V - Salmonella enterica indica
+"11:C:E,N,Z15",II, 
+11:K:-,I,I - Salmonella enterica enterica
+"11:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"11:Z4,Z23:-",IV,IV - Salmonella enterica houtenae
+121:C:-,I,I - Salmonella enterica enterica
+"13,22:-:1,6",I,I - Salmonella enterica enterica
+"13,22:Z29:1,5",II,II - Salmonella enterica salamae
+"13,22:Z:-",I,I - Salmonella enterica enterica
+"13,23:-:-",I,I - Salmonella enterica enterica
+"13,23:-:1,5",I,I - Salmonella enterica enterica
+"13,23:-:1,5,7",II, 
+"13,23:-:1,7",II, 
+"13,23:G,T:-",II, 
+"13,23:GZ51:-",IIIa,Salmonella Enterica subspecies Arizonae
+"13,23:I:-",I, 
+"13,23:L,Z28:Z6",II,II - Salmonella enterica salamae
+"13,23:Z4,Z23,Z32:-",IIIa,IIIa - Salmonella enterica arizonae
+"13,23:Z:-",I,I - Salmonella enterica enterica
+"13,23:Z:1,5",II, 
+"14:EH:1,7",IV,IV - Salmonella enterica houtenae
+"14:EH:1,7",I,I - Salmonella enterica enterica
+14:Z10:Z,IIIb,salmonella enterica diarizonae
+16:-:-,IIIb,salmonella enterica diarizonae
+16:-:-,I,I - Salmonella enterica enterica
+"16:G,M,T:-",II, 
+16:GST:-,II, 
+"16:M,T:-",II,II - Salmonella enterica salamae
+"16:Z10:E,N,X,Z15",IIIb,IIIb - Salmonella enterica diarizonae
+"16:Z4,Z23:-",II,salmonella .salamae
+"16:Z4,Z32:-",IV,IV - Salmonella enterica houtenae
+17:B:-,I,I - Salmonella enterica enterica
+"17:ENX,Z15:1,6",II, 
+"17:G,T:-",II,II - Salmonella enterica salamae
+"17:L,V:-",I,I - Salmonella enterica enterica
+18:-:-,I,I - Salmonella enterica enterica
+18:-:-,IV,IV - Salmonella enterica houtenae
+18:K:-,IIIb,IIIb - Salmonella enterica diarizonae
+"18:L,V:Z",IIIb,IIIb - Salmonella enterica diarizonae
+"18:Z36,Z38:-",IV, 
+"18:Z4,Z23:-",II,II - Salmonella enterica salamae
+"18:Z4,Z23:-",IIIa, 
+"18:Z4,Z23:-",I,I - Salmonella enterica enterica
+"18:Z4,Z32:-",IIIa,IIIa - Salmonella enterica arizonae
+"2,12:-:-",I,I - Salmonella enterica enterica
+21:-:-,I,I - Salmonella enterica enterica
+"21:G,F,T:-",II,II - Salmonella enterica salamae
+21:Z10:-,II,II - Salmonella enterica salamae
+21:Z10:Z6,II,II - Salmonella enterica salamae
+28:-:-,I,I - Salmonella enterica enterica
+28:-:-,II,II - Salmonella enterica salamae
+"28:-:E,N,Z15",II,II - Salmonella enterica salamae
+28:GT:-,II,II - Salmonella enterica salamae
+"28:Z4,Z23:-",II,II - Salmonella enterica salamae
+"28:Z6:E,N,Z15",II,II - Salmonella enterica salamae
+"28:Z6:E,N,Z15",I,I - Salmonella enterica enterica
+"3,10:-:-",I,I - Salmonella enterica enterica
+"3,10:-:1,5",I,I - Salmonella enterica enterica
+"3,10:-:1,6",I,I - Salmonella enterica enterica
+"3,10:E,H:-",I,I - Salmonella enterica enterica
+"3,10:LV:-",I,I - Salmonella enterica enterica
+"3,10:Y:-",I,I - Salmonella enterica enterica
+"3,10:Z10:-",I,I - Salmonella enterica enterica
+"3,15,34:-:-",I,I - Salmonella enterica enterica
+"3,15:-:-",I,I - Salmonella enterica enterica
+"3,15:-:1,5",I,I - Salmonella enterica enterica
+"3,15:-:1,7",I,I - Salmonella enterica enterica
+"3,15:D:E,N Z15",I,I - Salmonella enterica enterica
+"3,15:I:1,7",I,I - Salmonella enterica enterica
+"3,15:L,V:-",I, 
+"3,15:LV:-",I,I - Salmonella enterica enterica
+"3,15:ROUGH:-",I,I - Salmonella enterica enterica
+"3,15:Y:-",I,I - Salmonella enterica enterica
+"3,15:Y:1,5",I,I - Salmonella enterica enterica
+"3,19:-:-",I,I - Salmonella enterica enterica
+"3,19:D:-",I,I - Salmonella enterica enterica
+"3,19:ROUGH:-",I,I - Salmonella enterica enterica
+"3,19:Z27:-",I,I - Salmonella enterica enterica
+"3,19:Z45:-",I,I - Salmonella enterica enterica
+30:-:-,II, 
+"30:L,Z28:-",II,II - Salmonella enterica salamae
+"30:L,Z28:Z6",II,II - Salmonella enterica salamae
+"30:LZ13,Z28:Z6",II,II - Salmonella enterica salamae
+30:LZ28:Z6,II,II - Salmonella enterica salamae
+35:-:-,I, 
+35:D:-,I,I - Salmonella enterica enterica
+35:I:-,IIIb, 
+"35:I:E,N,X,Z15",IIIb,IIIb - Salmonella enterica diarizonae
+35:I:Z35,IIIb,Salmonella enterica diarizonae
+"35:R:ENX,Z15",IIIb,IIIb - Salmonella enterica diarizonae
+38:I:Z,IIIb,Salmonella enterica diarizonae
+38:K:-,IIIb, 
+"38:L,V,Z13:-",IIIa,Salmonella Enterica subspecies Arizonae
+"38:L,V:Z",IIIb, 
+"38:L,V:Z50",IIIb,IIIb - Salmonella enterica diarizonae
+38:R:-,IIIb,IIIb - Salmonella enterica diarizonae
+38:R:Z,IIIb,IIIb - Salmonella enterica diarizonae
+38:Y:-,I,I - Salmonella enterica enterica
+38:Z10:-,IIIb,IIIb - Salmonella enterica diarizonae
+"38:Z4,Z23:-",I,I - Salmonella enterica enterica
+"38:Z4,Z23:-",IV,IV - Salmonella enterica houtenae
+"38:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"4,12,[27]:B:E,N,X",II,II - Salmonella enterica salamae
+"4,12:-:-",I,I - Salmonella enterica enterica
+"4,12:-:1,2",I,I - Salmonella enterica enterica
+"4,12:-:1,6",II,II - Salmonella enterica salamae
+"4,12:-:1,6",I,I - Salmonella enterica enterica
+"4,12:-:1,7",I,I - Salmonella enterica enterica
+"4,12:A:-",I,I - Salmonella enterica enterica
+"4,12:B:-",I,I - Salmonella enterica enterica
+"4,12:B:-",II,II - Salmonella enterica salamae
+"4,12:C:-",I,I - Salmonella enterica enterica
+"4,12:D:-",I,I - Salmonella enterica enterica
+"4,12:E,H:-",I,I - Salmonella enterica enterica
+"4,12:I:-",I,I - Salmonella enterica enterica
+"4,12:L,V:-",I,I - Salmonella enterica enterica
+"4,12:M,T:-",I, 
+"4,12:ROUGH:-",I,I - Salmonella enterica enterica
+"4,12:Z:-",I,I - Salmonella enterica enterica
+"4,5,12:-:-",I,I - Salmonella enterica enterica
+"4,5,12:-:1,2",I,I - Salmonella enterica enterica
+"4,5,12:-:ENZ15",I,I - Salmonella enterica enterica
+"4,5,12:B:-",I,I - Salmonella enterica enterica
+"4,5,12:D:-",I,I - Salmonella enterica enterica
+"4,5,12:E,H:-",I,I - Salmonella enterica enterica
+"4,5,12:E,H:1,7",I,I - Salmonella enterica enterica
+"4,5,12:I:-",I,I - Salmonella enterica enterica
+"4,5,12:ROUGH:-",I,I - Salmonella enterica enterica
+"40:C:E,N,X,Z15",II, 
+40:FG:-,IIIa,Salmonella Enterica subspecies Arizonae
+"40:G,M,T:-",II,II - Salmonella enterica salamae
+"40:G,T:-",II,II - Salmonella enterica salamae
+"40:G,T:E,N,X,Z15",II,II - Salmonella enterica salamae
+"40:Z10:E,N,X",II,II - Salmonella enterica salamae
+"40:Z4,Z24:-",IV, 
+"40:Z4,Z32:-",IV,IV - Salmonella enterica houtenae
+"40:Z4,Z32:-",IIIa,IIIa - Salmonella enterica arizonae
+41:-:-,I,I - Salmonella enterica enterica
+"41:Z4,Z23,Z32:-",IIIa,IIIa - Salmonella enterica arizonae
+"41:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"41:Z4,Z23:-",IV,IV - Salmonella enterica houtenae
+"41:Z4,Z24:-",I,I - Salmonella enterica enterica
+"42:B:E,N,X,Z15",II,II - Salmonella enterica salamae
+42:K:-,IIIa,Salmonella enterica diarizonae
+42:K:-,IIIb,salmonella enterica diarizonae
+42:K:-,I,I - Salmonella enterica enterica
+"42:L,V:1,5",I,I - Salmonella enterica enterica
+"42:L,V:1,5,7",IIIb,IIIb - Salmonella enterica diarizonae
+"42:L,V:1,6,7",I,I - Salmonella enterica enterica
+42:Z10:Z6,II,II - Salmonella enterica salamae
+"42:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"42:Z4,Z23:-",I,I - Salmonella enterica enterica
+"42:Z4,Z24:-",IIIa,IIIa - Salmonella enterica arizonae
+"42:Z4,Z24:-",IV,IV - Salmonella enterica houtenae
+"42:Z:1,5",II,II - Salmonella enterica salamae
+43:-:-,IV,IV - Salmonella enterica houtenae
+43:-:-,I,I - Salmonella enterica enterica
+"43:Z4,Z23:-",II,II - Salmonella enterica salamae
+"43:Z4,Z23:-",I,I - Salmonella enterica enterica
+"43:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"43:Z4,Z23:-",IV,IV - Salmonella enterica houtenae
+"43:Z4,Z24:-",IIIa,IIIa - Salmonella enterica arizonae
+"43:Z4,Z24:-",IV,IV - Salmonella enterica houtenae
+"43:Z4,Z32:-",IV,IV - Salmonella enterica houtenae
+44:-:-,IV,salmonella enterica subsp houtenae
+"44:Z10:1,7",IIIa,IIIa - Salmonella enterica arizonae
+"44:Z4,Z23,Z32:-",IV,salmonella enterica subsp houtenae
+"44:Z4,Z23,Z32:-",IIIa,IIIa - Salmonella enterica arizonae
+"44:Z4,Z23:-",II,II - Salmonella enterica salamae
+"44:Z4,Z23:-",IV,IV - Salmonella enterica houtenae
+"44:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"44:Z4,Z24:-",IV,IV - Salmonella enterica houtenae
+"44:Z4,Z24:-",IIIa,IIIa - Salmonella enterica arizonae
+"44:Z4,Z32:-",IV,IV - Salmonella enterica houtenae
+"45:G,Z51:-",IIIa,IIIa - Salmonella enterica arizonae
+"45:G,Z51:-",IV,IV - Salmonella enterica houtenae
+"45:Z36,Z38:-",IV,IV - Salmonella enterica houtenae
+47:-:-,II,II - Salmonella enterica salamae
+47:-:-,IIIb,IIIb - Salmonella enterica diarizonae
+47:-:-,I,I - Salmonella enterica enterica
+"47:A:1,5",II,II - Salmonella enterica salamae
+"47:B:1,5",II, 
+"47:B:E,N,X,Z15",II,II - Salmonella enterica salamae
+47:C:-,I, 
+47:D:Z39,II,II - Salmonella enterica salamae
+47:K:-,IIIb,IIIb - Salmonella enterica diarizonae
+47:K:-,I,I - Salmonella enterica enterica
+47:K:Z35,IIIb,IIIb - Salmonella enterica diarizonae
+47:ROUGH:-,I,I - Salmonella enterica enterica
+47:Z10:-,IIIb,IIIb - Salmonella enterica diarizonae
+47:Z10:-,I,I - Salmonella enterica enterica
+47:Z10:Z35,IIIb,salmonella enterica diarizonae
+"47:Z4,Z23:-",I,I - Salmonella enterica enterica
+"47:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+"47:Z52:1,5,7",IIIb,salmonella enterica diarizonae
+"47:Z52:E,N,X,Z15",IIIb,Salmonella enterica diarizonae
+"48:-:1,5",VI,VI - Salmonella enterica indica
+48:D:Z6,II,II - Salmonella enterica salamae
+"48:G,Z51:-",IIIa,IIIa - Salmonella enterica arizonae
+"48:G,Z51:-",IV,IV - Salmonella enterica houtenae
+48:I:-,IIIb,IIIb - Salmonella enterica diarizonae
+48:I:Z,IIIb,IIIb - Salmonella enterica diarizonae
+"48:K:1,5,7",IIIb,IIIb - Salmonella enterica diarizonae
+"48:L,V:1,5",IIIb,IIIb - Salmonella enterica diarizonae
+"48:L,V:1,5,7",IIIb,IIIb - Salmonella enterica diarizonae
+48:R:Z,IIIb,IIIb - Salmonella enterica diarizonae
+"48:Z10:1,5",VI,Indica
+"48:Z4,Z24:-",IIIa, 
+"48:Z4,Z24:-",IIIb, 
+"48:Z4,Z32:-",IV,IV - Salmonella enterica houtenae
+"48:Z4,Z32:-",IIIa,Salmonella enterica diarizonae
+48:Z52:Z,IIIb,IIIb - Salmonella enterica diarizonae
+50:-:-,IIIb,IIIb - Salmonella enterica diarizonae
+50:B:-,II,II - Salmonella enterica salamae
+50:B:Z6,II,II - Salmonella enterica salamae
+"50:G,Z51:-",IV,IV - Salmonella enterica houtenae
+"50:G,Z51:-",IIIa, 
+50:K:Z,IIIb,IIIb - Salmonella enterica diarizonae
+"50:L,V:-",VI,Indica
+"50:L,V:Z35",IIIb,IIIb - Salmonella enterica diarizonae
+50:R:-,IIIb,IIIb - Salmonella enterica diarizonae
+"50:R:1,5,7",IIIb,Salmonella enterica diarizonae
+50:R:Z,IIIb,IIIb - Salmonella enterica diarizonae
+50:R:Z35,IIIb,salmonella enterica diarizonae
+"50:Z4,Z24:-",IV,IV - Salmonella enterica houtenae
+"50:Z4,Z24:-",IIIa,IIIa - Salmonella enterica arizonae
+50:Z67:-,IIIb, 
+50:Z:Z52,IIIb,Salmonella Enterica subspecies Arizonae
+"51:Y:1,2",I,I - Salmonella enterica enterica
+"51:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+53:-:-,IIIb,IIIb - Salmonella enterica diarizonae
+"53:K:E,N,X,Z15",IIIb, 
+53:Z10:Z35,IIIb,IIIb - Salmonella enterica diarizonae
+55:-:Z39,II,II - Salmonella enterica salamae
+55:K:Z39,II,II - Salmonella enterica salamae
+"56:Z4,Z23,Z32:-",IIIa,IIIa - Salmonella enterica arizonae
+"56:Z4,Z23:-",IIIa,IIIa - Salmonella enterica arizonae
+57:C:Z,IIIb,IIIb - Salmonella enterica diarizonae
+58:A:Z6,II,II - Salmonella enterica salamae
+58:C:Z6,II,II - Salmonella enterica salamae
+"58:L,Z13,Z28:Z6",II,II - Salmonella enterica salamae
+58:R:-,IIIb,IIIb - Salmonella enterica diarizonae
+58:R:Z53,IIIb,IIIb - Salmonella enterica diarizonae
+58:Z52:Z35,IIIb,Salmonella enterica diarizonae
+"6,14:A:1,5",VI,Indica
+"6,14:E,H:1,5",I,I - Salmonella enterica enterica
+"6,14:Z10:Z",IIIb,IIIb - Salmonella enterica diarizonae
+"6,7,14:-:-",I,I - Salmonella enterica enterica
+"6,7:-:-",II,II - Salmonella enterica salamae
+"6,7:-:-",I,I - Salmonella enterica enterica
+"6,7:-:1,2",I,I - Salmonella enterica enterica
+"6,7:-:1,5",I,I - Salmonella enterica enterica
+"6,7:-:ENZ15",I,I - Salmonella enterica enterica
+"6,7:-:L,W",I, 
+"6,7:-:Z15",I,I - Salmonella enterica enterica
+"6,7:B:-",I,I - Salmonella enterica enterica
+"6,7:D:-",I,I - Salmonella enterica enterica
+"6,7:E,H:-",I,I - Salmonella enterica enterica
+"6,7:K:-",I,I - Salmonella enterica enterica
+"6,7:LZ13,LZ28:-",I,I - Salmonella enterica enterica
+"6,7:R:-",I,I - Salmonella enterica enterica
+"6,7:ROUGH:-",I,I - Salmonella enterica enterica
+"6,7:Z10:-",I,I - Salmonella enterica enterica
+"6,7:Z10:E,N,X",IIIb,Salmonella enterica diarizonae
+"6,7:Z10:E,N,X",II,II - Salmonella enterica salamae
+"6,7:Z4,Z23:-",I,I - Salmonella enterica enterica
+"6,7:Z:-",I,I - Salmonella enterica enterica
+"6,7:Z:1,5",II,II - Salmonella enterica salamae
+"6,7:Z:LZ28",I,I - Salmonella enterica enterica
+"6,8:-:-",I,I - Salmonella enterica enterica
+"6,8:-:1,5",I, 
+"6,8:-:E,N,X",I,I - Salmonella enterica enterica
+"6,8:-:E,N,X15",I,I - Salmonella enterica enterica
+"6,8:-:E,N,Z15",I,I - Salmonella enterica enterica
+"6,8:B:-",I,I - Salmonella enterica enterica
+"6,8:C:-",I,I - Salmonella enterica enterica
+"6,8:D:-",I,I - Salmonella enterica enterica
+"6,8:R:-",I,I - Salmonella enterica enterica
+"6,8:Z10:-",I,I - Salmonella enterica enterica
+60:-:-,II,II - Salmonella enterica salamae
+60:A:Z6,I,I - Salmonella enterica enterica
+60:R:Z,IIIb,IIIb - Salmonella enterica diarizonae
+61:-:-,IIIb,IIIb - Salmonella enterica diarizonae
+"61:-:1,5",IIIb,IIIb - Salmonella enterica diarizonae
+"61:-:1,5,7",IIIb,IIIb - Salmonella enterica diarizonae
+61:C:Z35,IIIb,IIIb - Salmonella enterica diarizonae
+61:I:Z,IIIb,IIIb - Salmonella enterica diarizonae
+61:I:Z53,IIIb,IIIb - Salmonella enterica diarizonae
+61:K:-,IIIb,IIIb - Salmonella enterica diarizonae
+"61:K:1,5",IIIb,IIIb - Salmonella enterica diarizonae
+"61:K:1,5,7",IIIb,IIIb - Salmonella enterica diarizonae
+"61:L,V:1,5",IIIb,IIIb - Salmonella enterica diarizonae
+"61:L,V:1,5,7",IIIb, 
+61:R:-,IIIb, 
+61:Z52:-,IIIb,IIIb - Salmonella enterica diarizonae
+"61:Z52:1,5,7",IIIb,IIIb - Salmonella enterica diarizonae
+66:-:-,V,Bongori
+66:Z41:-,V,V - Salmonella bongori
+"9,12,27:C:-",II,II - Salmonella enterica salamae
+"9,12:-:-",I,I - Salmonella enterica enterica
+"9,12:-:1,5",I,I - Salmonella enterica enterica
+"9,12:B:Z39",II,II - Salmonella enterica salamae
+"9,12:E,H:-",II,II - Salmonella enterica salamae
+"9,12:Z29:1,5",II,II - Salmonella enterica salamae
+"9,12:Z6:-",I,I - Salmonella enterica enterica
+AARHUS,I,I - Salmonella enterica enterica
+ABA,I,I - Salmonella enterica enterica
+ABAETETUBA,I,I - Salmonella enterica enterica
+ABERDEEN,I,I - Salmonella enterica enterica
+ABONY,I,I - Salmonella enterica enterica
+ABORTUSOVIS,I,I - Salmonella enterica enterica
+ADAMSTUA,I, 
+ADELAIDE,I,I - Salmonella enterica enterica
+ADJAME,I,I - Salmonella enterica enterica
+AFRICANA,I,I - Salmonella enterica enterica
+AGAMA,I,I - Salmonella enterica enterica
+AGBENI,I,I - Salmonella enterica enterica
+AGO,I,Salmonella enterica enterica
+AGODI,I,I - Salmonella enterica enterica
+AGONA,I,I - Salmonella enterica enterica
+AGOUEVE,I,I - Salmonella enterica enterica
+AHUZA,I,I - Salmonella enterica enterica
+AJIOBO,I,I - Salmonella enterica enterica
+ALACHUA,I,I - Salmonella enterica enterica
+ALBANY,I,I - Salmonella enterica enterica
+ALBERT,I,I - Salmonella enterica enterica
+ALMINKO,I,I - Salmonella enterica enterica
+ALTONA,I,I - Salmonella enterica enterica
+AMAGER,I,I - Salmonella enterica enterica
+AMERSFOORT,I,I - Salmonella enterica enterica
+AMSTERDAM,I,I - Salmonella enterica enterica
+ANATUM,I,I - Salmonella enterica enterica
+ANATUM 15+ 34+ VAR MINNEAPOLIS,I, 
+ANATUM VAR 15+ (NEWINGTON),I,I - Salmonella enterica enterica
+ANECHO,I,I - Salmonella enterica enterica
+ANGODA,I,I - Salmonella enterica enterica
+ANK,I,I - Salmonella enterica enterica
+APEYEME,I,I - Salmonella enterica enterica
+AQUA,I,I - Salmonella enterica enterica
+ARECHAVALETA,I,I - Salmonella enterica enterica
+AUGUSTENBORG,I,I - Salmonella enterica enterica
+BAILDON,I,I - Salmonella enterica enterica
+BAMBOYE,I,I - Salmonella enterica enterica
+BANANA,I,I - Salmonella enterica enterica
+BANDIA,I,I - Salmonella enterica enterica
+BARDO,I,I - Salmonella enterica enterica
+BAREILLY,I,I - Salmonella enterica enterica
+BEAUDESERT,I,I - Salmonella enterica enterica
+BENFICA,I,I - Salmonella enterica enterica
+BERE,I,I - Salmonella enterica enterica
+BERGEDORF,I,I - Salmonella enterica enterica
+BERGEN,I,I - Salmonella enterica enterica
+BERKELEY,I,Salmonella enterica enterica
+BERLIN,I, 
+BERTA,I,I - Salmonella enterica enterica
+BIAFRA,I,I - Salmonella enterica enterica
+BISPEBJERG,I,I - Salmonella enterica enterica
+BLIJDORP,I,I - Salmonella enterica enterica
+BLOCKLEY,I,I - Salmonella enterica enterica
+BLUKWA,I,I - Salmonella enterica enterica
+BOCHUM,I,I - Salmonella enterica enterica
+BONN,I,I - Salmonella enterica enterica
+BOUSSO,I,I - Salmonella enterica enterica
+BOVISMORBIFICANS,I,I - Salmonella enterica enterica
+BRACKNELL,I,I - Salmonella enterica enterica
+BRADFORD,I,I - Salmonella enterica enterica
+BRAENDERUP,I,I - Salmonella enterica enterica
+BRANCASTER,I,I - Salmonella enterica enterica
+BRANDENBURG,I,I - Salmonella enterica enterica
+BREDENEY,I,I - Salmonella enterica enterica
+BRON,I,I - Salmonella enterica enterica
+BRONX,I,I - Salmonella enterica enterica
+BUDAPEST,I,I - Salmonella enterica enterica
+BUTANTAN,I,I - Salmonella enterica enterica
+BUZU,I,I - Salmonella enterica enterica
+CAIRINA,I,I - Salmonella enterica enterica
+CALIFORNIA,I,I - Salmonella enterica enterica
+CANADA,I,I - Salmonella enterica enterica
+CANNSTATT,I,I - Salmonella enterica enterica
+CARACAS,I,I - Salmonella enterica enterica
+CARMEL,I,I - Salmonella enterica enterica
+CARNO,I,I - Salmonella enterica enterica
+CARRAU,I,I - Salmonella enterica enterica
+CERRO,I,I - Salmonella enterica enterica
+CHAILEY,I,I - Salmonella enterica enterica
+CHAMPAIGN,I,I - Salmonella enterica enterica
+CHANDANS,I,I - Salmonella enterica enterica
+CHARITY,I,I - Salmonella enterica enterica
+CHENNAI,I,I - Salmonella enterica enterica
+CHESTER,I,I - Salmonella enterica enterica
+CHINGOLA,I,I - Salmonella enterica enterica
+CHOLERAESUIS,I,I - Salmonella enterica enterica
+CHOLERAESUIS VAR DECATUR,I,I - Salmonella enterica enterica
+CHOLERAESUIS_VAR_KUNZENDORF,I,I - Salmonella enterica enterica
+COELN,I,I - Salmonella enterica enterica
+COLINDALE,I,I - Salmonella enterica enterica
+CONCORD,I,I - Salmonella enterica enterica
+CORVALLIS,I,I - Salmonella enterica enterica
+COTHAM,I,I - Salmonella enterica enterica
+CROFT,I,I - Salmonella enterica enterica
+CUBANA,I,I - Salmonella enterica enterica
+DAHLEM,I,I - Salmonella enterica enterica
+DAKOTA,I,Salmonella enterica enterica
+DALLGOW,I,I - Salmonella enterica enterica
+DENVER,I, 
+DERBY,I,I - Salmonella enterica enterica
+DUBLIN,I,I - Salmonella enterica enterica
+DUESSELDORF,I,I - Salmonella enterica enterica
+DUGBE,I,I - Salmonella enterica enterica
+DUISBURG,I,I - Salmonella enterica enterica
+DURBAN,I,I - Salmonella enterica enterica
+DURHAM,I,I - Salmonella enterica enterica
+EALING,I,I - Salmonella enterica enterica
+EASTBOURNE,I,I - Salmonella enterica enterica
+EBOKO,I,I - Salmonella enterica enterica
+EBRIE,I,I - Salmonella enterica enterica
+EDINBURG,I,I - Salmonella enterica enterica
+EGUSITOO,I,I - Salmonella enterica enterica
+ELISABETHVILLE,I,I - Salmonella enterica enterica
+ELOMRANE,I,I - Salmonella enterica enterica
+EMEK,I,I - Salmonella enterica enterica
+ENTERITIDIS,I,I - Salmonella enterica enterica
+ESCANABA,I,I - Salmonella enterica enterica
+ESSEN,I,I - Salmonella enterica enterica
+FALKENSEE,I,I - Salmonella enterica enterica
+FARMINGDALE,I,I - Salmonella enterica enterica
+FARSTA,I,I - Salmonella enterica enterica
+FERRUCH,I,I - Salmonella enterica enterica
+FISCHERKIETZ,I,I - Salmonella enterica enterica
+FLORIDA,I,I - Salmonella enterica enterica
+FLUNTERN,I,I - Salmonella enterica enterica
+FORTUNE,I, 
+FRESNO,I,I - Salmonella enterica enterica
+FRINTROP,I,I - Salmonella enterica enterica
+GALIEMA,I,I - Salmonella enterica enterica
+GALLEN,I,I - Salmonella enterica enterica
+GALLINARUM,I,I - Salmonella enterica enterica
+GAMINARA,I,I - Salmonella enterica enterica
+GEORGIA,I,I - Salmonella enterica enterica
+GIVE,I,I - Salmonella enterica enterica
+GIVE VAR 15+ (NEWBRUNSWICK),I,I - Salmonella enterica enterica
+GLOSTRUP,I,I - Salmonella enterica enterica
+GLOUCESTER,I,I - Salmonella enterica enterica
+GODESBERG,I,I - Salmonella enterica enterica
+GOLDCOAST,I,I - Salmonella enterica enterica
+GOOD,I,I - Salmonella enterica enterica
+GRUMPENSIS,I,I - Salmonella enterica enterica
+GUINEA,I,I - Salmonella enterica enterica
+HAARDT,I,I - Salmonella enterica enterica
+HADAR,I,I - Salmonella enterica enterica
+HAIFA,I,I - Salmonella enterica enterica
+HALLE,I,I - Salmonella enterica enterica
+HARTFORD,I,I - Salmonella enterica enterica
+HAVANA,I,I - Salmonella enterica enterica
+HEIDELBERG,I,I - Salmonella enterica enterica
+HERON,I,I - Salmonella enterica enterica
+HERSTON,I,I - Salmonella enterica enterica
+HESSAREK,I,I - Salmonella enterica enterica
+HINDMARSH,I,I - Salmonella enterica enterica
+HOGHTON,I,I - Salmonella enterica enterica
+HULL,I,I - Salmonella enterica enterica
+HVITTINGFOSS,I,I - Salmonella enterica enterica
+IBADAN,I,I - Salmonella enterica enterica
+IDIKAN,I,I - Salmonella enterica enterica
+ILALA,I,I - Salmonella enterica enterica
+ILUGUN,I,I - Salmonella enterica enterica
+INDIANA,I,I - Salmonella enterica enterica
+INFANTIS,I,I - Salmonella enterica enterica
+INVERNESS,I,I - Salmonella enterica enterica
+IRUMU,I,I - Salmonella enterica enterica
+ISANGI,I,I - Salmonella enterica enterica
+ISASZEG,I, 
+ISTANBUL,I,I - Salmonella enterica enterica
+ITURI,I,I - Salmonella enterica enterica
+JANGWANI,I,I - Salmonella enterica enterica
+JAVIANA,I,I - Salmonella enterica enterica
+JERUSALEM,I,I - Salmonella enterica enterica
+JODHPUR,I,I - Salmonella enterica enterica
+JOHANNESBURG,I,I - Salmonella enterica enterica
+JUKESTOWN,I,I - Salmonella enterica enterica
+KAAPSTAD,I,I - Salmonella enterica enterica
+KAPEMBA,I,I - Salmonella enterica enterica
+KEDOUGOU,I,I - Salmonella enterica enterica
+KENTUCKY,I,I - Salmonella enterica enterica
+KIAMBU,I,I - Salmonella enterica enterica
+KIBUSI,I,I - Salmonella enterica enterica
+KIMUENZA,I,I - Salmonella enterica enterica
+KINGABWA,I,I - Salmonella enterica enterica
+KINGSTON,I,I - Salmonella enterica enterica
+KINTAMBO,I,I - Salmonella enterica enterica
+KISARAWE,I,I - Salmonella enterica enterica
+KISII,I,I - Salmonella enterica enterica
+KIVU,I,I - Salmonella enterica enterica
+KOKOMLEMLE,I,I - Salmonella enterica enterica
+KORLEBU,I,I - Salmonella enterica enterica
+KOTTBUS,I,I - Salmonella enterica enterica
+KREFELD,I,I - Salmonella enterica enterica
+KUA,I,I - Salmonella enterica enterica
+KUESSEL,I,I - Salmonella enterica enterica
+LABADI,I, 
+LAGOS,I,I - Salmonella enterica enterica
+LANGENHORN,I,I - Salmonella enterica enterica
+LAROCHELLE,I,I - Salmonella enterica enterica
+LATTENKAMP,I,I - Salmonella enterica enterica
+LAWNDALE,I, 
+LEEUWARDEN,I, 
+LEIDEN,I,I - Salmonella enterica enterica
+LEXINGTON,I,I - Salmonella enterica enterica
+LEXINGTON VAR 15+ (MANILA),I,I - Salmonella enterica enterica
+LEXINGTON VAR 15+34+ (ILLINOIS,I,I - Salmonella enterica enterica
+LILLE,I,I - Salmonella enterica enterica
+LIMETE,I,I - Salmonella enterica enterica
+LITCHFIELD,I,I - Salmonella enterica enterica
+LIVERPOOL,I,I - Salmonella enterica enterica
+LIVINGSTONE,I,I - Salmonella enterica enterica
+LLANDOFF,I,I - Salmonella enterica enterica
+LOME,I,I - Salmonella enterica enterica
+LOMITA,I,I - Salmonella enterica enterica
+LONDON,I,I - Salmonella enterica enterica
+MADELIA,I, 
+MALAYSIA,I,I - Salmonella enterica enterica
+MALSTATT,I,I - Salmonella enterica enterica
+MANCHESTER,I,I - Salmonella enterica enterica
+MANHATTAN,I,I - Salmonella enterica enterica
+MANNHEIM,I,I - Salmonella enterica enterica
+MAPO,I,I - Salmonella enterica enterica
+MARITZBURG,I,I - Salmonella enterica enterica
+MARYLEBONE,I,I - Salmonella enterica enterica
+MATADI,I,I - Salmonella enterica enterica
+MATOPENI,I,I - Salmonella enterica enterica
+MBANDAKA,I,I - Salmonella enterica enterica
+MELEAGRIDIS,I,I - Salmonella enterica enterica
+MELEAGRIDIS VAR 15+34+ (WILDWD,I,I - Salmonella enterica enterica
+MENSTON,I,I - Salmonella enterica enterica
+MGULANI,I,I - Salmonella enterica enterica
+MIAMI,I,I - Salmonella enterica enterica
+MIDWAY,I,Enterica
+MINNESOTA,I,I - Salmonella enterica enterica
+MISHMARHAEMEK,I,I - Salmonella enterica enterica
+MISSISSIPPI,I,I - Salmonella enterica enterica
+MOKOLA,I, 
+MOLADE,I,I - Salmonella enterica enterica
+MONOPHASIC TYPHIMURIUM,I,I - Salmonella enterica enterica
+MONS,I,I - Salmonella enterica enterica
+MONSCHAUI,I,I - Salmonella enterica enterica
+MONTEVIDEO,I,I - Salmonella enterica enterica
+MOREHEAD,I,I - Salmonella enterica enterica
+MORNINGSIDE,I,I - Salmonella enterica enterica
+MOUNTPLEASANT,I,I - Salmonella enterica enterica
+MUENCHEN,I,I - Salmonella enterica enterica
+MUENSTER,I,I - Salmonella enterica enterica
+MUENSTER VAR 15+34+ (ARKANSAS),I,I - Salmonella enterica enterica
+NAGOYA,I,I - Salmonella enterica enterica
+NAPOLI,I,I - Salmonella enterica enterica
+NASHUA,I, 
+NCHANGA,I,I - Salmonella enterica enterica
+NESSZIONA,I,I - Salmonella enterica enterica
+NEWPORT,I,I - Salmonella enterica enterica
+NIAREMBE,I,I - Salmonella enterica enterica
+NIGERIA,I,I - Salmonella enterica enterica
+NIMA,I,I - Salmonella enterica enterica
+NOTTINGHAM,I,I - Salmonella enterica enterica
+NOT_SALMONELLA,NotApp,Not Applicable
+NO_VIABLE_ORGANISMS,NotApp,Not Applicable
+NYANZA,I,I - Salmonella enterica enterica
+"O ROUGH:G,M,T:-",II, 
+"O-ROUGH:Z10:1,5",I, 
+"O-ROUGH:Z4,Z32:-",IV,salmonella enterica subsp houtenae
+OAKLAND,I,I - Salmonella enterica enterica
+ODOZI,I,I - Salmonella enterica enterica
+OFFA,I,I - Salmonella enterica enterica
+OHIO,I,I - Salmonella enterica enterica
+OKATIE,I,I - Salmonella enterica enterica
+ONDERSPOORT,I,I - Salmonella enterica enterica
+ORANIENBURG,I,I - Salmonella enterica enterica
+ORDONEZ,I,I - Salmonella enterica enterica
+ORIENTALIS,I,I - Salmonella enterica enterica
+ORION,I,I - Salmonella enterica enterica
+ORION VAR 15+ (BINZA),I,I - Salmonella enterica enterica
+ORION VAR 15+34+ (THOMASVILLE),I,I - Salmonella enterica enterica
+OSKARSHAMN,I,I - Salmonella enterica enterica
+OSLO,I,I - Salmonella enterica enterica
+OTHMARSCHEN,I,I - Salmonella enterica enterica
+OUAKAM,I,I - Salmonella enterica enterica
+OVERSCHIE,I,I - Salmonella enterica enterica
+O_ ROUGH:GMT:-,II,II - Salmonella enterica salamae
+"O_ROUGH:-:1,5,7",IIIb, 
+"O_ROUGH:A:E,N,X",I, 
+"O_ROUGH:B:L,W",I, 
+O_ROUGH:D:-,I, 
+O_ROUGH:GMT:-,II,II - Salmonella enterica salamae
+O_ROUGH:I:-,I,I - Salmonella enterica enterica
+"O_ROUGH:I:1,2",I,I - Salmonella enterica enterica
+O_ROUGH:I:ENZ15,I,I - Salmonella enterica enterica
+"O_ROUGH:I:L,W",I,I - Salmonella enterica enterica
+O_ROUGH:I:Z,IIIb,Salmonella enterica diarizonae
+O_ROUGH:I:Z6,I,I - Salmonella enterica enterica
+O_ROUGH:K:Z,IIIb,Salmonella enterica diarizonae
+"O_ROUGH:LZ13,Z28:-",II,II - Salmonella enterica salamae
+"O_ROUGH:LZ13:1,5",I,I - Salmonella enterica enterica
+"O_ROUGH:M,T:-",I,I - Salmonella enterica enterica
+O_ROUGH:R:-,I,I - Salmonella enterica enterica
+O_ROUGH:R:-,IIIa,Salmonella Enterica subspecies Arizonae
+"O_ROUGH:R:1,2",I,I - Salmonella enterica enterica
+O_ROUGH:R:ENX,I, 
+"O_ROUGH:R:L,W",I, 
+"O_ROUGH:Y:1,5",I, 
+O_ROUGH:Z10:-,I,I - Salmonella enterica enterica
+O_ROUGH:Z10:ENX,I,I - Salmonella enterica enterica
+O_ROUGH:Z29:-,I,I - Salmonella enterica enterica
+O_ROUGH:Z35:-,V,Bongori
+"O_ROUGH:Z4,Z23:-",I,I - Salmonella enterica enterica
+"O_ROUGH:Z4,Z23:-",IV,salmonella enterica subsp houtenae
+O_ROUGH:Z:Z10,IIIb,Salmonella enterica diarizonae
+PANAMA,I,I - Salmonella enterica enterica
+PARATYPHI_B,I,I - Salmonella enterica enterica
+PARATYPHI_B_JAVA,I,I - Salmonella enterica enterica
+PERTH,I,I - Salmonella enterica enterica
+PLYMOUTH,I,I - Salmonella enterica enterica
+POANO,I, 
+POMONA,I,I - Salmonella enterica enterica
+POONA,I,I - Salmonella enterica enterica
+POTSDAM,I,I - Salmonella enterica enterica
+POWELL,I,I - Salmonella enterica enterica
+PROTEUS,NotApp,Not Applicable
+PULLORUM,I,I - Salmonella enterica enterica
+PUTTEN,I,I - Salmonella enterica enterica
+RAMATGAN,I,I - Salmonella enterica enterica
+READING,I,I - Salmonella enterica enterica
+REGENT,I,I - Salmonella enterica enterica
+RICHMOND,I,I - Salmonella enterica enterica
+RIGGIL,I,I - Salmonella enterica enterica
+RISSEN,I,I - Salmonella enterica enterica
+ROODEPOORT,I,I - Salmonella enterica enterica
+RUBISLAW,I,I - Salmonella enterica enterica
+RUIRU,I,I - Salmonella enterica enterica
+SAARBRUECKEN,I,1 - Salmonella enterica enterica
+SAINTPAUL,I,I - Salmonella enterica enterica
+SALFORD,I,I - Salmonella enterica enterica
+SANDIEGO,I,I - Salmonella enterica enterica
+SAPHRA,I,I - Salmonella enterica enterica
+SCHWARZENGRUND,I,I - Salmonella enterica enterica
+SENDAI,I,I - Salmonella enterica enterica
+SENEGAL,I,I - Salmonella enterica enterica
+SENFTENBERG,I,I - Salmonella enterica enterica
+SENFTENBERG (Z27),I,I - Salmonella enterica enterica
+SINGAPORE,I,I - Salmonella enterica enterica
+SINSTORF,I,I - Salmonella enterica enterica
+SINTHIA,I,I - Salmonella enterica enterica
+SOERENGA,I,I - Salmonella enterica enterica
+SOLT,I,I - Salmonella enterica enterica
+SOMONE,I,I - Salmonella enterica enterica
+SOUTHAMPTON,I, 
+STANLEY,I,I - Salmonella enterica enterica
+STANLEYVILLE,I,I - Salmonella enterica enterica
+STENDAL,I, 
+STOCKHOLM,I,I - Salmonella enterica enterica
+STOURBRIDGE,I,I - Salmonella enterica enterica
+SUELLDORF,I,I - Salmonella enterica enterica
+SUNDSVALL,I,I - Salmonella enterica enterica
+SZENTES,I,I - Salmonella enterica enterica
+TAKORADI,I,I - Salmonella enterica enterica
+TAKSONY,I,I - Salmonella enterica enterica
+TALLAHASSEE,I,I - Salmonella enterica enterica
+TANANARIVE,I,I - Salmonella enterica enterica
+TEDDINGTON,I,I - Salmonella enterica enterica
+TEES,I,I - Salmonella enterica enterica
+TELELKEBIR,I,I - Salmonella enterica enterica
+TELTOW,I,I - Salmonella enterica enterica
+TENNESSEE,I,I - Salmonella enterica enterica
+TESHIE,I,I - Salmonella enterica enterica
+THOMPSON,I,I - Salmonella enterica enterica
+TIONE,I,I - Salmonella enterica enterica
+TORONTO,I,I - Salmonella enterica enterica
+TOUCRA,I,I - Salmonella enterica enterica
+TSEVIE,I,I - Salmonella enterica enterica
+TYPHIMURIUM,I,I - Salmonella enterica enterica
+TYRESOE,I,I - Salmonella enterica enterica
+UGANDA,I,I - Salmonella enterica enterica
+UMBILO,I,I - Salmonella enterica enterica
+UMHLALI,I, 
+UPPSALA,I,I - Salmonella enterica enterica
+URBANA,I,I - Salmonella enterica enterica
+UTAH,I,I - Salmonella enterica enterica
+UZARAMO,I,I - Salmonella enterica enterica
+VEJLE,I,I - Salmonella enterica enterica
+VENEZIANA,I,I - Salmonella enterica enterica
+VINOHRADY,I,I - Salmonella enterica enterica
+VIRCHOW,I,I - Salmonella enterica enterica
+VIRGINIA,I,I - Salmonella enterica enterica
+VITKIN,I,I - Salmonella enterica enterica
+VLEUTEN,I,I - Salmonella enterica enterica
+WAGENIA,I,I - Salmonella enterica enterica
+WANDSWORTH,I,I - Salmonella enterica enterica
+WANGATA,I,I - Salmonella enterica enterica
+WEDDING,I, 
+WELIKADE,I,I - Salmonella enterica enterica
+WELTEVREDEN,I,I - Salmonella enterica enterica
+WERNIGERODE,I,I - Salmonella enterica enterica
+WESTHAMPTON,I,I - Salmonella enterica enterica
+WEYBRIDGE,I, 
+WIEN,I,I - Salmonella enterica enterica
+WILHELMSBERG,I,I - Salmonella enterica enterica
+WINSLOW,I,I - Salmonella enterica enterica
+WINSTON,I,Enterica
+WOODINVILLE,I,I - Salmonella enterica enterica
+WORTHINGTON,I,I - Salmonella enterica enterica
+YABA,I,I - Salmonella enterica enterica
+YORUBA,I,I - Salmonella enterica enterica
+ZANZIBAR,I,I - Salmonella enterica enterica
